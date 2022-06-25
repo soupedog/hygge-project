@@ -3,7 +3,6 @@ package hygge.commons.templates.configuration;
 import hygge.commons.templates.container.AbstractHyggeKeeper;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * hygge 配置项
@@ -16,8 +15,8 @@ public class HyggeConfigurationItemKeeper extends AbstractHyggeKeeper<String, Hy
     public HyggeConfigurationItemKeeper() {
     }
 
-    public HyggeConfigurationItemKeeper(int size) {
-        this.container = new ConcurrentHashMap<>(size);
+    public HyggeConfigurationItemKeeper(int initialCapacity) {
+        super(initialCapacity);
     }
 
     public Map<String, HyggeConfigurationItem<?>> getContainer() {

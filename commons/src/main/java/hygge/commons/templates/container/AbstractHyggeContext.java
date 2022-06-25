@@ -10,15 +10,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2022/6/25
  * @since 1.0
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractHyggeContext<K> implements HyggeContext<K> {
     protected Map<K, Object> container;
 
     protected AbstractHyggeContext() {
-        initContainer();
+        initContainer(16);
     }
 
-    protected void initContainer() {
-        this.container = new ConcurrentHashMap<>();
+    protected AbstractHyggeContext(int initialCapacity) {
+        initContainer(initialCapacity);
+    }
+
+    protected void initContainer(int initialCapacity) {
+        this.container = new ConcurrentHashMap<>(initialCapacity);
     }
 
     @Override
