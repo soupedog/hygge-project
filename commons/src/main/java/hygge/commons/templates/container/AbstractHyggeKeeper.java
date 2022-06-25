@@ -1,4 +1,4 @@
-package hygge.commons.template.container;
+package hygge.commons.templates.container;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
