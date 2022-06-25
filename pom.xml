@@ -48,9 +48,10 @@
         </dependencies>
     </dependencyManagement>
 
-    <!--打包插件-->
+    <!--插件-->
     <build>
         <plugins>
+            <!--全局统一管理模块版本号插件-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
