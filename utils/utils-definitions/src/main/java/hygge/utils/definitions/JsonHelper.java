@@ -6,17 +6,19 @@ import java.util.Properties;
 
 /**
  * json 处理工具类
- * <p/>
- * 注意：
  *
  * @author Xavier
  * @date 2022/6/25
  * @since 1.0
  */
 public interface JsonHelper<S> extends HyggeUtil {
+    /**
+     * 该枚举直接作为带 {@link java.util.Properties} 参构造方法入参的 key
+     */
     enum ConfigKey {
         /**
-         * 是否开启排版缩进
+         * 是否开启排版缩进<p/>
+         * 值: {@link Boolean#TRUE} / {@link Boolean#FALSE}
          */
         INDENT
     }
@@ -57,7 +59,7 @@ public interface JsonHelper<S> extends HyggeUtil {
      * 将 json 串 反序列化为对象
      *
      * @param jsonString 待反序列化目标
-     * @param classInfo  目标类信息(基于不同实现，可能为任何值，JsonHelper 实现类需要自行处理)
+     * @param classInfo  目标类信息 e.g {@link com.fasterxml.jackson.core.type.TypeReference} (基于 JsonHelper 不同具体实现，可能为任何值，JsonHelper 实现类需要自行处理)
      * @return json 串反序列化后的目标
      */
     Object readAsObjectWithClassInfo(String jsonString, Object classInfo);
