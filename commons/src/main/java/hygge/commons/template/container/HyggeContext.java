@@ -28,7 +28,7 @@ public interface HyggeContext<K> {
     /**
      * 根据 key 从容器中获取对象
      *
-     * @return key 对应的对象。如果容器中不存在该 key ，则返回 {@code defaultObject}
+     * @return key 对应的对象。如果容器中不存在该 key ，则返回 defaultObject
      */
     <T> T getObjectOfNullable(K key, Object defaultObject);
 }
