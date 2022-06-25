@@ -12,6 +12,7 @@ public interface HyggeContext<K> {
      * 检测容器中是否存在特定的 key
      */
     boolean containsKey(K key);
+
     /**
      * 向容器中以 key 存入特定对象
      *
