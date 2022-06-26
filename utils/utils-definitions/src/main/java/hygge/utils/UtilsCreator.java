@@ -3,6 +3,7 @@ package hygge.utils;
 import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.utils.definitions.JsonHelper;
 
+import java.util.Properties;
 import java.util.function.Supplier;
 
 /**
@@ -69,13 +70,27 @@ public enum UtilsCreator implements UtilsCreatorAbility {
             if (JsonHelper.class.isAssignableFrom(target) && tryToGetClass("com.fasterxml.jackson.databind.ObjectMapper") == null) {
                 throw new UtilRuntimeException("Default \"JsonHelper\" implementation class lacks jackson dependencies:com.fasterxml.jackson.databind.ObjectMapper.");
             }
-            String className = String.format("hygge.utils.impl.%s", hyggeName);
+            String className = String.format("hygge.utils.impl.Default%s", hyggeName);
             return createHelper(className);
         });
     }
 
     @Override
-    public JsonHelper<?> getDefaultJsonHelperInstance(boolean indent) {
-        return null;
+    public <T> JsonHelper<T> getDefaultJsonHelperInstance(boolean indent) {
+        String hyggeName = JsonHelper.class.getSimpleName();
+        return getAndCacheInstance(hyggeName, () -> {
+            String className = String.format("hygge.utils.impl.Default%s", hyggeName);
+            Class<?> jsonHelperClass = tryToGetClass(className);
+            if (jsonHelperClass == null || !JsonHelper.class.isAssignableFrom(jsonHelperClass)) {
+                throw new UtilRuntimeException("Default \"JsonHelper\" implementation class(" + className + ") was not found.");
+            }
+            // 构造 JsonHelper 默认实现需要先检查依赖
+            if (tryToGetClass("com.fasterxml.jackson.databind.ObjectMapper") == null) {
+                throw new UtilRuntimeException("Default \"JsonHelper\" implementation class lacks jackson dependencies:com.fasterxml.jackson.databind.ObjectMapper.");
+            }
+            Properties properties = new Properties();
+            properties.put(JsonHelper.ConfigKey.INDENT, indent);
+            return (JsonHelper<T>) createInstanceByClass(properties, jsonHelperClass);
+        });
     }
 }

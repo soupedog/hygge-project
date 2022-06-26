@@ -56,7 +56,7 @@ public interface UtilsCreatorAbility {
      *
      * @param indent 是否开启缩进
      */
-    JsonHelper<?> getDefaultJsonHelperInstance(boolean indent);
+    <T> JsonHelper<T> getDefaultJsonHelperInstance(boolean indent);
 
     /**
      * 创建用户自定义的类实例
@@ -82,7 +82,7 @@ public interface UtilsCreatorAbility {
      * @param customClass 自定义类
      * @return 自定义类实例
      */
-    static <C> C createInstanceByClass(Properties properties, Class<C> customClass) {
+    default <C> C createInstanceByClass(Properties properties, Class<C> customClass) {
         if (customClass == null) {
             throw new UtilRuntimeException("Create target can't be null.");
         }
