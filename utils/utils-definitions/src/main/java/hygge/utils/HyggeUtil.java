@@ -7,6 +7,7 @@ import hygge.commons.templates.core.WithName;
  *
  * @author Xavier
  * @date 2022/6/25
+ * @since 1.0
  */
 public interface HyggeUtil extends WithName {
     @Override

@@ -19,6 +19,7 @@ import java.util.Properties;
  *
  * @author Xavier
  * @date 2022/6/25
+ * @since 1.0
  */
 public interface UtilsCreatorAbility {
     /**
@@ -101,5 +102,4 @@ public interface UtilsCreatorAbility {
             return null;
         }
     }
-
 }
