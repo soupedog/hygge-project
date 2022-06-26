@@ -24,7 +24,7 @@ public interface DaoHelper extends HyggeUtil {
      * @param checkInfoCollection 属性信息
      * @return 筛选过后的新 Map,不会为 null
      */
-    HashMap<String, ?> filterOutTheFinalAttributes(Map<String, Object> rawData, Collection<ColumnInfo> checkInfoCollection);
+    HashMap<String, Object> filterOutTheFinalAttributes(Map<String, ?> rawData, Collection<ColumnInfo> checkInfoCollection);
 
     /**
      * 根据属性信息，筛选出有效属性并生成新的 Map 结构
@@ -34,5 +34,5 @@ public interface DaoHelper extends HyggeUtil {
      * @param successCallBack     成功筛选出有效属性时的回调函数
      * @return 筛选过后的新 Map,不会为 null
      */
-    HashMap<String, ?> filterOutTheFinalAttributes(Map<String, Object> rawData, Collection<ColumnInfo> checkInfoCollection, UnaryOperator<HashMap<String, ?>> successCallBack);
+    HashMap<String, Object> filterOutTheFinalAttributes(Map<String, ?> rawData, Collection<ColumnInfo> checkInfoCollection, UnaryOperator<HashMap<String, ?>> successCallBack);
 }
