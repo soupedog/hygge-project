@@ -37,9 +37,9 @@ public interface UtilsCreatorAbility {
     /**
      * 获取目标工具的默认单例实现
      * <p/>
-     * 会通过 {@code "hygge.util.impl." + {@link HyggeUtil#getHyggeName()} 来确定默认实现类的类名，并尝试通过反射构造实例}
+     * 会通过 "hygge.util.impl.Default" + {@link HyggeUtil#getHyggeName()} 来确定默认实现类的类名，并尝试通过反射构造实例
      *
-     * @param target {@link UtilsCreator} 要求入参必须下列任意其一：<p/>
+     * @param target {@link UtilsCreator} 要求入参必须下列任意其一：<br/>
      *               {@link CollectionHelper}<br/>
      *               {@link DaoHelper}<br/>
      *               {@link FileHelper}<br/>

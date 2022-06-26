@@ -25,7 +25,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
         boolean result = true;
         if (target != null) {
             if (target instanceof String) {
-                result = target.toString().trim().isEmpty();
+                result = ((String) target).trim().isEmpty();
             } else if (target instanceof Collection) {
                 result = ((Collection<?>) target).isEmpty();
             } else if (target instanceof Map) {
