@@ -745,6 +745,48 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
+    public Boolean booleanFormat(String targetName, Object target) {
+        Boolean result = parseBoolean(targetName, target);
+        return hookBoolean(result);
+    }
+
+    @Override
+    public Boolean booleanFormatOfNullable(String targetName, Object target, Boolean defaultValue) {
+        Boolean result = parseBoolean(targetName, target);
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookBoolean(result);
+    }
+
+    @Override
+    public Boolean booleanFormatOfNullable(Object target, Boolean defaultValue, String errorMessage) {
+        Boolean result = parseBoolean(target, errorMessage);
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookBoolean(result);
+    }
+
+    @Override
+    public Boolean booleanFormatNotEmpty(String targetName, Object target) {
+        Boolean result = parseBoolean(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        return hookBoolean(result);
+    }
+
+    @Override
+    public Boolean booleanFormatNotEmpty(Object target, String errorMessage) {
+        Boolean result = parseBoolean(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookBoolean(result);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;

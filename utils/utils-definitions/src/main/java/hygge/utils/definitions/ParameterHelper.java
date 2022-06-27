@@ -17,6 +17,7 @@ import java.util.Map;
  * @date 2022/6/25
  * @since 1.0
  */
+@SuppressWarnings("java:S2447")
 public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
     /**
      * 首字母大写常规模式，入参字符串最小长度
@@ -1321,6 +1322,81 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
             result = new BigDecimal(target).setScale(scale, roundingMode);
         } catch (NumberFormatException e) {
             hookUnexpectedEvent(errorMessage, e);
+        }
+        return result;
+    }
+
+    /**
+     * 默认的 Boolean 转化函数<br/>
+     * 如果目标对象满足 {@link ParameterHelper#isEmpty(Object)} == true<br/>
+     * 目标对象将被转化为 null
+     * <p>
+     * 下列内容被视为 true：<br/>
+     * "1"<br/>
+     * "true"<br/>
+     * "TRUE"<br/>
+     * <p>
+     * 下列内容被视为 false：<br/>
+     * "0"<br/>
+     * "false"<br/>
+     * "FALSE"<br/>
+     * <p>
+     * 其余内容被视为不符合预期
+     *
+     * @param targetName 目标对象名称
+     * @param target     目标对象
+     * @return 转化后的数据
+     */
+    default Boolean parseBoolean(String targetName, Object target) {
+        return parseBoolean(target, unexpectedObject("value", target, targetName, "[\"0\",\"1\",\"false\",\"true\",\"FALSE\",\"TRUE\"]"));
+    }
+
+    /**
+     * 默认的 Boolean 转化函数<br/>
+     * 如果目标对象满足 {@link ParameterHelper#isEmpty(Object)} == true<br/>
+     * 目标对象将被转化为 null
+     * <p>
+     * 下列内容被视为 true：<br/>
+     * "1"<br/>
+     * "true"<br/>
+     * "TRUE"<br/>
+     * <p>
+     * 下列内容被视为 false：<br/>
+     * "0"<br/>
+     * "false"<br/>
+     * "FALSE"<br/>
+     * <p>
+     * 其余内容被视为不符合预期
+     *
+     * @param target       目标对象
+     * @param errorMessage 不符合预期时的完整异常提示信息
+     * @return 转化后的数据
+     */
+    default Boolean parseBoolean(Object target, String errorMessage) {
+        if (target instanceof Boolean) {
+            return (Boolean) target;
+        }
+
+        String targetStringValue = string(target);
+        if (isEmpty(target)) {
+            return null;
+        }
+
+        Boolean result = null;
+
+        switch (targetStringValue) {
+            case "1":
+            case "true":
+            case "TRUE":
+                result = Boolean.TRUE;
+                break;
+            case "0":
+            case "false":
+            case "FALSE":
+                result = Boolean.FALSE;
+                break;
+            default:
+                hookUnexpectedEvent(errorMessage, null);
         }
         return result;
     }
