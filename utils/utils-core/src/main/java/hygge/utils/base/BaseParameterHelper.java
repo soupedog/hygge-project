@@ -205,6 +205,96 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
+    public Short shortFormat(String targetName, Object target) {
+        Short result = parseShort(targetName, target);
+        return hookShort(result);
+    }
+
+    @Override
+    public short shortFormatOfNullable(String targetName, Object target, short defaultValue) {
+        Short result = parseShort(targetName, target);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookShort(result);
+    }
+
+    @Override
+    public short shortFormat(Object target, short defaultValue, String errorMessage) {
+        Short result = parseShort(target, errorMessage);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookShort(result);
+    }
+
+    @Override
+    public Short shortFormat(String targetName, Object target, short min, short max) {
+        Short result = parseShort(targetName, target);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Short.class.getSimpleName(), min, max), null);
+        }
+        return hookShort(result);
+    }
+
+    @Override
+    public Short shortFormat(Object target, short min, short max, String errorMessage) {
+        Short result = parseShort(target, errorMessage);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookShort(result);
+    }
+
+    @Override
+    public Short shortFormatNotEmpty(String targetName, Object target) {
+        Short result = parseShort(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        return hookShort(result);
+    }
+
+    @Override
+    public Short shortFormatNotEmpty(Object target, String errorMessage) {
+        Short result = parseShort(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookShort(result);
+    }
+
+    @Override
+    public Short shortFormatNotEmpty(String targetName, Object target, short min, short max) {
+        Short result = parseShort(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Short.class.getSimpleName(), min, max), null);
+        }
+        return hookShort(result);
+    }
+
+    @Override
+    public Short shortFormatNotEmpty(Object target, short min, short max, String errorMessage) {
+        Short result = parseShort(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookShort(result);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;
