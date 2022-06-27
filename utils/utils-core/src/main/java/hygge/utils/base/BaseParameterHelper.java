@@ -385,6 +385,96 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
+    public Long longFormat(String targetName, Object target) {
+        Long result = parseLong(targetName, target);
+        return hookLong(result);
+    }
+
+    @Override
+    public long longFormatOfNullable(String targetName, Object target, long defaultValue) {
+        Long result = parseLong(targetName, target);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookLong(result);
+    }
+
+    @Override
+    public long longFormat(Object target, long defaultValue, String errorMessage) {
+        Long result = parseLong(target, errorMessage);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookLong(result);
+    }
+
+    @Override
+    public Long longFormat(String targetName, Object target, long min, long max) {
+        Long result = parseLong(targetName, target);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Long.class.getSimpleName(), min, max), null);
+        }
+        return hookLong(result);
+    }
+
+    @Override
+    public Long longFormat(Object target, long min, long max, String errorMessage) {
+        Long result = parseLong(target, errorMessage);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookLong(result);
+    }
+
+    @Override
+    public Long longFormatNotEmpty(String targetName, Object target) {
+        Long result = parseLong(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        return hookLong(result);
+    }
+
+    @Override
+    public Long longFormatNotEmpty(Object target, String errorMessage) {
+        Long result = parseLong(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookLong(result);
+    }
+
+    @Override
+    public Long longFormatNotEmpty(String targetName, Object target, long min, long max) {
+        Long result = parseLong(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Long.class.getSimpleName(), min, max), null);
+        }
+        return hookLong(result);
+    }
+
+    @Override
+    public Long longFormatNotEmpty(Object target, long min, long max, String errorMessage) {
+        Long result = parseLong(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookLong(result);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;
