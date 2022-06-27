@@ -3,6 +3,8 @@ package hygge.utils.base;
 
 import hygge.utils.definitions.ParameterHelper;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
 
 /**
@@ -652,6 +654,94 @@ public abstract class BaseParameterHelper implements ParameterHelper {
             hookUnexpectedEvent(errorMessage, null);
         }
         return hookDouble(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormat(String targetName, String target, int scale, RoundingMode roundingMode) {
+        BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormatOfNullable(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal defaultValue) {
+        BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormatOfNullable(String target, int scale, RoundingMode roundingMode, BigDecimal defaultValue, String errorMessage) {
+        BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormat(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max) {
+        BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
+
+        boolean notNull = result != null;
+        if (notNull && (result.compareTo(min) < 0 || result.compareTo(max) > 0)) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, BigDecimal.class.getSimpleName(), min, max), null);
+        }
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormat(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage) {
+        BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
+
+        boolean notNull = result != null;
+        if (notNull && (result.compareTo(min) < 0 || result.compareTo(max) > 0)) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormatNotEmpty(String targetName, String target, int scale, RoundingMode roundingMode) {
+        BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
+
+        objectNotNull(targetName, result);
+
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, String errorMessage) {
+        BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormatNotEmpty(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max) {
+        BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
+
+        objectNotNull(targetName, result);
+
+        if (result.compareTo(min) < 0 || result.compareTo(max) > 0) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, BigDecimal.class.getSimpleName(), min, max), null);
+        }
+        return hookBigDecimal(result);
+    }
+
+    @Override
+    public BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage) {
+        BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        if (result.compareTo(min) < 0 || result.compareTo(max) > 0) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookBigDecimal(result);
     }
 
     @Override
