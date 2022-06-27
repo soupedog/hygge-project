@@ -565,6 +565,96 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
+    public Double doubleFormat(String targetName, Object target) {
+        Double result = parseDouble(targetName, target);
+        return hookDouble(result);
+    }
+
+    @Override
+    public double doubleFormatOfNullable(String targetName, Object target, double defaultValue) {
+        Double result = parseDouble(targetName, target);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookDouble(result);
+    }
+
+    @Override
+    public double doubleFormatOfNullable(Object target, double defaultValue, String errorMessage) {
+        Double result = parseDouble(target, errorMessage);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookDouble(result);
+    }
+
+    @Override
+    public Double doubleFormat(String targetName, Object target, double min, double max) {
+        Double result = parseDouble(targetName, target);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Double.class.getSimpleName(), min, max), null);
+        }
+        return hookDouble(result);
+    }
+
+    @Override
+    public Double doubleFormat(Object target, double min, double max, String errorMessage) {
+        Double result = parseDouble(target, errorMessage);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookDouble(result);
+    }
+
+    @Override
+    public Double doubleFormatNotEmpty(String targetName, Object target) {
+        Double result = parseDouble(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        return hookDouble(result);
+    }
+
+    @Override
+    public Double doubleFormatNotEmpty(Object target, String errorMessage) {
+        Double result = parseDouble(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookDouble(result);
+    }
+
+    @Override
+    public Double doubleFormatNotEmpty(String targetName, Object target, double min, double max) {
+        Double result = parseDouble(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Double.class.getSimpleName(), min, max), null);
+        }
+        return hookDouble(result);
+    }
+
+    @Override
+    public Double doubleFormatNotEmpty(Object target, double min, double max, String errorMessage) {
+        Double result = parseDouble(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookDouble(result);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;
