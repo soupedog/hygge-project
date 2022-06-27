@@ -1,14 +1,13 @@
 package hygge.utils;
 
 import hygge.commons.exceptions.UtilRuntimeException;
-import hygge.utils.bo.UtilsCreatorConfigKeeper;
 import hygge.utils.definitions.JsonHelper;
 
 import java.util.Properties;
 import java.util.function.Supplier;
 
-import static hygge.utils.bo.UtilsCreatorConfigKeeper.DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME;
-import static hygge.utils.bo.UtilsCreatorConfigKeeper.KEY_ACTUAL_DEFAULT_JSON_HELPER;
+import static hygge.utils.UtilsCreatorConfigurationKeeper.DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME;
+import static hygge.utils.UtilsCreatorConfigurationKeeper.KEY_ACTUAL_DEFAULT_JSON_HELPER;
 
 /**
  * HyggeUtil 示例构造器
@@ -26,11 +25,11 @@ public enum UtilsCreator implements UtilsCreatorAbility, InfoMessageSupplier {
     /**
      * UtilsCreator 配置项容器
      */
-    public static final UtilsCreatorConfigKeeper CONFIG_KEEPER = new UtilsCreatorConfigKeeper();
+    public static final UtilsCreatorConfigurationKeeper CONFIG_KEEPER = new UtilsCreatorConfigurationKeeper();
     /**
      * 用于保存单例工具类的容器，key 是 {@link HyggeUtil#getHyggeName()}
      */
-    private static final HyggeUtilKeeper singletonObjects = new HyggeUtilKeeper(64);
+    private static final UtilsCreatorHyggeUtilKeeper singletonObjects = new UtilsCreatorHyggeUtilKeeper(64);
 
     /**
      * 先从 {@link UtilsCreator#singletonObjects} 里根据 cacheKey 取，如果没取到则通过构造方法获取实例，并将该实例缓存到 {@link UtilsCreator#singletonObjects}

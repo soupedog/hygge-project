@@ -1,7 +1,6 @@
-package hygge.utils.bo;
+package hygge.utils;
 
 import hygge.commons.templates.container.AbstractHyggeKeeper;
-import hygge.utils.UtilsCreator;
 
 /**
  * UtilsCreator 配置项容器
@@ -10,7 +9,7 @@ import hygge.utils.UtilsCreator;
  * @date 2022/6/28
  * @since 1.0
  */
-public class UtilsCreatorConfigKeeper extends AbstractHyggeKeeper<String, Object> {
+public class UtilsCreatorConfigurationKeeper extends AbstractHyggeKeeper<String, Object> {
     /**
      * 基于 jackson 的 JsonHelper 默认实现类
      */
@@ -22,7 +21,7 @@ public class UtilsCreatorConfigKeeper extends AbstractHyggeKeeper<String, Object
      */
     public static final String KEY_ACTUAL_DEFAULT_JSON_HELPER = "ACTUAL_DEFAULT_JSON_HELPER";
 
-    public UtilsCreatorConfigKeeper() {
+    public UtilsCreatorConfigurationKeeper() {
         super();
         saveValue(KEY_ACTUAL_DEFAULT_JSON_HELPER, DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME);
     }
