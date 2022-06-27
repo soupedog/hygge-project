@@ -17,7 +17,8 @@ public class UtilsCreatorConfigKeeper extends AbstractHyggeKeeper<String, Object
     public static final String DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME = "hygge.utils.json.jackson.impl.DefaultJsonHelper";
     /**
      * 如果需要修改默认 JsonHelper 实现类，请用新实现类全类名覆盖这个 key 的值
-     * {@link UtilsCreator#getDefaultJacksonJsonHelperPath()}
+     *
+     * @see UtilsCreator#getDefaultJacksonJsonHelperPath()
      */
     public static final String KEY_ACTUAL_DEFAULT_JSON_HELPER = "ACTUAL_DEFAULT_JSON_HELPER";
 

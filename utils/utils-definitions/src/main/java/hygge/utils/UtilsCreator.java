@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.function.Supplier;
 
 import static hygge.utils.bo.UtilsCreatorConfigKeeper.DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME;
+import static hygge.utils.bo.UtilsCreatorConfigKeeper.KEY_ACTUAL_DEFAULT_JSON_HELPER;
 
 /**
  * HyggeUtil 示例构造器
@@ -22,6 +23,9 @@ public enum UtilsCreator implements UtilsCreatorAbility, InfoMessageSupplier {
      * UtilsCreator 单例
      */
     INSTANCE;
+    /**
+     * UtilsCreator 配置项容器
+     */
     public static final UtilsCreatorConfigKeeper CONFIG_KEEPER = new UtilsCreatorConfigKeeper();
     /**
      * 用于保存单例工具类的容器，key 是 {@link HyggeUtil#getHyggeName()}
@@ -109,9 +113,9 @@ public enum UtilsCreator implements UtilsCreatorAbility, InfoMessageSupplier {
     }
 
     /**
-     * 用的返回当前的 JsonHelper 默认实现类名称
+     * 用的返回当前实际的 JsonHelper 默认实现类名称
      */
     private String getDefaultJacksonJsonHelperPath() {
-        return CONFIG_KEEPER.getValue(UtilsCreatorConfigKeeper.KEY_ACTUAL_DEFAULT_JSON_HELPER).toString();
+        return CONFIG_KEEPER.getValue(KEY_ACTUAL_DEFAULT_JSON_HELPER).toString();
     }
 }
