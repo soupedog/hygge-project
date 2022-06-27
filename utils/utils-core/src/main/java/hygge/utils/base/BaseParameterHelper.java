@@ -1,6 +1,7 @@
 package hygge.utils.base;
 
 
+import hygge.commons.enums.StringFormatModeEnum;
 import hygge.utils.definitions.ParameterHelper;
 
 import java.math.BigDecimal;
@@ -784,6 +785,43 @@ public abstract class BaseParameterHelper implements ParameterHelper {
         objectNotNull(result, errorMessage);
 
         return hookBoolean(result);
+    }
+
+    @Override
+    public String leftFillString(String target, int totalLength, String fillingItem, StringFormatModeEnum stringFormatModeEnum) {
+        String rowString = parseObjectOfNullable("target", target, "");
+        StringBuilder deltaPart = buildFillDeltaPart(rowString, totalLength, fillingItem, stringFormatModeEnum);
+        return formatString(stringFormatModeEnum, deltaPart.toString().concat(rowString));
+    }
+
+    @Override
+    public String rightFillString(String target, int totalLength, String fillingItem, StringFormatModeEnum stringFormatModeEnum) {
+        String rowString = parseObjectOfNullable("target", target, "");
+        StringBuilder deltaPart = buildFillDeltaPart(rowString, totalLength, fillingItem, stringFormatModeEnum);
+        return formatString(stringFormatModeEnum, rowString.concat(deltaPart.toString()));
+    }
+
+    private StringBuilder buildFillDeltaPart(String rowString, int totalLength, String fillingItem, StringFormatModeEnum stringFormatModeEnum) {
+        objectNotNull("stringFormatModeEnum", stringFormatModeEnum);
+        stringNotEmpty("fillingItem", (Object) fillingItem);
+
+        if (rowString.length() > totalLength) {
+            hookUnexpectedEvent(String.format("Unexpected totalLength,it should be no more than %d.", totalLength), null);
+        }
+        int remainLength = totalLength - rowString.length();
+        int itemLength = fillingItem.length();
+        if (remainLength % itemLength != 0) {
+            hookUnexpectedEvent(String.format("Unexpected fillingItem,%s cannot be filled to the length of %d by %s.",
+                    rowString,
+                    totalLength,
+                    fillingItem), null);
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        int appendCount = remainLength / itemLength;
+        for (int i = 0; i < appendCount; i++) {
+            stringBuilder.append(fillingItem);
+        }
+        return stringBuilder;
     }
 
     @Override

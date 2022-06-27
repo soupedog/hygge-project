@@ -1470,6 +1470,20 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      */
     String rightFillString(String target, int totalLength, String fillingItem, StringFormatModeEnum stringFormatModeEnum);
 
+    default String formatString(StringFormatModeEnum stringFormatModeEnum, String string) {
+        String result;
+        switch (stringFormatModeEnum) {
+            case LOWERCASE:
+                result = string.toLowerCase();
+                break;
+            case UPPERCASE:
+                result = string.toUpperCase();
+                break;
+            default:
+                result = string;
+        }
+        return result;
+    }
     /**
      * 将传入字符串首字母大写
      *
