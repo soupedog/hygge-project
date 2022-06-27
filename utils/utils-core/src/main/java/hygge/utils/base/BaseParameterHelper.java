@@ -475,6 +475,96 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
+    public Float floatFormat(String targetName, Object target) {
+        Float result = parseFloat(targetName, target);
+        return hookFloat(result);
+    }
+
+    @Override
+    public float floatFormatOfNullable(String targetName, Object target, float defaultValue) {
+        Float result = parseFloat(targetName, target);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookFloat(result);
+    }
+
+    @Override
+    public float floatFormat(Object target, float defaultValue, String errorMessage) {
+        Float result = parseFloat(target, errorMessage);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookFloat(result);
+    }
+
+    @Override
+    public Float floatFormat(String targetName, Object target, float min, float max) {
+        Float result = parseFloat(targetName, target);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Float.class.getSimpleName(), min, max), null);
+        }
+        return hookFloat(result);
+    }
+
+    @Override
+    public Float floatFormat(Object target, float min, float max, String errorMessage) {
+        Float result = parseFloat(target, errorMessage);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookFloat(result);
+    }
+
+    @Override
+    public Float floatFormatNotEmpty(String targetName, Object target) {
+        Float result = parseFloat(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        return hookFloat(result);
+    }
+
+    @Override
+    public Float floatFormatNotEmpty(Object target, String errorMessage) {
+        Float result = parseFloat(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookFloat(result);
+    }
+
+    @Override
+    public Float floatFormatNotEmpty(String targetName, Object target, float min, float max) {
+        Float result = parseFloat(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Float.class.getSimpleName(), min, max), null);
+        }
+        return hookFloat(result);
+    }
+
+    @Override
+    public Float floatFormatNotEmpty(Object target, float min, float max, String errorMessage) {
+        Float result = parseFloat(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookFloat(result);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;
