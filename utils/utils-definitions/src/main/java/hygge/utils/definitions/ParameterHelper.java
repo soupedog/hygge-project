@@ -1123,6 +1123,48 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
     }
 
     /**
+     * 默认的 Integer 转化函数<br/>
+     * 如果目标对象满足 {@link ParameterHelper#isEmpty(Object)} == true<br/>
+     * 目标对象将被转化为 null
+     *
+     * @param targetName 目标对象名称
+     * @param target     目标对象
+     * @return 转化后的数据
+     */
+    default Integer parseInteger(String targetName, Object target) {
+        return parseInteger(target, unexpectedObject("value", target, targetName, Integer.class.getSimpleName()));
+    }
+
+    /**
+     * 默认的 Integer 转化函数<br/>
+     * 如果目标对象满足 {@link ParameterHelper#isEmpty(Object)} == true<br/>
+     * 目标对象将被转化为 null
+     *
+     * @param target       目标对象
+     * @param errorMessage 不符合预期时的完整异常提示信息
+     * @return 转化后的数据
+     */
+    default Integer parseInteger(Object target, String errorMessage) {
+        if (isEmpty(target)) {
+            return null;
+        }
+
+        Integer result = null;
+        try {
+            if (target instanceof Integer) {
+                result = (Integer) target;
+            } else if (target instanceof Number) {
+                result = ((Number) target).intValue();
+            } else {
+                result = Integer.valueOf(target.toString());
+            }
+        } catch (NumberFormatException e) {
+            hookUnexpectedEvent(errorMessage, e);
+        }
+        return result;
+    }
+
+    /**
      * 转化目标为 (允许为空)
      *
      * @param targetName 目标对象名称(用于输出默认异常信息)

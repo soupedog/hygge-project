@@ -295,6 +295,96 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
+    public Integer integerFormat(String targetName, Object target) {
+        Integer result = parseInteger(targetName, target);
+        return hookInteger(result);
+    }
+
+    @Override
+    public int integerFormatOfNullable(String targetName, Object target, int defaultValue) {
+        Integer result = parseInteger(targetName, target);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookInteger(result);
+    }
+
+    @Override
+    public int integerFormat(Object target, int defaultValue, String errorMessage) {
+        Integer result = parseInteger(target, errorMessage);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookInteger(result);
+    }
+
+    @Override
+    public Integer integerFormat(String targetName, Object target, int min, int max) {
+        Integer result = parseInteger(targetName, target);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Integer.class.getSimpleName(), min, max), null);
+        }
+        return hookInteger(result);
+    }
+
+    @Override
+    public Integer integerFormat(Object target, int min, int max, String errorMessage) {
+        Integer result = parseInteger(target, errorMessage);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookInteger(result);
+    }
+
+    @Override
+    public Integer integerFormatNotEmpty(String targetName, Object target) {
+        Integer result = parseInteger(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        return hookInteger(result);
+    }
+
+    @Override
+    public Integer integerFormatNotEmpty(Object target, String errorMessage) {
+        Integer result = parseInteger(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookInteger(result);
+    }
+
+    @Override
+    public Integer integerFormatNotEmpty(String targetName, Object target, int min, int max) {
+        Integer result = parseInteger(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Integer.class.getSimpleName(), min, max), null);
+        }
+        return hookInteger(result);
+    }
+
+    @Override
+    public Integer integerFormatNotEmpty(Object target, int min, int max, String errorMessage) {
+        Integer result = parseInteger(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookInteger(result);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;
