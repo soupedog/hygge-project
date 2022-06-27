@@ -115,6 +115,96 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
+    public Byte byteFormat(String targetName, Object target) {
+        Byte result = parseByte(targetName, target);
+        return hookByte(result);
+    }
+
+    @Override
+    public byte byteFormatOfNullable(String targetName, Object target, byte defaultValue) {
+        Byte result = parseByte(targetName, target);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookByte(result);
+    }
+
+    @Override
+    public byte byteFormatOfNullable(Object target, byte defaultValue, String errorMessage) {
+        Byte result = parseByte(target, errorMessage);
+
+        if (result == null) {
+            result = defaultValue;
+        }
+        return hookByte(result);
+    }
+
+    @Override
+    public Byte byteFormat(String targetName, Object target, byte min, byte max) {
+        Byte result = parseByte(targetName, target);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Byte.class.getSimpleName(), min, max), null);
+        }
+        return hookByte(result);
+    }
+
+    @Override
+    public Byte byteFormat(Object target, byte min, byte max, String errorMessage) {
+        Byte result = parseByte(target, errorMessage);
+
+        boolean notNull = result != null;
+        if (notNull && (result < min || result > max)) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookByte(result);
+    }
+
+    @Override
+    public Byte byteFormatNotEmpty(String targetName, Object target) {
+        Byte result = parseByte(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        return hookByte(result);
+    }
+
+    @Override
+    public Byte byteFormatNotEmpty(Object target, String errorMessage) {
+        Byte result = parseByte(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        return hookByte(result);
+    }
+
+    @Override
+    public Byte byteFormatNotEmpty(String targetName, Object target, byte min, byte max) {
+        Byte result = parseByte(targetName, target);
+
+        objectNotNull(targetName, result);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(unexpectedNumberValue(result, targetName, Byte.class.getSimpleName(), min, max), null);
+        }
+        return hookByte(result);
+    }
+
+    @Override
+    public Byte byteFormatNotEmpty(Object target, byte min, byte max, String errorMessage) {
+        Byte result = parseByte(target, errorMessage);
+
+        objectNotNull(result, errorMessage);
+
+        if (result < min || result > max) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookByte(result);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;

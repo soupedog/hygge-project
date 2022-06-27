@@ -394,7 +394,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @return 转化成 Byte 的结果
      */
     byte byteFormatOfNullable(String targetName, Object target, byte defaultValue);
@@ -403,7 +403,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Byte(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Byte 的结果
      */
@@ -485,7 +485,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @return 转化成 Short 的结果
      */
     short shortFormatOfNullable(String targetName, Object target, short defaultValue);
@@ -494,7 +494,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Short(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Short 的结果
      */
@@ -576,7 +576,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @return 转化成 Integer 的结果
      */
     int integerFormatOfNullable(String targetName, Object target, int defaultValue);
@@ -585,7 +585,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Integer(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Integer 的结果
      */
@@ -667,7 +667,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @return 转化成 Long 的结果
      */
     long longFormatOfNullable(String targetName, Object target, long defaultValue);
@@ -676,7 +676,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Long(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Long 的结果
      */
@@ -758,7 +758,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @return 转化成 Float 的结果
      */
     float floatFormatOfNullable(String targetName, Object target, float defaultValue);
@@ -767,7 +767,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Float(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Float 的结果
      */
@@ -849,7 +849,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @return 转化成 Double 的结果
      */
     double doubleFormatOfNullable(String targetName, Object target, double defaultValue);
@@ -858,7 +858,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Double(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param defaultValue 默认值。目标对象转化值满足 {@link ParameterHelper#isEmpty(Object)} == true 时，用该值进行替换。
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Double 的结果
      */
