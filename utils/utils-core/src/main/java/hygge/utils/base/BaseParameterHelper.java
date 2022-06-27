@@ -14,6 +14,107 @@ import java.util.Scanner;
  */
 public abstract class BaseParameterHelper implements ParameterHelper {
     @Override
+    public String string(Object target) {
+        if (isEmpty(target)) {
+            return hookString(null);
+        }
+        return hookString(target.toString());
+    }
+
+    @Override
+    public String stringOfNullable(Object target, String defaultValue) {
+        if (isEmpty(target)) {
+            return hookString(defaultValue);
+        }
+        return hookString(target.toString());
+    }
+
+    @Override
+    public String string(String targetName, Object target, int minLength, int maxLength) {
+        String resultTemp = null;
+        if (isEmpty(target)) {
+            if (0 < minLength) {
+                hookUnexpectedEvent(
+                        unexpectedStringLength(target == null ? null : target.toString(),
+                                targetName,
+                                minLength,
+                                maxLength),
+                        null);
+            }
+        } else {
+            resultTemp = target.toString();
+            int resultLength = resultTemp.length();
+
+            if (resultLength < minLength || resultLength > maxLength) {
+                hookUnexpectedEvent(unexpectedStringLength(resultTemp, targetName, minLength, maxLength),
+                        null);
+            }
+        }
+        return hookString(resultTemp);
+    }
+
+    @Override
+    public String string(Object target, int minLength, int maxLength, String errorMessage) {
+        String resultTemp = null;
+        if (isEmpty(target)) {
+            if (0 < minLength) {
+                hookUnexpectedEvent(errorMessage, null);
+            }
+        } else {
+            resultTemp = target.toString();
+            int resultLength = resultTemp.length();
+
+            if (resultLength < minLength || resultLength > maxLength) {
+                hookUnexpectedEvent(errorMessage, null);
+            }
+        }
+        return hookString(resultTemp);
+    }
+
+    @Override
+    public String stringNotEmpty(String targetName, Object target) {
+        notEmpty(targetName, target);
+
+        String resultTemp = target.toString();
+        return hookString(resultTemp);
+    }
+
+    @Override
+    public String stringNotEmpty(Object target, String errorMessage) {
+        notEmpty(target, errorMessage);
+
+        String resultTemp = target.toString();
+        return hookString(resultTemp);
+    }
+
+    @Override
+    public String stringNotEmpty(String targetName, Object target, int minLength, int maxLength) {
+        notEmpty(targetName, target);
+
+        String resultTemp = target.toString();
+        int resultLength = resultTemp.length();
+
+        if (resultLength < minLength || resultLength > maxLength) {
+            hookUnexpectedEvent(unexpectedStringLength(resultTemp, targetName, minLength, maxLength),
+                    null);
+        }
+        return hookString(resultTemp);
+    }
+
+    @Override
+    public String stringNotEmpty(Object target, int minLength, int maxLength, String errorMessage) {
+        notEmpty(target, errorMessage);
+
+        String resultTemp = target.toString();
+        int resultTempLength = resultTemp.length();
+
+        if (resultTempLength < minLength || resultTempLength > maxLength) {
+            hookUnexpectedEvent(errorMessage, null);
+        }
+        return hookString(resultTemp);
+    }
+
+    @Override
     public String upperCaseFirstLetter(String target) {
         if (target == null) {
             return null;
