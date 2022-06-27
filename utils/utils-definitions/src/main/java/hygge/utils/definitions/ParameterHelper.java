@@ -32,7 +32,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
     /**
      * 默认的异常处理函数
      *
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @param throwable    触发非预期事件的异常(可能为空)
      * @throws ParameterRuntimeException 参数非预期异常
      */
@@ -56,7 +56,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 目标对象为 null 则触发非预期事件
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      */
     default void objectNotNull(Object target, String errorMessage) {
         if (target == null) {
@@ -95,7 +95,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
     /**
      * 目标对象是否为空<br/>
      * <p/>
-     * 下列内容被视为空：
+     * 下列内容被视为空：<br/>
      * null<br/>
      * {@link String#trim()} 操作之后 {@link String#length()} 为 0 的字符串<br/>
      * {@link Collection#size()} 为 0 的 Collection<br/>
@@ -134,7 +134,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 目标对象是否全部不为空<br/>
-     * 是否每一个对象都满足 {@link ParameterHelper#isNotEmpty(Object)}
+     * 是否每一个对象都满足 {@linkplain ParameterHelper#isNotEmpty(Object)} == true
      *
      * @param targetArray 被验证的目标
      * @return 目标对象是否全部不为空
@@ -150,7 +150,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 目标对象是否全部为空<br/>
-     * 是否每一个对象都满足 {@link ParameterHelper#isEmpty(Object)}
+     * 是否每一个对象都满足 {@link ParameterHelper#isEmpty(Object)} == true
      *
      * @param targetArray 被验证的目标
      * @return 目标对象是否全部为空
@@ -188,7 +188,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 验证目标不可为空<br/>
-     * {@link ParameterHelper#isEmpty(Object) == true} 则触发非预期事件
+     * {@link ParameterHelper#isEmpty(Object)} == true 则触发非预期事件
      *
      * @param targetName 目标对象名称(用于输出默认异常信息)
      * @param target     被验证的目标
@@ -199,10 +199,10 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 验证目标不可为空<br/>
-     * {@link ParameterHelper#isEmpty(Object) == true} 则触发非预期事件
+     * {@link ParameterHelper#isEmpty(Object)} == true 则触发非预期事件
      *
      * @param target       被验证的目标
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      */
     default void notEmpty(Object target, String errorMessage) {
         if (isEmpty(target)) {
@@ -310,7 +310,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 转化目标为 String<br/>
-     * 如果目标 {@link ParameterHelper#isEmpty(Object)} 为真，则使用默认值替换，否则返回目标对象本身
+     * 如果目标 {@link ParameterHelper#isEmpty(Object)} == true，则使用默认值替换，否则返回目标对象本身
      *
      * @param target       目标对象
      * @param defaultValue 默认值
@@ -335,7 +335,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param minLength    字符串最小长度
      * @param maxLength    字符串最大长度
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 String 的结果
      */
     String string(Object target, int minLength, int maxLength, String errorMessage);
@@ -353,7 +353,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 String(不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 String 的结果
      */
     String stringNotEmpty(Object target, String errorMessage);
@@ -375,7 +375,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param minLength    最小字符串长度
      * @param maxLength    最大字符串长度
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 String 的结果
      */
     String stringNotEmpty(Object target, int minLength, int maxLength, String errorMessage);
@@ -394,20 +394,20 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
      * @return 转化成 Byte 的结果
      */
-    Byte byteFormatOfNullable(String targetName, Object target, byte defaultValue);
+    byte byteFormatOfNullable(String targetName, Object target, byte defaultValue);
 
     /**
      * 转化目标为 Byte(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Byte 的结果
      */
-    Byte byteFormatOfNullable(Object target, byte defaultValue, String errorMessage);
+    byte byteFormatOfNullable(Object target, byte defaultValue, String errorMessage);
 
     /**
      * 转化目标为 Byte(允许为空)，且对其值进行限制(闭区间)
@@ -426,7 +426,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Byte 的结果
      */
     Byte byteFormat(Object target, byte min, byte max, String errorMessage);
@@ -444,7 +444,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Byte(不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Byte 的结果
      */
     Byte byteFormatNotEmpty(Object target, String errorMessage);
@@ -466,7 +466,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Byte 的结果
      */
     Byte byteFormatNotEmpty(Object target, byte min, byte max, String errorMessage);
@@ -485,20 +485,20 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
      * @return 转化成 Short 的结果
      */
-    Short shortFormatOfNullable(String targetName, Object target, short defaultValue);
+    short shortFormatOfNullable(String targetName, Object target, short defaultValue);
 
     /**
      * 转化目标为 Short(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Short 的结果
      */
-    Short shortFormat(Object target, short defaultValue, String errorMessage);
+    short shortFormat(Object target, short defaultValue, String errorMessage);
 
     /**
      * 转化目标为 Short(允许为空)，且对其值进行限制(闭区间)
@@ -517,7 +517,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Short 的结果
      */
     Short shortFormat(Object target, short min, short max, String errorMessage);
@@ -535,7 +535,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Short(不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Short 的结果
      */
     Short shortFormatNotEmpty(Object target, String errorMessage);
@@ -557,7 +557,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Short 的结果
      */
     Short shortFormatNotEmpty(Object target, short min, short max, String errorMessage);
@@ -576,20 +576,20 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
      * @return 转化成 Integer 的结果
      */
-    Integer integerFormatOfNullable(String targetName, Object target, int defaultValue);
+    int integerFormatOfNullable(String targetName, Object target, int defaultValue);
 
     /**
      * 转化目标为 Integer(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Integer 的结果
      */
-    Integer integerFormat(Object target, int defaultValue, String errorMessage);
+    int integerFormat(Object target, int defaultValue, String errorMessage);
 
     /**
      * 转化目标为 Integer(允许为空)，且对其值进行限制(闭区间)
@@ -608,7 +608,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Integer 的结果
      */
     Integer integerFormat(Object target, int min, int max, String errorMessage);
@@ -626,7 +626,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Integer(不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Integer 的结果
      */
     Integer integerFormatNotEmpty(Object target, String errorMessage);
@@ -648,7 +648,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Integer 的结果
      */
     Integer integerFormatNotEmpty(Object target, int min, int max, String errorMessage);
@@ -667,20 +667,20 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
      * @return 转化成 Long 的结果
      */
-    Long longFormatOfNullable(String targetName, Object target, long defaultValue);
+    long longFormatOfNullable(String targetName, Object target, long defaultValue);
 
     /**
      * 转化目标为 Long(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Long 的结果
      */
-    Long longFormat(Object target, long defaultValue, String errorMessage);
+    long longFormat(Object target, long defaultValue, String errorMessage);
 
     /**
      * 转化目标为 Long(允许为空)，且对其值进行限制(闭区间)
@@ -699,7 +699,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Long 的结果
      */
     Long longFormat(Object target, long min, long max, String errorMessage);
@@ -717,7 +717,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Long(不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Long 的结果
      */
     Long longFormatNotEmpty(Object target, String errorMessage);
@@ -739,7 +739,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Long 的结果
      */
     Long longFormatNotEmpty(Object target, long min, long max, String errorMessage);
@@ -758,20 +758,20 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
      * @return 转化成 Float 的结果
      */
-    Float floatFormatOfNullable(String targetName, Object target, float defaultValue);
+    float floatFormatOfNullable(String targetName, Object target, float defaultValue);
 
     /**
      * 转化目标为 Float(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Float 的结果
      */
-    Float floatFormat(Object target, float defaultValue, String errorMessage);
+    float floatFormat(Object target, float defaultValue, String errorMessage);
 
     /**
      * 转化目标为 Float(允许为空)，且对其值进行限制(闭区间)
@@ -790,7 +790,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Float 的结果
      */
     Float floatFormat(Object target, float min, float max, String errorMessage);
@@ -808,7 +808,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Float(不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Float 的结果
      */
     Float floatFormatNotEmpty(Object target, String errorMessage);
@@ -830,7 +830,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Float 的结果
      */
     Float floatFormatNotEmpty(Object target, float min, float max, String errorMessage);
@@ -849,20 +849,20 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
      * @return 转化成 Double 的结果
      */
-    Double doubleFormatOfNullable(String targetName, Object target, double defaultValue);
+    double doubleFormatOfNullable(String targetName, Object target, double defaultValue);
 
     /**
      * 转化目标为 Double(允许为空)
      *
      * @param target       目标对象
-     * @param defaultValue 入参为 null 或 空字符串时的默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param defaultValue 默认值。目标对象为空时，用该值进行替换 {@link ParameterHelper#isEmpty(Object)}
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Double 的结果
      */
-    Double doubleFormatOfNullable(Object target, double defaultValue, String errorMessage);
+    double doubleFormatOfNullable(Object target, double defaultValue, String errorMessage);
 
     /**
      * 转化目标为 Double(允许为空)，且对其值进行限制(闭区间)
@@ -881,7 +881,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Double 的结果
      */
     Double doubleFormat(Object target, double min, double max, String errorMessage);
@@ -899,7 +899,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 Double(不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Double 的结果
      */
     Double doubleFormatNotEmpty(Object target, String errorMessage);
@@ -921,7 +921,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Double 的结果
      */
     Double doubleFormatNotEmpty(Object target, double min, double max, String errorMessage);
@@ -956,7 +956,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param defaultValue 默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
     BigDecimal bigDecimalFormatOfNullable(String target, int scale, RoundingMode roundingMode, BigDecimal defaultValue, String errorMessage);
@@ -983,7 +983,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param roundingMode 精度保留模式
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
     BigDecimal bigDecimalFormat(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage);
@@ -1006,7 +1006,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target       目标对象
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
     BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, String errorMessage);
@@ -1034,7 +1034,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param roundingMode 精度保留模式
      * @param min          最小值
      * @param max          最大值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
     BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage);
@@ -1053,10 +1053,11 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 默认的 Byte 转化函数<br/>
-     * PS:目标对象为 null 或空字符串将转化为 null
+     * 如果目标对象满足 {@link ParameterHelper#isEmpty(Object)} == true<br/>
+     * 目标对象将被转化为 null
      *
      * @param target       目标对象
-     * @param errorMessage 完整错误提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化后的数据
      */
     default Byte parseByte(Object target, String errorMessage) {
@@ -1081,7 +1082,8 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 默认的 Short 转化函数<br/>
-     * PS:目标对象为 null 或空字符串将转化为 null
+     * 如果目标对象满足 {@link ParameterHelper#isEmpty(Object)} == true<br/>
+     * 目标对象将被转化为 null
      *
      * @param targetName 目标对象名称
      * @param target     目标对象
@@ -1093,10 +1095,11 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
     /**
      * 默认的 Short 转化函数<br/>
-     * PS:目标对象为 null 或空字符串将转化为 null
+     * 如果目标对象满足 {@link ParameterHelper#isEmpty(Object)} == true<br/>
+     * 目标对象将被转化为 null
      *
      * @param target       目标对象
-     * @param errorMessage 完整错误提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化后的数据
      */
     default Short parseShort(Object target, String errorMessage) {
@@ -1143,7 +1146,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      *
      * @param target       目标对象
      * @param defaultValue 默认值
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Boolean 的结果
      */
     Boolean booleanFormatOfNullable(Object target, Boolean defaultValue, String errorMessage);
@@ -1161,7 +1164,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 (不许为空)
      *
      * @param target       目标对象
-     * @param errorMessage 不符合预期时的异常提示信息
+     * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Boolean 的结果
      */
     Boolean booleanFormatNotEmpty(Object target, String errorMessage);
@@ -1225,22 +1228,26 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
     StringBuilder removeStringFormTail(StringBuilder target, String string, int time);
 
     /**
-     * 逐行扫描，从数据源中截取开始标记、结束标记之间的全部行内容<p/>
+     * 逐行扫描，从数据源中截取开始标记、结束标记之间的全部行内容<br/>
+     * 数据源：
      * <pre>
-     *     其他内容
-     *     start>
-     *     测试内容
-     *     <end
-     *     其他内容
+     *     asdzxcasfasd
+     *     S-
+     *     textContent
+     *     -E
+     *     wersgsdfasda
      * </pre>
+     * <p>
+     * 执行函数：<br/>
      * <pre>
-     *     getTextFileSpeContent(source, "start>", "<end")=
+     *     getTextFileSpeContent(source, "S-", "-E")
      * </pre>
-     * 包括缩进内容
+     * <p>
+     * 结果：<br/>
      * <pre>
-     *     start>
-     *     测试内容
-     *     <end
+     *     S-
+     *     textContent
+     *     -E
      * </pre>
      *
      * @param source    待提取内容的数据源
