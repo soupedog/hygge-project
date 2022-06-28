@@ -53,7 +53,7 @@ public enum DeploymentEnvironmentEnum {
                 return UAT;
             case 300:
                 return SIM;
-            case 400:
+            case 666:
                 return PROD;
             default:
                 throw new IllegalArgumentException(String.format("%s fall to resolve index of %d.", DeploymentEnvironmentEnum.class.getName(), index));
