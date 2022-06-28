@@ -27,7 +27,7 @@ public enum DeploymentEnvironmentEnum {
     /**
      * Production
      */
-    PROD(666, "PROD");
+    PROD(888, "PROD");
 
     DeploymentEnvironmentEnum(int privilegeLevel, String description) {
         this.privilegeLevel = privilegeLevel;
@@ -37,14 +37,14 @@ public enum DeploymentEnvironmentEnum {
     /**
      * 环境权限值
      */
-    private int privilegeLevel;
+    private final int privilegeLevel;
     /**
      * 描述
      */
-    private String description;
+    private final String description;
 
-    public static DeploymentEnvironmentEnum parse(int index) {
-        switch (index) {
+    public static DeploymentEnvironmentEnum parse(int privilegeLevel) {
+        switch (privilegeLevel) {
             case 0:
                 return DEV;
             case 100:
@@ -53,10 +53,10 @@ public enum DeploymentEnvironmentEnum {
                 return UAT;
             case 300:
                 return SIM;
-            case 666:
+            case 888:
                 return PROD;
             default:
-                throw new IllegalArgumentException(String.format("%s fall to resolve index of %d.", DeploymentEnvironmentEnum.class.getName(), index));
+                throw new IllegalArgumentException(String.format("%s fall to resolve privilegeLevel of %d.", DeploymentEnvironmentEnum.class.getName(), privilegeLevel));
         }
     }
 

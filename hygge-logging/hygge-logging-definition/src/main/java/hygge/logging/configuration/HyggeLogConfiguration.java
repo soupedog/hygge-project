@@ -108,7 +108,6 @@ public class HyggeLogConfiguration {
 
         this.enable = parameterHelper.booleanFormat(ConfigKey.ENABLE.getKey(), configurableEnvironment.getProperty(ConfigKey.ENABLE.getKey()));
 
-        // 加载需要激活 Hygge 业务类日志的目标路径
         Binder binder = Binder.get(configurableEnvironment);
         this.hyggeScopePaths = binder.bind(HYGGE_SCOPE_PATH_PREFIX, HYGGE_SCOPE_PATH_MAPPING).orElseGet(Collections::emptyMap);
 
@@ -146,7 +145,7 @@ public class HyggeLogConfiguration {
         if (OutputModeEnum.FILE.equals(outputMode)) {
             this.filePath = parameterHelper.stringNotEmpty("filePath", (Object) filePath);
             this.fileMaxSize = parameterHelper.stringOfNullable(fileMaxSize, "2MB");
-            // 默认 0 点切换文件存储
+            // 默认 0 点截断日志文件
             this.cronTrigger = parameterHelper.stringOfNullable(cronTrigger, "0 0 0 * * ? ");
         }
 

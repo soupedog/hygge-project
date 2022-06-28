@@ -21,9 +21,12 @@ public class HyggeSpringContextInitListener implements ApplicationListener<Appli
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent applicationEnvironmentPreparedEvent) {
         ConfigurableEnvironment configurableEnvironment = applicationEnvironmentPreparedEvent.getEnvironment();
-        String applicationName = configurableEnvironment.getProperty("spring.application.name");
 
-        HyggeSpringContext.setAppName(parameterHelper.stringNotEmpty("spring.application.name", (Object) applicationName));
+        String applicationName = parameterHelper.stringNotEmpty(
+                "spring.application.name",
+                (Object) configurableEnvironment.getProperty("spring.application.name")
+        );
+        HyggeSpringContext.setAppName(applicationName);
         HyggeSpringContext.setDeploymentEnvironment(analyzeEnvironment(configurableEnvironment.getActiveProfiles()));
         HyggeSpringContext.setConfigurableEnvironment(configurableEnvironment);
     }

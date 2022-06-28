@@ -5,6 +5,7 @@ package hygge.commons.templates.core;
  *
  * @author Xavier
  * @date 2022/6/25
+ * @since 1.0
  */
 public interface WithName {
     /**
