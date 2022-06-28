@@ -752,7 +752,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public Boolean booleanFormatOfNullable(String targetName, Object target, Boolean defaultValue) {
+    public boolean booleanFormatOfNullable(String targetName, Object target, boolean defaultValue) {
         Boolean result = parseBoolean(targetName, target);
         if (result == null) {
             result = defaultValue;
@@ -761,7 +761,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public Boolean booleanFormatOfNullable(Object target, Boolean defaultValue, String errorMessage) {
+    public boolean booleanFormatOfNullable(Object target, boolean defaultValue, String errorMessage) {
         Boolean result = parseBoolean(target, errorMessage);
         if (result == null) {
             result = defaultValue;
@@ -770,7 +770,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public Boolean booleanFormatNotEmpty(String targetName, Object target) {
+    public boolean booleanFormatNotEmpty(String targetName, Object target) {
         Boolean result = parseBoolean(targetName, target);
 
         objectNotNull(targetName, result);
@@ -779,7 +779,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public Boolean booleanFormatNotEmpty(Object target, String errorMessage) {
+    public boolean booleanFormatNotEmpty(Object target, String errorMessage) {
         Boolean result = parseBoolean(target, errorMessage);
 
         objectNotNull(result, errorMessage);

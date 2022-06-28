@@ -17,7 +17,7 @@ public class HyggeSpringContext {
      *
      * @see HyggeSpringContextInitListener
      */
-    private static DeploymentEnvironmentEnum environmentModeEnum;
+    private static volatile DeploymentEnvironmentEnum deploymentEnvironment;
     /**
      * 应用名称
      *
@@ -31,12 +31,12 @@ public class HyggeSpringContext {
      */
     private static ConfigurableEnvironment configurableEnvironment;
 
-    public static DeploymentEnvironmentEnum getEnvironmentModeEnum() {
-        return environmentModeEnum;
+    public static DeploymentEnvironmentEnum getDeploymentEnvironment() {
+        return deploymentEnvironment;
     }
 
-    public static void setEnvironmentModeEnum(DeploymentEnvironmentEnum environmentModeEnum) {
-        HyggeSpringContext.environmentModeEnum = environmentModeEnum;
+    public static void setDeploymentEnvironment(DeploymentEnvironmentEnum deploymentEnvironment) {
+        HyggeSpringContext.deploymentEnvironment = deploymentEnvironment;
     }
 
     public static String getAppName() {
@@ -57,7 +57,7 @@ public class HyggeSpringContext {
 
     public static String toJsonVale() {
         return String.format("{\"environmentModeEnum\":\"%s\",\"appName\":\"%s\"}",
-                environmentModeEnum,
+                deploymentEnvironment,
                 appName);
     }
 

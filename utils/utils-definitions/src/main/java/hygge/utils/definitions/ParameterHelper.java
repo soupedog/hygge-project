@@ -1418,7 +1418,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param defaultValue 默认值
      * @return 转化成 Boolean 的结果
      */
-    Boolean booleanFormatOfNullable(String targetName, Object target, Boolean defaultValue);
+    boolean booleanFormatOfNullable(String targetName, Object target, boolean defaultValue);
 
     /**
      * 转化目标为 (允许为空)
@@ -1428,7 +1428,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Boolean 的结果
      */
-    Boolean booleanFormatOfNullable(Object target, Boolean defaultValue, String errorMessage);
+    boolean booleanFormatOfNullable(Object target, boolean defaultValue, String errorMessage);
 
     /**
      * 转化目标为 (不许为空)
@@ -1437,7 +1437,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target     目标对象
      * @return 转化成 Boolean 的结果
      */
-    Boolean booleanFormatNotEmpty(String targetName, Object target);
+    boolean booleanFormatNotEmpty(String targetName, Object target);
 
     /**
      * 转化目标为 (不许为空)
@@ -1446,7 +1446,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 Boolean 的结果
      */
-    Boolean booleanFormatNotEmpty(Object target, String errorMessage);
+    boolean booleanFormatNotEmpty(Object target, String errorMessage);
 
     /**
      * 从 target 左侧填充若干个 fillingItem 直至长度到达 totalLength

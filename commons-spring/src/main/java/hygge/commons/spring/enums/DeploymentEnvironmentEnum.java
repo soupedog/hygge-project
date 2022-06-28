@@ -43,7 +43,7 @@ public enum DeploymentEnvironmentEnum {
      */
     private String description;
 
-    public static DeploymentEnvironmentEnum valueOf(int index) {
+    public static DeploymentEnvironmentEnum parse(int index) {
         switch (index) {
             case 0:
                 return DEV;
@@ -58,6 +58,10 @@ public enum DeploymentEnvironmentEnum {
             default:
                 throw new IllegalArgumentException(String.format("%s fall to resolve index of %d.", DeploymentEnvironmentEnum.class.getName(), index));
         }
+    }
+
+    public int getPrivilegeLevel() {
+        return privilegeLevel;
     }
 
     public String getDescription() {
