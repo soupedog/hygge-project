@@ -13,6 +13,7 @@
         <module>commons</module>
         <module>utils</module>
         <module>hygge-logging</module>
+        <module>commons-spring</module>
     </modules>
 
     <properties>
@@ -45,6 +46,11 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
             <dependency>
