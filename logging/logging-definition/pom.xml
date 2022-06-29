@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.hyggeproject</groupId>
-            <artifactId>commons-spring</artifactId>
+            <artifactId>commons-spring-boot</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

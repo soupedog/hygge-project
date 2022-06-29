@@ -11,9 +11,9 @@
 
     <modules>
         <module>commons</module>
-        <module>utils</module>
+        <module>commons-spring-boot</module>
         <module>logging</module>
-        <module>commons-spring</module>
+        <module>utils</module>
     </modules>
 
     <properties>
