@@ -10,11 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
-    <artifactId>hygge-logging</artifactId>
+    <artifactId>logging</artifactId>
 
     <modules>
-        <module>hygge-logging-definition</module>
-        <module>hygge-logging-log4j</module>
+        <module>logging-definition</module>
+        <module>logging-log4j</module>
     </modules>
 
     <properties>

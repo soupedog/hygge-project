@@ -12,7 +12,7 @@
     <modules>
         <module>commons</module>
         <module>utils</module>
-        <module>hygge-logging</module>
+        <module>logging</module>
         <module>commons-spring</module>
     </modules>
 
