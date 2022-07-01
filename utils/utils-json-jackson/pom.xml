@@ -19,7 +19,12 @@
     <dependencies>
         <dependency>
             <groupId>io.github.hyggeproject</groupId>
-            <artifactId>utils-definitions</artifactId>
+            <artifactId>utils-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.hyggeproject</groupId>
+            <artifactId>utils-json-jackson</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

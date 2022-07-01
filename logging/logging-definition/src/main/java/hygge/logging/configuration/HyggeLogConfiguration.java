@@ -47,7 +47,7 @@ public abstract class HyggeLogConfiguration {
     /**
      * HyggeLog 是否启动
      */
-    protected boolean enable;
+    protected Boolean enable;
     /**
      * hygge 包路径范围标记<br/>
      * key : path<br/>
@@ -57,16 +57,16 @@ public abstract class HyggeLogConfiguration {
     /**
      * 是否覆写 Root Logger
      */
-    protected boolean enableRootOverride;
+    protected Boolean enableRootOverride;
     /**
      * 每条日志整体作为 json 字符串<br/>
      * 显式指定 {@link HyggeLogConfiguration#rootPattern} / {@link HyggeLogConfiguration#hyggePattern} 时，该参数无意义
      */
-    protected boolean enableJsonType;
+    protected Boolean enableJsonType;
     /**
      * 日志模板是否启用彩色
      */
-    protected boolean enableColorful;
+    protected Boolean enableColorful;
     /**
      * root pattern
      */
@@ -110,7 +110,7 @@ public abstract class HyggeLogConfiguration {
      * 共享属性的读取
      */
     protected void sharedRead(ConfigurableEnvironment configurableEnvironment) {
-        this.projectName = configurableEnvironment.getProperty(ConfigKey.PROJECT_NAME.getKey());
+        this.projectName = configurableEnvironment.getProperty(ConfigKey.PROJECT_NAME.getKey(), "hygge");
         this.appName = configurableEnvironment.getProperty(ConfigKey.APP_NAME.getKey(), HyggeSpringContext.getAppName());
         this.version = configurableEnvironment.getProperty(ConfigKey.VERSION.getKey());
 
@@ -185,7 +185,7 @@ public abstract class HyggeLogConfiguration {
         /**
          * hygge 包路径范围
          */
-        HYGGE_SCOPE_PATHS("hygge.logging.hyggeScope.paths"),
+        HYGGE_SCOPE_PATHS("hygge.logging.scope.paths"),
         /**
          * 日志模板是否启用彩色
          */

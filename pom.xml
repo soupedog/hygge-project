@@ -14,10 +14,11 @@
         <module>commons-spring-boot</module>
         <module>logging</module>
         <module>utils</module>
+        <module>web-toolkit</module>
     </modules>
 
     <properties>
-        <hygge.version>1.0-SNAPSHOT</hygge.version>
+        <hygge.version>0.0.1-SNAPSHOT</hygge.version>
         <spring.boot.version>2.7.0</spring.boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -51,6 +52,21 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
             <dependency>

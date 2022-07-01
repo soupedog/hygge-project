@@ -2,7 +2,7 @@ package hygge.utils.lg4j.impl;
 
 import hygge.logging.configuration.HyggeLogConfiguration;
 import hygge.logging.enums.ConverterModeEnum;
-import hygge.utils.definitions.LogPatterHelper;
+import hygge.utils.definitions.HyggeLogPatterHelper;
 
 import static hygge.logging.enums.ConverterModeEnum.ESCAPE;
 import static hygge.logging.enums.ConverterModeEnum.JSON_FRIENDLY;
@@ -14,7 +14,7 @@ import static hygge.logging.enums.ConverterModeEnum.JSON_FRIENDLY;
  * @date 2022/6/28
  * @since 1.0
  */
-public class DefaultLogPatterHelper implements LogPatterHelper {
+public class HyggeLog4JPatterHelper implements HyggeLogPatterHelper {
     /**
      * 默认的 hygge 日志模板
      */
@@ -33,21 +33,26 @@ public class DefaultLogPatterHelper implements LogPatterHelper {
     public static final String ROOT_DEFAULT_COLORFUL_PATTERN = "%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx";
 
     @Override
-    public String createPatter(HyggeLogConfiguration configuration, boolean hyggeScope, boolean enableColorful, boolean enableJsonType, ConverterModeEnum converterMode) {
+    public String createPatter(HyggeLogConfiguration configuration, boolean hyggeScope) {
         String finalPatter;
 
-        if (enableJsonType) {
-            // TODO json Template
-            finalPatter = "TODO";
+        if (configuration.isEnableJsonType()) {
+            HyggeLog4jJsonPatterHelper hyggeLog4jJsonPatterHelper = new HyggeLog4jJsonPatterHelper(
+                    hyggeScope ? "hygge" : "root",
+                    configuration.getProjectName(),
+                    configuration.getAppName(),
+                    configuration.getVersion()
+            );
+            finalPatter = hyggeLog4jJsonPatterHelper.create(configuration.isEnableColorful(), configuration.getConverterMode());
         } else {
-            if (enableColorful) {
+            if (configuration.isEnableColorful()) {
                 finalPatter = hyggeScope ? HYGGE_DEFAULT_COLORFUL_PATTERN : ROOT_DEFAULT_COLORFUL_PATTERN;
             } else {
                 finalPatter = hyggeScope ? HYGGE_DEFAULT_PATTERN : ROOT_DEFAULT_PATTERN;
             }
         }
 
-        finalPatter = initConverter(converterMode, finalPatter);
+        finalPatter = initConverter(configuration.getConverterMode(), finalPatter);
         return finalPatter;
     }
 
