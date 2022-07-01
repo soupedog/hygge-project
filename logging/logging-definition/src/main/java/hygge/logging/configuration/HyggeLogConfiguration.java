@@ -21,7 +21,7 @@ import java.util.Map;
  * @date 2022/6/28
  * @since 1.0
  */
-public class HyggeLogConfiguration {
+public abstract class HyggeLogConfiguration {
     protected static final ParameterHelper parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
     /**
      * hygge 包路径范围配置项映射获取工具
@@ -76,21 +76,6 @@ public class HyggeLogConfiguration {
      */
     protected String hyggePattern;
     /**
-     * 自定义日志工具文件输出路径<br/>
-     * {@link HyggeLogConfiguration#outputMode} 为控制台时，该参数无意义
-     */
-    protected String filePath;
-    /**
-     * 单个日志文件最大文件大小，样例：10MB/10KB<br/>
-     * {@link HyggeLogConfiguration#outputMode} 为控制台时，该参数无意义
-     */
-    protected String fileMaxSize;
-    /**
-     * 日志文件截断触发时间 cron 表达式<br/>
-     * {@link HyggeLogConfiguration#outputMode} 为控制台时，该参数无意义
-     */
-    protected String cronTrigger;
-    /**
      * 日志输出的模式
      */
     protected OutputModeEnum outputMode;
@@ -99,9 +84,32 @@ public class HyggeLogConfiguration {
      */
     protected ConverterModeEnum converterMode;
 
-    public HyggeLogConfiguration() {
+    protected HyggeLogConfiguration() {
         ConfigurableEnvironment configurableEnvironment = HyggeSpringContext.getConfigurableEnvironment();
 
+        sharedRead(configurableEnvironment);
+
+        exclusiveRead(configurableEnvironment);
+
+        sharedCheckAndInit();
+
+        exclusiveCheckAndInit();
+    }
+
+    /**
+     * 从环境变量中读取独占属性
+     */
+    protected abstract void exclusiveRead(ConfigurableEnvironment configurableEnvironment);
+
+    /**
+     * 独占属性的检查与默认值配置
+     */
+    protected abstract void exclusiveCheckAndInit();
+
+    /**
+     * 共享属性的读取
+     */
+    protected void sharedRead(ConfigurableEnvironment configurableEnvironment) {
         this.projectName = configurableEnvironment.getProperty(ConfigKey.PROJECT_NAME.getKey());
         this.appName = configurableEnvironment.getProperty(ConfigKey.APP_NAME.getKey(), HyggeSpringContext.getAppName());
         this.version = configurableEnvironment.getProperty(ConfigKey.VERSION.getKey());
@@ -117,10 +125,6 @@ public class HyggeLogConfiguration {
         this.rootPattern = configurableEnvironment.getProperty(ConfigKey.ROOT_PATTERN.getKey());
         this.hyggePattern = configurableEnvironment.getProperty(ConfigKey.HYGGE_PATTERN.getKey());
 
-        this.filePath = configurableEnvironment.getProperty(ConfigKey.FILE_PATH.getKey());
-        this.fileMaxSize = configurableEnvironment.getProperty(ConfigKey.FILE_MAX_SIZE.getKey());
-        this.cronTrigger = configurableEnvironment.getProperty(ConfigKey.CRON_TRIGGER.getKey());
-
         if (parameterHelper.isNotEmpty(configurableEnvironment.getProperty(ConfigKey.OUTPUT_MODE.getKey()))) {
             this.outputMode = OutputModeEnum.valueOf(configurableEnvironment.getProperty(ConfigKey.OUTPUT_MODE.getKey()));
         }
@@ -128,10 +132,12 @@ public class HyggeLogConfiguration {
         if (parameterHelper.isNotEmpty(configurableEnvironment.getProperty(ConfigKey.CONVERTER_MODE.getKey()))) {
             this.converterMode = ConverterModeEnum.valueOf(configurableEnvironment.getProperty(ConfigKey.CONVERTER_MODE.getKey()));
         }
-        checkAndInit();
     }
 
-    public void checkAndInit() {
+    /**
+     * 共享属性的检查与默认值配置
+     */
+    protected void sharedCheckAndInit() {
         this.projectName = parameterHelper.stringOfNullable(this.projectName, "hygge");
         this.appName = HyggeSpringContext.getAppName();
         this.version = parameterHelper.stringOfNullable(this.version, "1.0.0");
@@ -140,14 +146,6 @@ public class HyggeLogConfiguration {
 
         this.enableRootOverride = parameterHelper.booleanFormatOfNullable(ConfigKey.ROOT_OVERRIDE.getKey(), this.enableRootOverride, true);
         this.enableJsonType = parameterHelper.booleanFormatOfNullable("simulateJsonPatter.enable", this.enableJsonType, false);
-
-        // 如果是文件输出
-        if (OutputModeEnum.FILE.equals(outputMode)) {
-            this.filePath = parameterHelper.stringNotEmpty("filePath", (Object) filePath);
-            this.fileMaxSize = parameterHelper.stringOfNullable(fileMaxSize, "2MB");
-            // 默认 0 点截断日志文件
-            this.cronTrigger = parameterHelper.stringOfNullable(cronTrigger, "0 0 0 * * ? ");
-        }
 
         // DEV 环境外默认使用
         if (HyggeSpringContext.getDeploymentEnvironment().getPrivilegeLevel() > DeploymentEnvironmentEnum.DEV.getPrivilegeLevel()) {
@@ -201,18 +199,6 @@ public class HyggeLogConfiguration {
          */
         HYGGE_PATTERN("hygge.logging.pattern.hygge"),
         /**
-         * 日志存储路径
-         */
-        FILE_PATH("hygge.logging.pattern.file.path"),
-        /**
-         * 单个日志文件最大文件大小
-         */
-        FILE_MAX_SIZE("hygge.logging.pattern.file.maxSize"),
-        /**
-         * 日志截断时间 cron 表达式
-         */
-        CRON_TRIGGER("hygge.logging.pattern.file.cron"),
-        /**
          * 每条日志整体作为 json 字符串<br/>
          * 显式指定 {@link HyggeLogConfiguration#rootPattern} / {@link HyggeLogConfiguration#hyggePattern} 时，该参数无意义
          */
@@ -225,6 +211,21 @@ public class HyggeLogConfiguration {
          * 日志内容编码模式
          */
         CONVERTER_MODE("hygge.logging.pattern.converter.mode"),
+        /**
+         * log4j 专有配置项<br/>
+         * 日志文件存储路径
+         */
+        LOG4J_FILE_PATH("hygge.logging.log4j.pattern.file.path"),
+        /**
+         * log4j 专有配置项<br/>
+         * 单个日志文件最大文件大小
+         */
+        LOG4J_FILE_MAX_SIZE("hygge.logging.log4j.pattern.file.maxSize"),
+        /**
+         * log4j 专有配置项<br/>
+         * 日志文件截断触发时间 cron 表达式
+         */
+        LOG4J_CRON_TRIGGER("hygge.logging.log4j.pattern.file.cron"),
         ;
 
         ConfigKey(String key) {
@@ -323,30 +324,6 @@ public class HyggeLogConfiguration {
 
     public void setHyggePattern(String hyggePattern) {
         this.hyggePattern = hyggePattern;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getFileMaxSize() {
-        return fileMaxSize;
-    }
-
-    public void setFileMaxSize(String fileMaxSize) {
-        this.fileMaxSize = fileMaxSize;
-    }
-
-    public String getCronTrigger() {
-        return cronTrigger;
-    }
-
-    public void setCronTrigger(String cronTrigger) {
-        this.cronTrigger = cronTrigger;
     }
 
     public OutputModeEnum getOutputMode() {

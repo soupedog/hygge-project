@@ -23,12 +23,22 @@ public enum LogConverter {
 
     private static final AggregateTranslator JSON_FRIENDLY_TRANSLATOR;
 
+    /**
+     * 将输入内容里的
+     * <pre>
+     *     "
+     *     \
+     *     \t
+     * </pre>
+     * 进行 URL 编码后输出
+     */
     public String jsonFriendlyConverter(CharSequence raw) {
         return JSON_FRIENDLY_TRANSLATOR.translate(raw);
     }
 
     static {
         final Map<CharSequence, CharSequence> jsonStringLookupMap = new HashMap<>();
+
         try {
             jsonStringLookupMap.put("\"", URLEncoder.encode("\"", StandardCharsets.UTF_8.displayName()));
             jsonStringLookupMap.put("\\", URLEncoder.encode("\\", StandardCharsets.UTF_8.displayName()));
