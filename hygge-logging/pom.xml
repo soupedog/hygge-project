@@ -10,13 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
-    <modules>
-        <module>utils-definitions</module>
-        <module>utils-core</module>
-        <module>utils-json-jackson</module>
-    </modules>
+    <artifactId>hygge-logging</artifactId>
 
-    <artifactId>utils</artifactId>
+    <modules>
+        <module>hygge-logging-definition</module>
+        <module>hygge-logging-log4j</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

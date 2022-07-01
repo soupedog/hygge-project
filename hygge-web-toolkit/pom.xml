@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>web-toolkit</artifactId>
+    <artifactId>hygge-web-toolkit</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -37,17 +37,17 @@
         </dependency>
         <dependency>
             <groupId>io.github.hyggeproject</groupId>
-            <artifactId>logging-log4j</artifactId>
+            <artifactId>hygge-logging-log4j</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hyggeproject</groupId>
-            <artifactId>utils-core</artifactId>
+            <artifactId>hygge-utils-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.hyggeproject</groupId>
-            <artifactId>utils-json-jackson</artifactId>
+            <artifactId>hygge-utils-json-jackson</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

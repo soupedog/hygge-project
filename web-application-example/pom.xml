@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.hyggeproject</groupId>
-            <artifactId>web-toolkit</artifactId>
+            <artifactId>hygge-web-toolkit</artifactId>
             <version>${hygge.version}</version>
         </dependency>
         <dependency>

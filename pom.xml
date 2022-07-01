@@ -10,11 +10,11 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <modules>
-        <module>commons</module>
-        <module>commons-spring-boot</module>
-        <module>logging</module>
-        <module>utils</module>
-        <module>web-toolkit</module>
+        <module>hygge-commons</module>
+        <module>hygge-commons-spring-boot</module>
+        <module>hygge-logging</module>
+        <module>hygge-utils</module>
+        <module>hygge-web-toolkit</module>
     </modules>
 
     <properties>
