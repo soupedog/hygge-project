@@ -5,7 +5,7 @@ import hygge.logging.enums.OutputModeEnum;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
- * Hygge 日志配置项
+ * Hygge log4j 日志配置项
  *
  * @author Xavier
  * @date 2022/7/1

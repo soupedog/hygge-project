@@ -226,6 +226,21 @@ public abstract class HyggeLogConfiguration {
          * 日志文件截断触发时间 cron 表达式
          */
         LOG4J_CRON_TRIGGER("hygge.logging.log4j.pattern.file.cron"),
+        /**
+         * logback 专有配置项<br/>
+         * 日志文件存储路径
+         */
+        LOGBACK_FILE_NAME_PATTERN("hygge.logging.logback.pattern.file.namePattern"),
+        /**
+         * logback 专有配置项<br/>
+         * 单个日志文件最大文件大小
+         */
+        LOGBACK_FILE_MAX_SIZE("hygge.logging.logback.pattern.file.maxSize"),
+        /**
+         * logback 专有配置项<br/>
+         * 日志文件保留的最长时间
+         */
+        LOGBACK_FILE_MAX_HISTORY("hygge.logging.logback.pattern.file.maxHistory"),
         ;
 
         ConfigKey(String key) {

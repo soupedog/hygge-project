@@ -15,6 +15,7 @@
     <modules>
         <module>hygge-logging-definition</module>
         <module>hygge-logging-log4j</module>
+        <module>hygge-logging-logback</module>
     </modules>
 
     <properties>

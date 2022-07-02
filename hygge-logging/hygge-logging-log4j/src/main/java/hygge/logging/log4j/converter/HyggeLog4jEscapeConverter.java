@@ -1,8 +1,8 @@
-package hygge.logging.log4j.convert;
+package hygge.logging.log4j.converter;
 
 import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.logging.enums.ConverterModeEnum;
-import hygge.logging.utils.LogConverter;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
@@ -16,33 +16,33 @@ import org.apache.logging.log4j.core.pattern.PatternParser;
 import java.util.List;
 
 /**
- * JsonString 编码工具 (对于只能识别单行字符串的组件做适配，对替换换符等特殊字符进行 URL 编码)
+ * log4j escape 转换工具
  *
  * @author Xavier
  * @date 2022/7/1
  * @see ConverterModeEnum ConverterKey 来源
  * @since 1.0
  */
-@Plugin(name = "HyggeLog4jJsonFriendlyConverter", category = PatternConverter.CATEGORY)
-@ConverterKeys({"jsonString"})
-public class HyggeLog4jJsonFriendlyConverter extends LogEventPatternConverter {
+@Plugin(name = "HyggeLog4jEscapeConverter", category = PatternConverter.CATEGORY)
+@ConverterKeys({"escape"})
+public class HyggeLog4jEscapeConverter extends LogEventPatternConverter {
     private List<PatternFormatter> formatters;
 
-    public HyggeLog4jJsonFriendlyConverter(List<PatternFormatter> formatters) {
-        super("HyggeLog4jJsonFriendlyConverter", "HyggeLog4jJsonFriendlyConverter");
+    public HyggeLog4jEscapeConverter(List<PatternFormatter> formatters) {
+        super("HyggeLog4jEscapeConverter", "HyggeLog4jEscapeConverter");
         this.formatters = formatters;
     }
 
     /**
      * @see "https://logging.apache.org/log4j/2.x/manual/plugins.html#Converters"
      */
-    public static HyggeLog4jJsonFriendlyConverter newInstance(Configuration config, String[] options) {
+    public static HyggeLog4jEscapeConverter newInstance(Configuration config, String[] options) {
         if (options == null || options.length < 1 || options[0] == null) {
-            throw new UtilRuntimeException("Fail to newInstance of HyggeLoggerPattenJsonStringConverter,options was empty.");
+            throw new UtilRuntimeException("Fail to newInstance of HyggeLoggerPattenEscapeConverter,options was empty.");
         }
         PatternParser parser = PatternLayout.createPatternParser(config);
         List<PatternFormatter> formatters = parser.parse(options[0]);
-        return new HyggeLog4jJsonFriendlyConverter(formatters);
+        return new HyggeLog4jEscapeConverter(formatters);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class HyggeLog4jJsonFriendlyConverter extends LogEventPatternConverter {
             formatter.format(event, stringBuilder);
         }
         if (stringBuilder.length() > 0) {
-            toAppendTo.append(LogConverter.INSTANCE.jsonFriendlyConverter(stringBuilder));
+            toAppendTo.append(StringEscapeUtils.escapeJava(stringBuilder.toString()));
         }
     }
 
