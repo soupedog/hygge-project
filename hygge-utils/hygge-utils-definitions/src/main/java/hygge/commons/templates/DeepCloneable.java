@@ -9,6 +9,7 @@ import hygge.utils.definitions.JsonHelper;
  *
  * @author Xavier
  * @date 2022/6/27
+ * @since 1.0
  */
 public interface DeepCloneable<T> {
 
