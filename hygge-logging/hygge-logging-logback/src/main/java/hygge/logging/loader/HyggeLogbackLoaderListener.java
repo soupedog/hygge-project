@@ -105,7 +105,7 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
 
     private void restRootLogger(LoggerContext loggerContext, Appender<ILoggingEvent> rootAppender) {
         Logger logger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-        // TODO Spring 也是 INFO 级别硬编码，但是不知道为什么 Spring 的配置项 "logging.level.root=warn" 目前无法生效
+        // 默认 root 为 info 级别
         logger.setLevel(Level.INFO);
         logger.addAppender(rootAppender);
     }
