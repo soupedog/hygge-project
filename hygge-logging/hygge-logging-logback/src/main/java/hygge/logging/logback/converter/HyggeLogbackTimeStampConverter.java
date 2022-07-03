@@ -10,8 +10,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  * @date 2022/7/3
  * @since 1.0
  */
+@SuppressWarnings("java:S110")
 public class HyggeLogbackTimeStampConverter extends DateConverter {
-
     @Override
     public String convert(ILoggingEvent le) {
         return le.getTimeStamp() + "";

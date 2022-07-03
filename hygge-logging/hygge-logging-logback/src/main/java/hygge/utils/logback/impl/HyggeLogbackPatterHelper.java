@@ -1,13 +1,9 @@
 package hygge.utils.logback.impl;
 
 import hygge.logging.configuration.HyggeLogConfiguration;
-import hygge.logging.enums.ConverterModeEnum;
 import hygge.utils.definitions.HyggeLogPatterHelper;
 
 import java.lang.management.ManagementFactory;
-
-import static hygge.logging.enums.ConverterModeEnum.ESCAPE;
-import static hygge.logging.enums.ConverterModeEnum.JSON_FRIENDLY;
 
 /**
  * 基于 logback 的 LogPatterHelper 默认实现
@@ -45,7 +41,7 @@ public class HyggeLogbackPatterHelper implements HyggeLogPatterHelper {
                     configuration.getAppName(),
                     configuration.getVersion()
             );
-            finalPatter = hyggeLogbackJsonPatterHelper.create(configuration.isEnableColorful(), configuration.getConverterMode());
+            finalPatter = hyggeLogbackJsonPatterHelper.create(configuration.isEnableColorful(), configuration.getConverterMode()) + "%n";
         } else {
             if (configuration.isEnableColorful()) {
                 finalPatter = hyggeScope ? HYGGE_DEFAULT_COLORFUL_PATTERN : ROOT_DEFAULT_COLORFUL_PATTERN;

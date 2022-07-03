@@ -3,6 +3,9 @@ package hygge.utils.logback.impl;
 import hygge.logging.enums.ConverterModeEnum;
 import hygge.utils.definitions.HyggeLogJsonPatterHelper;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 /**
  * logback json 日志模板生成工具
  *
@@ -43,12 +46,18 @@ public class HyggeLogbackJsonPatterHelper extends HyggeLogJsonPatterHelper {
 
     @Override
     public String getHost(boolean enableColorful, ConverterModeEnum converterMode) {
-        return "${hostName}";
+        String hostName;
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException ignored) {
+            hostName = "unknown";
+        }
+        return hostName;
     }
 
     @Override
     public String getPid(boolean enableColorful, ConverterModeEnum converterMode) {
-        return enableColorful ? "%pid" : "%clr{%pid}{magenta}";
+        return enableColorful ? "%clr{%pid}{magenta}" : "%pid";
     }
 
     @Override
@@ -58,7 +67,7 @@ public class HyggeLogbackJsonPatterHelper extends HyggeLogJsonPatterHelper {
 
     @Override
     public String getClassPath(boolean enableColorful, ConverterModeEnum converterMode) {
-        return enableColorful ? "%-40.40logger{39}" : "%clr(%-40.40logger{39}){cyan}";
+        return enableColorful ? "%clr(%-40.40logger{39}){cyan}" : "%-40.40logger{39}";
     }
 
     @Override

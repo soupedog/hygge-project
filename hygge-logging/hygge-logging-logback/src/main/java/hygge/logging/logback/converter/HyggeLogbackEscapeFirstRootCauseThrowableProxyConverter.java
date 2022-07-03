@@ -13,7 +13,8 @@ import org.apache.commons.text.StringEscapeUtils;
  * @see ConverterModeEnum ConverterKey 来源
  * @since 1.0
  */
-public class HyggeLogbackEscapeRootCauseFirstThrowableProxyConverter extends RootCauseFirstThrowableProxyConverter {
+@SuppressWarnings("java:S110")
+public class HyggeLogbackEscapeFirstRootCauseThrowableProxyConverter extends RootCauseFirstThrowableProxyConverter {
     @Override
     public String convert(ILoggingEvent event) {
         return StringEscapeUtils.escapeJava(super.convert(event));

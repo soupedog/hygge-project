@@ -4,8 +4,10 @@ import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
 import hygge.utils.UtilsCreator;
 import hygge.utils.definitions.ParameterHelper;
+import org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
@@ -15,8 +17,14 @@ import org.springframework.core.env.ConfigurableEnvironment;
  * @date 2022/6/28
  * @since 1.0
  */
-public class HyggeSpringContextInitListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
+public class HyggeSpringContextInitListener implements Ordered, ApplicationListener<ApplicationEnvironmentPreparedEvent> {
     private static final ParameterHelper parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+
+    @Override
+    public int getOrder() {
+        // 设置优先级比 ConfigDataEnvironmentPostProcessor 低一点
+        return ConfigDataEnvironmentPostProcessor.ORDER + 1;
+    }
 
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent applicationEnvironmentPreparedEvent) {
