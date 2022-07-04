@@ -1,6 +1,5 @@
 package hygge.logging.loader;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
@@ -28,9 +27,6 @@ import hygge.utils.logback.impl.HyggeLogbackPatterHelper;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
-import org.springframework.boot.logging.logback.ColorConverter;
-import org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter;
-import org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
@@ -63,7 +59,7 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
             log.info("HyggeLoggerLogback init success");
         }
 
-        // 这里和 HyggeLogbackLoaderListener 其实没关系，只是希望是在日志配置完毕后再输出
+        // 这里和 HyggeLogbackLoaderListener 其实没关系，只是希望是在日志配置完毕后再输出 HyggeContext
         String logInfo = "HyggeContext init success:" + HyggeSpringContext.toJsonVale();
         logForHyggeSpringContext.info(logInfo);
     }
@@ -71,17 +67,12 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
     protected void loadLogback(HyggeLogbackConfiguration configuration) {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-        stopAndReset(loggerContext);
-
         if (configuration.isEnableRootOverride()) {
             LayoutWrappingEncoder<ILoggingEvent> rootEncoder = createEncoder(false, configuration, loggerContext);
             Appender<ILoggingEvent> rootAppender = createAppender(false, loggerContext, configuration, rootEncoder);
             // 重置 rootLogger
             restRootLogger(loggerContext, rootAppender);
         }
-
-        // 初始化 Spring 的默认配置
-        new SpringLoggingSystemDefaultHelper(loggerContext).apply();
 
         Map<String, Boolean> hyggeScopePathsMap = configuration.getHyggeScopePaths();
         if (hyggeScopePathsMap.isEmpty()) {
@@ -105,8 +96,7 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
 
     private void restRootLogger(LoggerContext loggerContext, Appender<ILoggingEvent> rootAppender) {
         Logger logger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-        // 默认 root 为 info 级别
-        logger.setLevel(Level.INFO);
+        logger.detachAppender("CONSOLE");
         logger.addAppender(rootAppender);
     }
 
@@ -176,10 +166,6 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
 
         Map<String, String> defaultConverterMap = layout.getDefaultConverterMap();
 
-        defaultConverterMap.put("clr", ColorConverter.class.getName());
-        defaultConverterMap.put("wex", WhitespaceThrowableProxyConverter.class.getName());
-        defaultConverterMap.put("wEx", ExtendedWhitespaceThrowableProxyConverter.class.getName());
-
         if (OutputModeEnum.FILE.equals(configuration.getOutputMode())) {
             defaultConverterMap.put("d", HyggeLogbackTimeStampConverter.class.getName());
             defaultConverterMap.put("date", HyggeLogbackTimeStampConverter.class.getName());
@@ -224,13 +210,5 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
         encoder.setLayout(layout);
         encoder.start();
         return encoder;
-    }
-
-    /**
-     * 停用旧的日志配置
-     */
-    protected void stopAndReset(LoggerContext loggerContext) {
-        loggerContext.stop();
-        loggerContext.reset();
     }
 }
