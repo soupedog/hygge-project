@@ -48,17 +48,17 @@ public class HyggeLog4jJsonPatterHelper extends HyggeLogJsonPatterHelper {
 
     @Override
     public String getPid(boolean enableColorful, ConverterModeEnum converterMode) {
-        return enableColorful ? "%pid" : "%clr{%pid}{magenta}";
+        return enableColorful ? "%clr{%pid}{magenta}" : "%pid";
     }
 
     @Override
     public String getThread(boolean enableColorful, ConverterModeEnum converterMode) {
-        return enableColorful ? "%t" : "%15t";
+        return "%15.15t";
     }
 
     @Override
     public String getClassPath(boolean enableColorful, ConverterModeEnum converterMode) {
-        return enableColorful ? "%c{1.}" : "%clr{%c{1.}}{blue}";
+        return enableColorful ? "%clr{%c{1.}}{blue}" : "%c{1.}";
     }
 
     @Override
