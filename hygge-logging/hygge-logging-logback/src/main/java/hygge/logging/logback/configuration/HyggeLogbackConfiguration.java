@@ -13,10 +13,15 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 public class HyggeLogbackConfiguration extends HyggeLogConfiguration {
     /**
-     * 自定义日志工具文件输出路径<br/>
+     * 自定义日志工具 root 文件输出路径<br/>
      * {@link HyggeLogConfiguration#outputMode} 为控制台时，该参数无意义
      */
-    protected String fileNamePattern;
+    protected String fileNamePatternRoot;
+    /**
+     * 自定义日志工具文件 hygge 输出路径<br/>
+     * {@link HyggeLogConfiguration#outputMode} 为控制台时，该参数无意义
+     */
+    protected String fileNamePatternHygge;
     /**
      * 单个日志文件最大文件大小，样例：10MB/10KB<br/>
      * {@link HyggeLogConfiguration#outputMode} 为控制台时，该参数无意义
@@ -30,7 +35,8 @@ public class HyggeLogbackConfiguration extends HyggeLogConfiguration {
 
     @Override
     protected void exclusiveRead(ConfigurableEnvironment configurableEnvironment) {
-        this.fileNamePattern = configurableEnvironment.getProperty(ConfigKey.LOGBACK_FILE_NAME_PATTERN.getKey());
+        this.fileNamePatternRoot = configurableEnvironment.getProperty(ConfigKey.LOGBACK_FILE_NAME_PATTERN_ROOT.getKey());
+        this.fileNamePatternHygge = configurableEnvironment.getProperty(ConfigKey.LOGBACK_FILE_NAME_PATTERN_HYGGE.getKey());
         this.fileMaxSize = configurableEnvironment.getProperty(ConfigKey.LOGBACK_FILE_MAX_SIZE.getKey());
         this.fileMaxHistory = parameterHelper.integerFormatOfNullable("fileMaxHistory", configurableEnvironment.getProperty(ConfigKey.LOGBACK_FILE_MAX_HISTORY.getKey()), 0);
     }
@@ -39,17 +45,26 @@ public class HyggeLogbackConfiguration extends HyggeLogConfiguration {
     protected void exclusiveCheckAndInit() {
         // 如果是文件输出
         if (OutputModeEnum.FILE.equals(outputMode)) {
-            this.fileNamePattern = parameterHelper.stringNotEmpty("fileNamePattern", (Object) fileNamePattern);
+            this.fileNamePatternRoot = parameterHelper.stringNotEmpty("fileNamePatternRoot", (Object) fileNamePatternRoot);
+            this.fileNamePatternHygge = parameterHelper.stringNotEmpty("fileNamePatternHygge", (Object) fileNamePatternHygge);
             this.fileMaxSize = parameterHelper.stringOfNullable(fileMaxSize, "2MB");
         }
     }
 
-    public String getFileNamePattern() {
-        return fileNamePattern;
+    public String getFileNamePatternRoot() {
+        return fileNamePatternRoot;
     }
 
-    public void setFileNamePattern(String fileNamePattern) {
-        this.fileNamePattern = fileNamePattern;
+    public void setFileNamePatternRoot(String fileNamePatternRoot) {
+        this.fileNamePatternRoot = fileNamePatternRoot;
+    }
+
+    public String getFileNamePatternHygge() {
+        return fileNamePatternHygge;
+    }
+
+    public void setFileNamePatternHygge(String fileNamePatternHygge) {
+        this.fileNamePatternHygge = fileNamePatternHygge;
     }
 
     public String getFileMaxSize() {
@@ -58,5 +73,13 @@ public class HyggeLogbackConfiguration extends HyggeLogConfiguration {
 
     public void setFileMaxSize(String fileMaxSize) {
         this.fileMaxSize = fileMaxSize;
+    }
+
+    public int getFileMaxHistory() {
+        return fileMaxHistory;
+    }
+
+    public void setFileMaxHistory(int fileMaxHistory) {
+        this.fileMaxHistory = fileMaxHistory;
     }
 }

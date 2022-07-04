@@ -119,12 +119,21 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
             rollingPolicy.setContext(loggerContext);
             rollingPolicy.setMaxFileSize(FileSize.valueOf(configuration.getFileMaxSize()));
 
-
             String fileNamePattern;
-            if (StringUtils.hasText(configuration.getFileNamePattern())) {
-                fileNamePattern = configuration.getFileNamePattern();
+            if (isHyggeScope) {
+                if (StringUtils.hasText(configuration.getFileNamePatternHygge())) {
+                    fileNamePattern = configuration.getFileNamePatternHygge();
+                } else {
+                    fileNamePattern = File.separator + "hygge-%d{yyyy-MM-dd}.%i.log";
+                    configuration.setFileNamePatternHygge(fileNamePattern);
+                }
             } else {
-                fileNamePattern = File.separator + (isHyggeScope ? "hygge" : "root") + "-%d{yyyy-MM-dd}.%i.log";
+                if (StringUtils.hasText(configuration.getFileNamePatternRoot())) {
+                    fileNamePattern = configuration.getFileNamePatternRoot();
+                } else {
+                    fileNamePattern = File.separator + "root-%d{yyyy-MM-dd}.%i.log";
+                    configuration.setFileNamePatternRoot(fileNamePattern);
+                }
             }
 
             rollingPolicy.setFileNamePattern(fileNamePattern);

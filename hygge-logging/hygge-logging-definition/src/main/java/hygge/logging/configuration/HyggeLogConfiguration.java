@@ -228,9 +228,14 @@ public abstract class HyggeLogConfiguration {
         LOG4J_CRON_TRIGGER("hygge.logging.log4j.pattern.file.cron"),
         /**
          * logback 专有配置项<br/>
-         * 日志文件存储路径
+         * root 日志文件存储路径
          */
-        LOGBACK_FILE_NAME_PATTERN("hygge.logging.logback.pattern.file.namePattern"),
+        LOGBACK_FILE_NAME_PATTERN_ROOT("hygge.logging.logback.pattern.fileNamePattern.root"),
+        /**
+         * logback 专有配置项<br/>
+         * hygge 日志文件存储路径
+         */
+        LOGBACK_FILE_NAME_PATTERN_HYGGE("hygge.logging.logback.pattern.fileNamePattern.hygge"),
         /**
          * logback 专有配置项<br/>
          * 单个日志文件最大文件大小
