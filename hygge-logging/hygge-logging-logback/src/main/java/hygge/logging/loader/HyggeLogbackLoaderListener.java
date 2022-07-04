@@ -118,6 +118,7 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
             SizeAndTimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new SizeAndTimeBasedRollingPolicy<>();
             rollingPolicy.setContext(loggerContext);
             rollingPolicy.setMaxFileSize(FileSize.valueOf(configuration.getFileMaxSize()));
+            rollingPolicy.setMaxHistory(configuration.getFileMaxHistory());
 
             String fileNamePattern;
             if (isHyggeScope) {
