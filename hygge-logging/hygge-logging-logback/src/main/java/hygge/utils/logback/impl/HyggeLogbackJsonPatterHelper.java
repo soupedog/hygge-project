@@ -82,6 +82,6 @@ public class HyggeLogbackJsonPatterHelper extends HyggeLogJsonPatterHelper {
 
     @Override
     public String getThrown(boolean enableColorful, ConverterModeEnum converterMode) {
-        return "%wEx";
+        return "%ex";
     }
 }
