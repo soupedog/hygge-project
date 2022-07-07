@@ -50,13 +50,13 @@ public enum GlobalHyggeCode implements HyggeCode<Object, Object> {
     }
 
     @Override
-    public Object getCode() {
-        return code;
+    public <Co> Co getCode() {
+        return (Co) code;
     }
 
     @Override
-    public Object getExtraInfo() {
-        return extraInfo;
+    public <Ex> Ex getExtraInfo() {
+        return (Ex) extraInfo;
     }
 
     GlobalHyggeCode(boolean serious, String publicMessage, Object code, Object extraInfo) {

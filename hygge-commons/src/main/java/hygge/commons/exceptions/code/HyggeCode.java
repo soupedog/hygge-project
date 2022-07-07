@@ -24,10 +24,10 @@ public interface HyggeCode<C, E> {
     /**
      * 获取业务标识码
      */
-    C getCode();
+    <Co> Co getCode();
 
     /**
      * 用于自由拓展的额外的信息，你可以通过异常向外部传递某些信息
      */
-    E getExtraInfo();
+    <Ex>Ex getExtraInfo();
 }
