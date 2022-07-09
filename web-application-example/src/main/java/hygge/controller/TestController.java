@@ -2,10 +2,12 @@ package hygge.controller;
 
 import hygge.commons.exceptions.InternalRuntimeException;
 import hygge.commons.exceptions.LightRuntimeException;
+import hygge.commons.exceptions.code.GlobalHyggeCode;
 import hygge.domain.ControllerResponse;
 import hygge.utils.UtilsCreator;
 import hygge.web.template.HyggeController;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +43,19 @@ public class TestController implements HyggeController<ResponseEntity<?>> {
     @GetMapping("/swaggerUnfriendly")
     public ResponseEntity<?> swaggerUnfriendly() {
         return success(new Timestamp(System.currentTimeMillis()));
+    }
+
+    private static final HyggeResponseWrapper<ResponseEntity<?>> customResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
+        ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus);
+        return result.body(entity);
+    };
+
+    /**
+     * 这是示例：演示自定义输出内容，此处是自定义为去掉 {@link ControllerResponse} 的主协议封装
+     */
+    @GetMapping("/custom")
+    public ResponseEntity<?> custom() {
+        return success(HttpStatus.OK, null, GlobalHyggeCode.SUCCESS, null, new Timestamp(System.currentTimeMillis()), customResponseWrapper);
     }
 
     @GetMapping("/mockLog")

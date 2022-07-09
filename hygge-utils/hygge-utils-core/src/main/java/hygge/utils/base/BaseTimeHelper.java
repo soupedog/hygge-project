@@ -61,6 +61,7 @@ public abstract class BaseTimeHelper implements TimeHelper {
                 LocalDateTime targetLocalTime;
                 if (DateTimeFormatMode.DateTimeFormatModeEnum.FULL_TRIM.equals(dateTimeFormatMode)) {
                     // Warning  parse(target, DateTimeFormatMode.FULL_TRIM, targetZoneOffset)
+                    // @see "https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8031085"
                     // jdk 8 存在 bug，jdk 9 以后才能正确运行携带毫秒信息的时间模板
                     // 下为兼容 java 8 的补救方式
                     String theFirstPart = target.substring(0, 14);

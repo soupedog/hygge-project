@@ -139,12 +139,12 @@ public interface HyggeController<R extends ResponseEntity<?>> {
     }
 
     @FunctionalInterface
-    interface HyggeResponseWrapper<R> {
+    interface HyggeResponseWrapper<R extends ResponseEntity<?>> {
         /**
          * HyggeControllerResponse 包装器
          *
          * @return HyggeControllerResponse 的实例
          */
-        <T> R createFailResponseData(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, Throwable throwable);
+        R createFailResponseData(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, Object entity, Throwable throwable);
     }
 }
