@@ -2,6 +2,7 @@ package hygge.utils;
 
 import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.utils.definitions.JsonHelper;
+import hygge.utils.definitions.RandomUniqueGenerator;
 
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -63,28 +64,30 @@ public enum UtilsCreator implements UtilsCreatorAbility, InfoMessageSupplier {
             }
             return (T) resultTemp;
         } catch (ClassNotFoundException e) {
-            throw new UtilRuntimeException(String.format("Class(%s) was not found.", className));
+            throw new UtilRuntimeException(String.format("Class(%s) was not found.", className), e);
         } catch (IllegalAccessException | InstantiationException e) {
-            throw new UtilRuntimeException(String.format("Fail to create instance of Class(%s).", className));
+            throw new UtilRuntimeException(String.format("Fail to create instance of Class(%s).", className), e);
         }
     }
 
     @Override
     public <T extends HyggeUtil> T getDefaultInstance(Class<T> target) {
-        String hyggeName = target.getSimpleName();
-        return getAndCacheInstance(hyggeName, () -> {
-            boolean isJsonHelper = JsonHelper.class.isAssignableFrom(target);
+        String cacheKey = target.getSimpleName();
+        return getAndCacheInstance(cacheKey, () -> {
             String className = null;
 
-            if (isJsonHelper) {
+            if (JsonHelper.class.isAssignableFrom(target)) {
                 // 构造 JsonHelper 默认实现需要先检查依赖
                 if (tryToGetClass("com.fasterxml.jackson.databind.ObjectMapper") == null) {
                     throw new UtilRuntimeException("Default \"JsonHelper\" implementation class lacks jackson dependencies:com.fasterxml.jackson.databind.ObjectMapper.");
                 }
                 className = getDefaultJacksonJsonHelperPath();
+            } else if (RandomUniqueGenerator.class.isAssignableFrom(target)) {
+                className = String.format("hygge.utils.impl.%s", "SnowFlakeGenerator");
             }
+
             if (className == null) {
-                className = String.format("hygge.utils.impl.Default%s", hyggeName);
+                className = String.format("hygge.utils.impl.Default%s", cacheKey);
             }
             return createHelper(className);
         });
