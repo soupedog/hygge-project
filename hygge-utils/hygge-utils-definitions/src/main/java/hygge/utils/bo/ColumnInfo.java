@@ -20,9 +20,9 @@ public class ColumnInfo {
      */
     private String columnName;
     /**
-     * 属性别名(为空则直接取 columnName)
+     * 属性在数据库中的实际名称(为空则直接取 columnName)
      */
-    private String columnAlias;
+    private String columnDatabaseName;
     /**
      * 属性类型
      */
@@ -48,9 +48,9 @@ public class ColumnInfo {
      */
     private Number maxLength;
 
-    public ColumnInfo(String columnName, String columnAlias, ColumnTypeEnum columnTypeEnum, boolean keyNullable, boolean valueNullable, Number minLength, Number maxLength) {
+    public ColumnInfo(String columnName, String columnDatabaseName, ColumnTypeEnum columnTypeEnum, boolean keyNullable, boolean valueNullable, Number minLength, Number maxLength) {
         this.columnName = parameterHelper.stringNotEmpty("columnName", (Object) columnName);
-        this.columnAlias = parameterHelper.stringOfNullable(columnAlias, columnName);
+        this.columnDatabaseName = parameterHelper.stringOfNullable(columnDatabaseName, columnName);
         parameterHelper.objectNotNull("columnTypeEnum", columnTypeEnum);
         this.columnTypeEnum = columnTypeEnum;
         this.keyNullable = parameterHelper.booleanFormatNotEmpty("keyNullable", keyNullable);
@@ -143,12 +143,12 @@ public class ColumnInfo {
         this.columnName = columnName;
     }
 
-    public String getColumnAlias() {
-        return columnAlias;
+    public String getColumnDatabaseName() {
+        return columnDatabaseName;
     }
 
-    public void setColumnAlias(String columnAlias) {
-        this.columnAlias = columnAlias;
+    public void setColumnDatabaseName(String columnDatabaseName) {
+        this.columnDatabaseName = columnDatabaseName;
     }
 
     public ColumnTypeEnum getColumnTypeEnum() {

@@ -18,21 +18,21 @@ import java.util.function.UnaryOperator;
  */
 public interface DaoHelper extends HyggeUtil {
     /**
-     * 根据属性信息，筛选出有效属性并生成新的 Map 结构
+     * 根据 Map 容器中的属性信息，筛选出有效属性并生成新的 Map 结构(用于非全量更新)
      *
      * @param rawData             原始数据
      * @param checkInfoCollection 属性信息
      * @return 筛选过后的新 Map,不会为 null
      */
-    HashMap<String, Object> filterOutTheFinalAttributes(Map<String, ?> rawData, Collection<ColumnInfo> checkInfoCollection);
+    HashMap<String, Object> filterOutTheFinalColumns(Map<String, Object> rawData, Collection<ColumnInfo> checkInfoCollection);
 
     /**
-     * 根据属性信息，筛选出有效属性并生成新的 Map 结构
+     * 根据 Map 容器中的属性信息，筛选出有效属性并生成新的 Map 结构(用于非全量更新)
      *
      * @param rawData             原始数据
      * @param checkInfoCollection 属性信息
      * @param successCallBack     成功筛选出有效属性时的回调函数
      * @return 筛选过后的新 Map,不会为 null
      */
-    HashMap<String, Object> filterOutTheFinalAttributes(Map<String, ?> rawData, Collection<ColumnInfo> checkInfoCollection, UnaryOperator<HashMap<String, ?>> successCallBack);
+    HashMap<String, Object> filterOutTheFinalColumns(Map<String, Object> rawData, Collection<ColumnInfo> checkInfoCollection, UnaryOperator<HashMap<String, Object>> successCallBack);
 }
