@@ -65,7 +65,7 @@ public interface FileHelper extends HyggeUtil {
     List<File> getFileFromDirectory(File directory, FileFilter fileFilter);
 
     /**
-     * 在目录 File 对象下的所有目录下寻找文件 (递归调用实现，层级过深时请谨慎使用)
+     * 在目录 File 对象下的所有后代目录下寻找文件 (递归调用实现，层级过深时请谨慎使用)
      *
      * @param directory 目录 File 对象
      * @param fileName  寻找的目标文件名称
@@ -74,7 +74,7 @@ public interface FileHelper extends HyggeUtil {
     List<File> getFileByFileNameFromDirectoryIgnoreDepth(File directory, String fileName);
 
     /**
-     * 在目录 File 对象下的所有目录下寻找文件 (递归调用实现，层级过深时请谨慎使用)
+     * 在目录 File 对象下的所有后代目录下寻找文件 (递归调用实现，层级过深时请谨慎使用)
      *
      * @param directory         目录 File 对象
      * @param fileExtensionName 扩展名限制，多个时用 "," 隔开  例如 ".png,.jpg,.gif"
@@ -83,7 +83,7 @@ public interface FileHelper extends HyggeUtil {
     List<File> getFileByFileExtensionNameFromDirectoryIgnoreDepth(File directory, String fileExtensionName);
 
     /**
-     * 在目录 File 对象下的所有目录下寻找文件 (层级过深时请谨慎使用)
+     * 在目录 File 对象下的所有后代目录下寻找文件 (层级过深时请谨慎使用)
      *
      * @param directory                     目录 File 对象
      * @param fileFilter                    文件目录下所有后代层级非目录 File 对象均会通过该过滤器验证，返回 true 时添加到查询结果集
