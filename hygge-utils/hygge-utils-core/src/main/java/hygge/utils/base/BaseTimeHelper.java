@@ -78,9 +78,8 @@ public abstract class BaseTimeHelper implements TimeHelper {
 
             return result;
         } catch (DateTimeParseException exception) {
-            throw new ParameterRuntimeException(String.format("Unexpected target,it should be %s,but %s."
-                    , dateTimeFormatMode.getPattern()
-                    , target),
+            throw new ParameterRuntimeException(
+                    "Fail to parse " + target + " to " + dateTimeFormatMode.getPattern() + ".",
                     exception);
         }
     }
@@ -100,9 +99,8 @@ public abstract class BaseTimeHelper implements TimeHelper {
             ZonedDateTime targetTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(target), resultZoneOffset);
             return targetTime.format(dateTimeFormatMode.getDateTimeFormatter());
         } catch (DateTimeException exception) {
-            throw new ParameterRuntimeException(String.format("Unexpected target,it should be %s,but %s."
-                    , dateTimeFormatMode.getPattern()
-                    , target),
+            throw new ParameterRuntimeException(
+                    "Fail to format " + target + " to " + dateTimeFormatMode.getPattern() + ".",
                     exception);
         }
     }
