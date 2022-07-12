@@ -1,0 +1,110 @@
+{
+  "hints": [
+    {
+      "name": "hygge.utils.httpHelper.default.autoRegister",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "hygge.utils.httpHelper.default.ignoreSSL",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "hygge.utils.httpHelper.default.logType",
+      "values": [
+        {
+          "value": "NONE"
+        },
+        {
+          "value": "STANDARD"
+        },
+        {
+          "value": "NO_RESPONSE_HEADERS"
+        },
+        {
+          "value": "NO_HEADERS"
+        },
+        {
+          "value": "NO_BODY"
+        },
+        {
+          "value": "NO_HEADERS_BODY"
+        }
+      ]
+    },
+    {
+      "name": "hygge.controller.autoLog.enable",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "org.hygge.web.toolkit.config.ControllerAutoLogConfig",
+      "name": "hygge.controller.autoLog.enable",
+      "type": "java.lang.Boolean",
+      "defaultValue": true
+    },
+    {
+      "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
+      "name": "hygge.utils.httpHelper.default.autoRegister",
+      "type": "java.lang.Boolean",
+      "defaultValue": true
+    },
+    {
+      "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
+      "name": "hygge.utils.httpHelper.default.ignoreSSL",
+      "type": "java.lang.Boolean",
+      "defaultValue": false
+    },
+    {
+      "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
+      "name": "hygge.utils.httpHelper.default.logType",
+      "type": "org.hygge.web.toolkit.http.configuration.HttpLogType",
+      "defaultValue": "NO_RESPONSE_HEADERS"
+    },
+    {
+      "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
+      "name": "hygge.utils.httpHelper.default.connection.connectTimeOut",
+      "type": "java.time.Duration",
+      "defaultValue": "30S"
+    },
+    {
+      "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
+      "name": "hygge.utils.httpHelper.default.connection.readTimeOut",
+      "type": "java.time.Duration",
+      "defaultValue": "30S"
+    },
+    {
+      "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
+      "name": "hygge.utils.httpHelper.default.connection.maxTotal",
+      "type": "java.lang.Integer",
+      "defaultValue": 400
+    },
+    {
+      "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
+      "name": "hygge.utils.httpHelper.default.connection.maxPerRoute",
+      "type": "java.lang.Integer",
+      "defaultValue": 200
+    }
+  ]
+}

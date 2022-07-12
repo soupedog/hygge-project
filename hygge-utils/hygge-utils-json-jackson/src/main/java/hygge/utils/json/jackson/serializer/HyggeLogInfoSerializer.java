@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import hygge.commons.templates.core.HyggeLogInfoObject;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -18,7 +19,14 @@ public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (value instanceof HyggeLogInfoObject) {
-            gen.writeRaw(((HyggeLogInfoObject) value).toJsonLogInfo());
+            String jsonInfo = ((HyggeLogInfoObject) value).toJsonLogInfo();
+            if (StringUtils.hasText(jsonInfo)) {
+                gen.writeRawValue(jsonInfo);
+            } else {
+                // "JsonInclude.Include.NON_NULL" 之类的配置项，影响到的是此处 value 不为 null 的才会进入这个 JsonSerializer
+                // value 是真的不为 null 导致没法把 key 抹除了
+                gen.writeNull();
+            }
         } else {
             gen.writeObject(value);
         }

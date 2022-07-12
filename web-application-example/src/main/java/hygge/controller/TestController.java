@@ -27,7 +27,6 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @RestController
 public class TestController implements HyggeController<ResponseEntity<?>> {
-
     /**
      * 这是示例：swagger 友好型，在无手动特殊标记描述性注解时， swagger 默认能展示较多信息</br>
      * 但是强转显得不太优雅，只能你自己实现一个无泛型，已是具体类型的 {@link HyggeController} 类了

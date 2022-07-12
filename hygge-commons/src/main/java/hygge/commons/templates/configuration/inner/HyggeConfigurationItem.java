@@ -1,4 +1,4 @@
-package hygge.commons.templates.configuration;
+package hygge.commons.templates.configuration.inner;
 
 
 import hygge.commons.enums.ColumnTypeEnum;

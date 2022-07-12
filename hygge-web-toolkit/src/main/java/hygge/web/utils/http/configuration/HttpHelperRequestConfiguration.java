@@ -1,21 +1,23 @@
 package hygge.web.utils.http.configuration;
 
+import hygge.web.utils.http.configuration.inner.HttpLogType;
+
 import java.util.StringJoiner;
 
 /**
- * 网络请求工具配置项
+ * HttpHelper 发起网络请求配置项
  *
  * @author Xavier
  * @date 2022/7/12
  * @since 1.0
  */
-public class HttpHelperConfig {
+public class HttpHelperRequestConfiguration {
     protected final HttpLogType logType;
     protected final boolean ignoreSSL;
     protected final long connectTimeOutMilliseconds;
     protected final long readTimeOutMilliseconds;
 
-    public HttpHelperConfig(HttpLogType logType, boolean ignoreSSL, long connectTimeOutMilliseconds, long readTimeOutMilliseconds) {
+    public HttpHelperRequestConfiguration(HttpLogType logType, boolean ignoreSSL, long connectTimeOutMilliseconds, long readTimeOutMilliseconds) {
         this.logType = logType;
         this.ignoreSSL = ignoreSSL;
         this.connectTimeOutMilliseconds = connectTimeOutMilliseconds;
@@ -43,7 +45,7 @@ public class HttpHelperConfig {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        HttpHelperConfig that = (HttpHelperConfig) o;
+        HttpHelperRequestConfiguration that = (HttpHelperRequestConfiguration) o;
 
         if (ignoreSSL != that.ignoreSSL) return false;
         if (connectTimeOutMilliseconds != that.connectTimeOutMilliseconds) return false;

@@ -2,7 +2,7 @@ package hygge.web.utils.http.definitions;
 
 
 import hygge.web.utils.http.bo.HttpResponse;
-import hygge.web.utils.http.configuration.HttpHelperConfig;
+import hygge.web.utils.http.configuration.HttpHelperRequestConfiguration;
 
 /**
  * 网络请求工具日志记录器
@@ -18,5 +18,5 @@ public interface HttpHelperLogger {
      * @param config 当前请求的配置项
      * @param result 当前请的响应结果
      */
-    void logOutput(HttpHelperConfig config, HttpResponse<?, ?> result);
+    void logOutput(HttpHelperRequestConfiguration config, HttpResponse<?, ?> result);
 }

@@ -1,6 +1,6 @@
 package hygge.web.utils.http.definitions;
 
-import hygge.web.utils.http.configuration.HttpHelperConfig;
+import hygge.web.utils.http.configuration.HttpHelperRequestConfiguration;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -14,5 +14,10 @@ public interface HttpHelperRestTemplateFactory {
     /**
      * 根据配置项获取对应 RestTemplate 对象
      */
-    RestTemplate getInstance(HttpHelperConfig config);
+    RestTemplate getInstance(HttpHelperRequestConfiguration config);
+
+    /**
+     * 获取请求默认配置项
+     */
+    HttpHelperRequestConfiguration getDefaultConfiguration();
 }

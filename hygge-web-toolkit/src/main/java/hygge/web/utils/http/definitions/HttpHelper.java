@@ -1,7 +1,7 @@
 package hygge.web.utils.http.definitions;
 
 import hygge.web.utils.http.bo.HttpResponse;
-import hygge.web.utils.http.configuration.HttpHelperConfig;
+import hygge.web.utils.http.configuration.HttpHelperRequestConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -47,35 +47,35 @@ public interface HttpHelper {
 
     <R, T> HttpResponse<R, T> get(String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
-    <R, T> HttpResponse<R, T> get(HttpHelperConfig config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
+    <R, T> HttpResponse<R, T> get(HttpHelperRequestConfiguration config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> post(String url, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> post(String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
-    <R, T> HttpResponse<R, T> post(HttpHelperConfig config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
+    <R, T> HttpResponse<R, T> post(HttpHelperRequestConfiguration config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> patch(String url, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> patch(String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
-    <R, T> HttpResponse<R, T> patch(HttpHelperConfig config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
+    <R, T> HttpResponse<R, T> patch(HttpHelperRequestConfiguration config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> put(String url, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> put(String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
-    <R, T> HttpResponse<R, T> put(HttpHelperConfig config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
+    <R, T> HttpResponse<R, T> put(HttpHelperRequestConfiguration config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> delete(String url, Class<T> targetClass);
 
     <R, T> HttpResponse<R, T> delete(String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
-    <R, T> HttpResponse<R, T> delete(HttpHelperConfig config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
+    <R, T> HttpResponse<R, T> delete(HttpHelperRequestConfiguration config, String url, HttpHeaders headers, R requestObject, Class<T> targetClass);
 
     /**
      * 如果你想下载文件:<br/>
      * HttpResponse<Void, byte[]> response = httpHelper.doRequest(null, "https://www.xxxxxxxxx/xxxxxx.png", HttpMethod.GET, headers, null, byte[].class, byte[].class);
      */
-    <R, E, T> HttpResponse<R, T> sendRequest(HttpHelperConfig config, String url, HttpMethod httpMethod, HttpHeaders requestHeaders, R requestObject, Class<E> responseClassInfo, Object dataClassInfo);
+    <R, E, T> HttpResponse<R, T> sendRequest(HttpHelperRequestConfiguration config, String url, HttpMethod httpMethod, HttpHeaders requestHeaders, R requestObject, Class<E> responseClassInfo, Object dataClassInfo);
 }

@@ -1,4 +1,4 @@
-package hygge.web.utils.http.configuration;
+package hygge.web.utils.http.configuration.inner;
 
 /**
  * 网络请求工具 日志格式 类型

@@ -1,5 +1,7 @@
 package hygge.commons.templates.configuration;
 
+import hygge.commons.templates.configuration.inner.HyggeConfigurationItem;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;

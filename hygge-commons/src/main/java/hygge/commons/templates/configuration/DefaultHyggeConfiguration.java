@@ -2,6 +2,8 @@ package hygge.commons.templates.configuration;
 
 
 import hygge.commons.enums.ColumnTypeEnum;
+import hygge.commons.templates.configuration.inner.HyggeConfigurationItem;
+import hygge.commons.templates.configuration.inner.HyggeConfigurationItemKeeper;
 
 import java.util.*;
 
