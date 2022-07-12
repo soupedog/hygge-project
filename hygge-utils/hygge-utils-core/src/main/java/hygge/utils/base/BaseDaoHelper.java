@@ -1,7 +1,6 @@
 package hygge.utils.base;
 
 import hygge.commons.exceptions.ParameterRuntimeException;
-import hygge.utils.InfoMessageSupplier;
 import hygge.utils.UtilsCreator;
 import hygge.utils.bo.ColumnInfo;
 import hygge.utils.definitions.DaoHelper;
@@ -19,7 +18,7 @@ import java.util.function.UnaryOperator;
  * @date 2022/7/11
  * @since 1.0
  */
-public abstract class BaseDaoHelper implements DaoHelper, InfoMessageSupplier {
+public abstract class BaseDaoHelper implements DaoHelper {
     protected ParameterHelper parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     @Override

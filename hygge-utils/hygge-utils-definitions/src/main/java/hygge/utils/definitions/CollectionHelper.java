@@ -65,14 +65,25 @@ public interface CollectionHelper extends HyggeUtil {
     /**
      * 根据传入规则过滤 Collection ,将目标 Collection 中非空元素转化成新对象组成 ArrayList
      *
-     * @param isUnique        ArrayList 中新对象是否要求唯一
+     * @param enableContainCheck 是否开启是否已包含检查。开启时，存入元素将先用 {@link ArrayList#contains(Object)} 检查，返回 false 时才真正进行添加
+     * @param target             待过滤的 Collection
+     * @param getItemFunction    新对象构造函数
+     * @param <T>                Collection 元素类型
+     * @param <R>                Collection 元素的目标属性类型
+     * @return 目标 Collection 中非空元素转化成新对象组成的 ArrayList
+     */
+    <T, R> ArrayList<R> filterNonemptyItemAsArrayList(boolean enableContainCheck, Collection<T> target, Function<T, R> getItemFunction);
+
+    /**
+     * 根据传入规则过滤 Collection ,将目标 Collection 中非空元素转化成新对象组成 HashSet
+     *
      * @param target          待过滤的 Collection
      * @param getItemFunction 新对象构造函数
      * @param <T>             Collection 元素类型
      * @param <R>             Collection 元素的目标属性类型
      * @return 目标 Collection 中非空元素转化成新对象组成的 ArrayList
      */
-    <T, R> ArrayList<R> filterCollectionNotEmptyAsArrayList(boolean isUnique, Collection<T> target, Function<T, R> getItemFunction);
+    <T, R> HashSet<R> filterNonemptyItemAsHashSet(Collection<T> target, Function<T, R> getItemFunction);
 
     /**
      * 根据传入规则过滤 Collection ,将目标 Collection 中非空元素转化成新对象组成 HashMap
@@ -85,7 +96,7 @@ public interface CollectionHelper extends HyggeUtil {
      * @param <V>       HashMap 的 value 类型
      * @return 目标 Collection 中非空元素转化成新对象组成的 HashMap
      */
-    <T, K, V> HashMap<K, V> filterCollectionNotEmptyAsHashMap(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction);
+    <T, K, V> HashMap<K, V> filterNonemptyItemAsHashMap(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction);
 
     /**
      * 根据传入规则过滤 Collection ,将目标 Collection 中非空元素转化成新对象组成 TreeMap
@@ -98,7 +109,7 @@ public interface CollectionHelper extends HyggeUtil {
      * @param <V>       TreeMap 的 value 类型
      * @return 目标 Collection 中非空元素转化成新对象组成的 TreeMap
      */
-    <T, K, V> TreeMap<K, V> filterCollectionNotEmptyAsTreeMap(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction);
+    <T, K, V> TreeMap<K, V> filterNonemptyItemAsTreeMap(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction);
 
     /**
      * 根据传入规则过滤 Collection ,将目标 Collection 中非空元素转化成新对象组成 TreeMap
@@ -112,7 +123,7 @@ public interface CollectionHelper extends HyggeUtil {
      * @param <V>        TreeMap 的 value 类型
      * @return 目标 Collection 中非空元素转化成新对象组成的 TreeMap
      */
-    <T, K, V> TreeMap<K, V> filterCollectionNotEmptyAsTreeMap(Collection<T> target, Comparator<K> comparator, Function<T, K> kFunction, Function<T, V> vFunction);
+    <T, K, V> TreeMap<K, V> filterNonemptyItemAsTreeMap(Collection<T> target, Comparator<K> comparator, Function<T, K> kFunction, Function<T, V> vFunction);
 
     /**
      * 根据传入规则过滤 Collection ,将目标 Collection 中非空元素转化成新对象组成 ConcurrentHashMap
@@ -125,5 +136,5 @@ public interface CollectionHelper extends HyggeUtil {
      * @param <V>       ConcurrentHashMap 的 value 类型
      * @return 目标 Collection 中非空元素转化成新对象组成的 ConcurrentHashMap
      */
-    <T, K, V> ConcurrentHashMap<K, V> filterCollectionNotEmptyAsConcurrentHashMap(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction);
+    <T, K, V> ConcurrentHashMap<K, V> filterNonemptyItemAsConcurrentHashMap(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction);
 }
