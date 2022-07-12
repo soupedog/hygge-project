@@ -43,6 +43,9 @@ import java.util.Map;
  */
 public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<ApplicationEnvironmentPreparedEvent> {
     private final Logger log = ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger(HyggeLogbackLoaderListener.class);
+    /**
+     * 此对象和 HyggeLogbackLoaderListener 其实没关系，只是希望是在日志配置完毕后再输出 HyggeContext 内容，故放在此处
+     */
     private final Logger logForHyggeSpringContext = ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger(HyggeSpringContextInitListener.class);
 
     @Override
@@ -59,7 +62,6 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
             log.info("HyggeLoggerLogback init success");
         }
 
-        // 这里和 HyggeLogbackLoaderListener 其实没关系，只是希望是在日志配置完毕后再输出 HyggeContext
         String logInfo = "HyggeContext init success:" + HyggeSpringContext.toJsonVale();
         logForHyggeSpringContext.info(logInfo);
     }

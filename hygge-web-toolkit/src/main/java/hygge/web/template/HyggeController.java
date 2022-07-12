@@ -82,21 +82,21 @@ public interface HyggeController<R extends ResponseEntity<?>> {
             hyggeCode = ((HyggeException) e).getHyggeCode();
         }
 
-        HyggeResponse<?, ?> hyggeResponse = new HyggeResponse<>();
+        HyggeControllerResponse<?, ?> HyggeControllerResponse = new HyggeControllerResponse<>();
 
         ResponseEntity.BodyBuilder builder = getBuilder(httpStatus);
 
         if (hyggeCode != null) {
-            hyggeResponse.setCode(hyggeCode.getCode());
-            hyggeResponse.setMsg(hyggeCode.getPublicMessage() == null ? e.getMessage() : hyggeCode.getPublicMessage());
+            HyggeControllerResponse.setCode(hyggeCode.getCode());
+            HyggeControllerResponse.setMsg(hyggeCode.getPublicMessage() == null ? e.getMessage() : hyggeCode.getPublicMessage());
         } else {
-            hyggeResponse.setCode(GlobalHyggeCode.SERVER_END_EXCEPTION.getCode());
-            hyggeResponse.setMsg(GlobalHyggeCode.SERVER_END_EXCEPTION.getPublicMessage());
+            HyggeControllerResponse.setCode(GlobalHyggeCode.SERVER_END_EXCEPTION.getCode());
+            HyggeControllerResponse.setMsg(GlobalHyggeCode.SERVER_END_EXCEPTION.getPublicMessage());
         }
-        return (R) builder.body(hyggeResponse);
+        return (R) builder.body(HyggeControllerResponse);
     }
 
-    default <T> R fail(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, Throwable e, HyggeResponseWrapper<R> responseWrapper) {
+    default <T> R fail(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, Throwable e, HyggeControllerResponseWrapper<R> responseWrapper) {
         return responseWrapper.createFailResponseData(httpStatus, headers, hyggeCode, msg, entity, e);
     }
 
@@ -114,21 +114,21 @@ public interface HyggeController<R extends ResponseEntity<?>> {
 
     default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity) {
         ResponseEntity.BodyBuilder builder = getBuilder(httpStatus);
-        HyggeResponse<?, T> hyggeResponse = new HyggeResponse<>();
-        hyggeResponse.setCode(hyggeCode.getCode());
-        hyggeResponse.setMsg(msg != null ? msg : hyggeCode.getPublicMessage());
-        hyggeResponse.setMain(entity);
+        HyggeControllerResponse<?, T> HyggeControllerResponse = new HyggeControllerResponse<>();
+        HyggeControllerResponse.setCode(hyggeCode.getCode());
+        HyggeControllerResponse.setMsg(msg != null ? msg : hyggeCode.getPublicMessage());
+        HyggeControllerResponse.setMain(entity);
 
         R response;
         if (headers != null) {
-            response = (R) builder.headers(headers).body(hyggeResponse);
+            response = (R) builder.headers(headers).body(HyggeControllerResponse);
         } else {
-            response = (R) builder.body(hyggeResponse);
+            response = (R) builder.body(HyggeControllerResponse);
         }
         return response;
     }
 
-    default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, HyggeResponseWrapper<R> responseWrapper) {
+    default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
         return responseWrapper.createFailResponseData(httpStatus, headers, hyggeCode, msg, entity, null);
     }
 
@@ -139,7 +139,7 @@ public interface HyggeController<R extends ResponseEntity<?>> {
     }
 
     @FunctionalInterface
-    interface HyggeResponseWrapper<R extends ResponseEntity<?>> {
+    interface HyggeControllerResponseWrapper<R extends ResponseEntity<?>> {
         /**
          * HyggeControllerResponse 包装器
          *

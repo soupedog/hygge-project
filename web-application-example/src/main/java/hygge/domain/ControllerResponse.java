@@ -1,7 +1,7 @@
 package hygge.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import hygge.web.template.HyggeResponse;
+import hygge.web.template.HyggeControllerResponse;
 
 /**
  * 自定义 Controller 返回类型
@@ -11,5 +11,5 @@ import hygge.web.template.HyggeResponse;
  * @since 1.0
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ControllerResponse<T> extends HyggeResponse<Integer, T> {
+public class ControllerResponse<T> extends HyggeControllerResponse<Integer, T> {
 }

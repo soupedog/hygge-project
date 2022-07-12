@@ -45,7 +45,7 @@ public class TestController implements HyggeController<ResponseEntity<?>> {
         return success(new Timestamp(System.currentTimeMillis()));
     }
 
-    private static final HyggeResponseWrapper<ResponseEntity<?>> customResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
+    private static final HyggeControllerResponseWrapper<ResponseEntity<?>> customResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
         ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus);
         return result.body(entity);
     };
