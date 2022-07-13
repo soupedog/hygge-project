@@ -1,5 +1,7 @@
 package hygge.commons.templates.container;
 
+import hygge.commons.templates.container.base.AbstractHyggeContext;
+
 /**
  * HyggeContext 的默认实现
  *

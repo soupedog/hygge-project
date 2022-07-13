@@ -1,6 +1,6 @@
 package hygge.commons.templates.configuration.inner;
 
-import hygge.commons.templates.container.AbstractHyggeKeeper;
+import hygge.commons.templates.container.base.AbstractHyggeKeeper;
 
 import java.util.Map;
 

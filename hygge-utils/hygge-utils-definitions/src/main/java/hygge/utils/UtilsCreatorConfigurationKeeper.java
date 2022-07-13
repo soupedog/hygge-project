@@ -1,6 +1,6 @@
 package hygge.utils;
 
-import hygge.commons.templates.container.AbstractHyggeKeeper;
+import hygge.commons.templates.container.base.AbstractHyggeKeeper;
 
 /**
  * UtilsCreator 配置项容器
