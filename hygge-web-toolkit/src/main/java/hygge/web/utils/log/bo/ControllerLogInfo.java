@@ -12,7 +12,7 @@ import hygge.utils.json.jackson.serializer.HyggeLogInfoSerializer;
  * @since 1.0
  */
 public class ControllerLogInfo {
-    private ControllerAutoLogType type;
+    private ControllerLogType type;
     private String path;
     @JsonSerialize(using = HyggeLogInfoSerializer.class)
     private Object input;
@@ -24,11 +24,11 @@ public class ControllerLogInfo {
      */
     private Long cost;
 
-    public ControllerAutoLogType getType() {
+    public ControllerLogType getType() {
         return type;
     }
 
-    public void setType(ControllerAutoLogType type) {
+    public void setType(ControllerLogType type) {
         this.type = type;
     }
 

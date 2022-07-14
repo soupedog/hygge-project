@@ -46,7 +46,7 @@
       ]
     },
     {
-      "name": "hygge.controller.autoLog.enable",
+      "name": "hygge.web-toolkit.controller.log.autoRegister",
       "values": [
         {
           "value": true
@@ -58,12 +58,6 @@
     }
   ],
   "properties": [
-    {
-      "sourceType": "org.hygge.web.toolkit.config.ControllerAutoLogConfig",
-      "name": "hygge.controller.autoLog.enable",
-      "type": "java.lang.Boolean",
-      "defaultValue": true
-    },
     {
       "sourceType": "hygge.web.utils.http.configuration.HttpHelperConfiguration",
       "name": "hygge.utils.httpHelper.default.autoRegister",
@@ -105,6 +99,12 @@
       "name": "hygge.utils.httpHelper.default.connection.maxPerRoute",
       "type": "java.lang.Integer",
       "defaultValue": 200
+    },
+    {
+      "sourceType": "hygge.web.utils.log.configuration.ControllerLogConfiguration",
+      "name": "hygge.web-toolkit.controller.log.autoRegister",
+      "type": "java.lang.Boolean",
+      "defaultValue": true
     }
   ]
 }

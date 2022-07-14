@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ControllerAutoLog {
+public @interface ControllerLog {
     /**
      * 是否激活该注解。未激活时，该注解不会产生实质性作用。
      */

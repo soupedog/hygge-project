@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @since 1.0
  */
 @ConfigurationProperties(prefix = "hygge.web-toolkit.controller.log")
-public class ControllerAutoLogConfiguration implements HyggeSpringProperties {
+public class ControllerLogConfiguration implements HyggeSpringProperties {
     private boolean autoRegister = true;
 
     public boolean isAutoRegister() {

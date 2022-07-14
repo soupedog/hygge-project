@@ -1,11 +1,11 @@
-package hygge.web.utils.log.core.handler;
+package hygge.web.utils.log.definitions;
 
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
 import hygge.web.template.HyggeWebUtilContainer;
-import hygge.web.utils.log.bo.ControllerAutoLogType;
+import hygge.web.utils.log.bo.ControllerLogType;
 import hygge.web.utils.log.bo.ControllerLogInfo;
-import hygge.web.utils.log.core.ControllerAutoLogContext;
-import hygge.web.utils.log.core.ExpressionCache;
+import hygge.web.utils.log.ControllerLogContext;
+import hygge.web.utils.log.ExpressionCache;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +28,11 @@ import java.util.Map;
  * @date 2022/7/14
  * @since 1.0
  */
-public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer {
-    protected static final Logger log = LoggerFactory.getLogger(BaseControllerAutoLogHandler.class);
-    protected static final SpelExpressionParser spelExpressionParser = new SpelExpressionParser(new SpelParserConfiguration(SpelCompilerMode.IMMEDIATE, BaseControllerAutoLogHandler.class.getClassLoader()));
+public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
+    protected static final Logger log = LoggerFactory.getLogger(BaseControllerLogHandler.class);
+    protected static final SpelExpressionParser spelExpressionParser = new SpelExpressionParser(new SpelParserConfiguration(SpelCompilerMode.IMMEDIATE, BaseControllerLogHandler.class.getClassLoader()));
 
-    protected ControllerAutoLogType type;
+    protected ControllerLogType type;
     protected String path;
     protected String[] inputParamNames;
     protected Collection<String> ignoreParamNames;
@@ -45,9 +45,9 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
     /**
      * 在打印日志前的最后一刻执行的钩子函数
      */
-    protected abstract void hook(ControllerAutoLogContext context, MethodInvocation methodInvocation);
+    protected abstract void hook(ControllerLogContext context, MethodInvocation methodInvocation);
 
-    protected BaseControllerAutoLogHandler(ControllerAutoLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionInfo> inputParamGetExpressions, Collection<HyggeExpressionInfo> outputParamExpressions) {
+    protected BaseControllerLogHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionInfo> inputParamGetExpressions, Collection<HyggeExpressionInfo> outputParamExpressions) {
         this.type = type;
         this.path = path;
         this.inputParamNames = inputParamNames == null ? new String[0] : inputParamNames;
@@ -74,7 +74,7 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
         }
     }
 
-    public boolean matches(ControllerAutoLogType type) {
+    public boolean matches(ControllerLogType type) {
         return this.type.equals(type);
     }
 
@@ -86,7 +86,7 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
      */
     public Object executeHandler(MethodInvocation methodInvocation) throws Throwable {
         long startTs = System.currentTimeMillis();
-        ControllerAutoLogContext context = new ControllerAutoLogContext(startTs);
+        ControllerLogContext context = new ControllerLogContext(startTs);
         try {
             ControllerLogInfo controllerLogInfo = context.getLogInfo();
             controllerLogInfo.setType(type);
@@ -96,7 +96,7 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
             controllerLogInfo.setInput(getInputParam(inputParameterValues));
 
             Object responseEntity = methodInvocation.proceed();
-            context.saveObject(ControllerAutoLogContext.Key.RAW_RESPONSE, responseEntity);
+            context.saveObject(ControllerLogContext.Key.RAW_RESPONSE, responseEntity);
 
             Object responseEntityForLog;
 
@@ -173,11 +173,11 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
         }
     }
 
-    private String getLogString(ControllerAutoLogContext context) {
+    private String getLogString(ControllerLogContext context) {
         ControllerLogInfo controllerLogInfo = context.getLogInfo();
         String logInfoStringValue;
         try {
-            logInfoStringValue = "ControllerAutoLog:" + jsonHelper.formatAsString(controllerLogInfo);
+            logInfoStringValue = "ControllerLog:" + jsonHelper.formatAsString(controllerLogInfo);
         } catch (Exception e) {
             String message = "Cannot serialize correctly.";
             log.error(message, e);
@@ -185,7 +185,7 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
             controllerLogInfo.setOutput(message);
             controllerLogInfo.setErrorMessage("An exception was triggered:" + e.getMessage());
             controllerLogInfo.setCost(System.currentTimeMillis() - context.getStartTs());
-            logInfoStringValue = "ControllerAutoLog:" + jsonHelper.formatAsString(controllerLogInfo);
+            logInfoStringValue = "ControllerLog:" + jsonHelper.formatAsString(controllerLogInfo);
         }
         return logInfoStringValue;
     }

@@ -1,20 +1,20 @@
-package hygge.web.utils.log.core;
+package hygge.web.utils.log;
 
 import hygge.commons.templates.container.base.AbstractHyggeContext;
 import hygge.web.utils.log.bo.ControllerLogInfo;
 
 /**
- * ControllerAutoLog 上下文容器
+ * ControllerLog 上下文容器
  *
  * @author Xavier
  * @date 2022/7/14
  * @since 1.0
  */
-public class ControllerAutoLogContext extends AbstractHyggeContext<ControllerAutoLogContext.Key> {
+public class ControllerLogContext extends AbstractHyggeContext<ControllerLogContext.Key> {
     private Long startTs;
     private ControllerLogInfo logInfo = new ControllerLogInfo();
 
-    public ControllerAutoLogContext(Long startTs) {
+    public ControllerLogContext(Long startTs) {
         this.startTs = startTs;
     }
 

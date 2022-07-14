@@ -6,7 +6,7 @@ import hygge.commons.exceptions.code.GlobalHyggeCode;
 import hygge.domain.ControllerResponse;
 import hygge.utils.UtilsCreator;
 import hygge.web.template.HyggeController;
-import hygge.web.utils.log.annotation.ControllerAutoLog;
+import hygge.web.utils.log.annotation.ControllerLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +59,7 @@ public class TestController implements HyggeController<ResponseEntity<?>> {
     }
 
     @GetMapping("/mockLog")
-    @ControllerAutoLog(enable = false)
+    @ControllerLog(enable = false)
     public ResponseEntity<?> mockLog() {
         log.info("info 模拟的日志信息");
         Map<Object, Object> mockObject = new HashMap<>();

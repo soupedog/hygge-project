@@ -1,4 +1,4 @@
-package hygge.web.utils.log.core;
+package hygge.web.utils.log;
 
 import hygge.commons.templates.container.base.AbstractHyggeKeeper;
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;

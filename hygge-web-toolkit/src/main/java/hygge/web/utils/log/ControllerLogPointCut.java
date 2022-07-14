@@ -1,11 +1,11 @@
-package hygge.web.utils.log.core;
+package hygge.web.utils.log;
 
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
 import hygge.web.template.HyggeController;
-import hygge.web.utils.log.annotation.ControllerAutoLog;
-import hygge.web.utils.log.bo.ControllerAutoLogType;
-import hygge.web.utils.log.core.handler.BaseControllerAutoLogHandler;
-import hygge.web.utils.log.core.handler.ControllerAutoLogHandlerFactory;
+import hygge.web.utils.log.annotation.ControllerLog;
+import hygge.web.utils.log.bo.ControllerLogType;
+import hygge.web.utils.log.definitions.BaseControllerLogHandler;
+import hygge.web.utils.log.definitions.ControllerLogHandlerFactory;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -32,14 +32,14 @@ import java.util.Set;
  * @date 2022/7/15
  * @since 1.0
  */
-public class ControllerAutoLogPointCut extends StaticMethodMatcherPointcut implements BeanPostProcessor {
+public class ControllerLogPointCut extends StaticMethodMatcherPointcut implements BeanPostProcessor {
     protected static final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-    protected ControllerAutoLogHandlerCache controllerAutoLogHandlerCache;
-    protected ControllerAutoLogHandlerFactory controllerAutoLogHandlerFactory;
+    protected ControllerLogHandlerCache controllerLogHandlerCache;
+    protected ControllerLogHandlerFactory controllerLogHandlerFactory;
 
-    public ControllerAutoLogPointCut(ControllerAutoLogHandlerCache controllerAutoLogHandlerCache, ControllerAutoLogHandlerFactory controllerAutoLogHandlerFactory) {
-        this.controllerAutoLogHandlerCache = controllerAutoLogHandlerCache;
-        this.controllerAutoLogHandlerFactory = controllerAutoLogHandlerFactory;
+    public ControllerLogPointCut(ControllerLogHandlerCache controllerLogHandlerCache, ControllerLogHandlerFactory controllerLogHandlerFactory) {
+        this.controllerLogHandlerCache = controllerLogHandlerCache;
+        this.controllerLogHandlerFactory = controllerLogHandlerFactory;
     }
 
     @Override
@@ -49,13 +49,13 @@ public class ControllerAutoLogPointCut extends StaticMethodMatcherPointcut imple
             return false;
         }
 
-        ControllerAutoLog configuration = AnnotationUtils.getAnnotation(method, ControllerAutoLog.class);
+        ControllerLog configuration = AnnotationUtils.getAnnotation(method, ControllerLog.class);
         if (configuration != null && !configuration.enable()) {
             // 如果使用配置项注解主动关闭当前方法的自动日志，直接跳过
             return false;
         }
 
-        ControllerAutoLogType type;
+        ControllerLogType type;
         String path;
         String[] inputParamNames = parameterNameDiscoverer.getParameterNames(method);
         Collection<String> ignoreParamNames;
@@ -64,30 +64,30 @@ public class ControllerAutoLogPointCut extends StaticMethodMatcherPointcut imple
 
         if (method.isAnnotationPresent(GetMapping.class)) {
             GetMapping getMapping = AnnotationUtils.getAnnotation(method, GetMapping.class);
-            type = ControllerAutoLogType.GET;
+            type = ControllerLogType.GET;
             path = getPathInfo(Objects.requireNonNull(getMapping).path(), getMapping.value());
         } else if (method.isAnnotationPresent(PostMapping.class)) {
             PostMapping postMapping = AnnotationUtils.getAnnotation(method, PostMapping.class);
-            type = ControllerAutoLogType.POST;
+            type = ControllerLogType.POST;
             path = getPathInfo(Objects.requireNonNull(postMapping).path(), postMapping.value());
         } else if (method.isAnnotationPresent(PatchMapping.class)) {
             PatchMapping patchMapping = AnnotationUtils.getAnnotation(method, PatchMapping.class);
-            type = ControllerAutoLogType.PATCH;
+            type = ControllerLogType.PATCH;
             path = getPathInfo(Objects.requireNonNull(patchMapping).path(), patchMapping.value());
         } else if (method.isAnnotationPresent(PutMapping.class)) {
             PutMapping putMapping = AnnotationUtils.getAnnotation(method, PutMapping.class);
-            type = ControllerAutoLogType.PUT;
+            type = ControllerLogType.PUT;
             path = getPathInfo(Objects.requireNonNull(putMapping).path(), putMapping.value());
         } else if (method.isAnnotationPresent(DeleteMapping.class)) {
             DeleteMapping deleteMapping = AnnotationUtils.getAnnotation(method, DeleteMapping.class);
-            type = ControllerAutoLogType.DELETE;
+            type = ControllerLogType.DELETE;
             path = getPathInfo(Objects.requireNonNull(deleteMapping).path(), deleteMapping.value());
         } else {
-            type = ControllerAutoLogType.NONE;
+            type = ControllerLogType.NONE;
             path = null;
         }
 
-        if (ControllerAutoLogType.NONE.equals(type)) {
+        if (ControllerLogType.NONE.equals(type)) {
             // 如果当前方法没有标记 GetMapping、PostMapping、PatchMapping、PutMapping、DeleteMapping，直接跳过
             return false;
         }
@@ -102,8 +102,8 @@ public class ControllerAutoLogPointCut extends StaticMethodMatcherPointcut imple
             outputParamExpressions = new ArrayList<>(0);
         }
 
-        BaseControllerAutoLogHandler handler = controllerAutoLogHandlerFactory.createHandler(type, path, inputParamNames, ignoreParamNames, inputParamGetExpressions, outputParamExpressions);
-        controllerAutoLogHandlerCache.saveValue(method, handler);
+        BaseControllerLogHandler handler = controllerLogHandlerFactory.createHandler(type, path, inputParamNames, ignoreParamNames, inputParamGetExpressions, outputParamExpressions);
+        controllerLogHandlerCache.saveValue(method, handler);
         return true;
     }
 

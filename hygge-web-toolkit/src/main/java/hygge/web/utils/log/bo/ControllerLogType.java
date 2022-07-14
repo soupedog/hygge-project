@@ -7,7 +7,7 @@ package hygge.web.utils.log.bo;
  * @date 2022/7/14
  * @since 1.0
  */
-public enum ControllerAutoLogType {
+public enum ControllerLogType {
     /**
      * 不需要自动日志
      */

@@ -1,4 +1,4 @@
-package hygge.web.utils.log.core;
+package hygge.web.utils.log;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.Pointcut;
@@ -11,13 +11,13 @@ import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
  * @date 2022/7/15
  * @since 1.0
  */
-public class ControllerAutoLogAdvisor extends AbstractBeanFactoryPointcutAdvisor {
+public class ControllerLogAdvisor extends AbstractBeanFactoryPointcutAdvisor {
     /**
      * i just copy from {@link AbstractBeanFactoryPointcutAdvisor#advice}
      */
     private transient volatile Pointcut pointcut;
 
-    public ControllerAutoLogAdvisor(MethodInterceptor methodInterceptor, Pointcut pointcut) {
+    public ControllerLogAdvisor(MethodInterceptor methodInterceptor, Pointcut pointcut) {
         setAdvice(methodInterceptor);
         this.pointcut = pointcut;
     }
