@@ -1,7 +1,7 @@
 package hygge.web.utils.log.core.handler;
 
 import hygge.web.template.HyggeWebUtilContainer;
-import hygge.web.utils.log.annotation.HyggeExpressionInfo;
+import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
 import hygge.web.utils.log.bo.ControllerAutoLogType;
 import hygge.web.utils.log.bo.ControllerLogInfo;
 import hygge.web.utils.log.core.ControllerAutoLogContext;

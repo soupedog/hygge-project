@@ -1,4 +1,4 @@
-package hygge.web.utils.log.annotation;
+package hygge.commons.templates.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

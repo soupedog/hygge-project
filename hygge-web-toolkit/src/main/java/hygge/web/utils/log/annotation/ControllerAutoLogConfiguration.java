@@ -1,5 +1,6 @@
 package hygge.web.utils.log.annotation;
 
+import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
 import hygge.web.template.HyggeControllerResponse;
 import org.springframework.http.RequestEntity;
 
