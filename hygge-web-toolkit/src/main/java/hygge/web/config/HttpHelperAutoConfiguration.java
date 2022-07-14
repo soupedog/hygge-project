@@ -10,6 +10,8 @@ import hygge.web.utils.http.impl.DefaultHttpHelper;
 import hygge.web.utils.http.impl.DefaultHttpHelperLogger;
 import hygge.web.utils.http.impl.DefaultHttpHelperResponseEntityReader;
 import hygge.web.utils.http.impl.DefaultHttpHelperRestTemplateFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,32 +27,32 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(value = HttpHelperConfiguration.class)
+@ConditionalOnProperty(value = "hygge.utils.httpHelper.default.autoRegister", havingValue = "true", matchIfMissing = true)
 public class HttpHelperAutoConfiguration implements HyggeAutoConfiguration {
+    private static final Logger log = LoggerFactory.getLogger(HttpHelperAutoConfiguration.class);
+
     @Bean("defaultHttpHelperRestTemplateFactory")
-    @ConditionalOnProperty(value = "hygge.utils.httpHelper.default.autoRegister", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(value = HttpHelperRestTemplateFactory.class)
     public HttpHelperRestTemplateFactory defaultHttpHelperRestTemplateFactory(HttpHelperConfiguration httpHelperConfiguration) {
         return new DefaultHttpHelperRestTemplateFactory(httpHelperConfiguration);
     }
 
     @Bean("defaultHttpHelperResponseEntityReader")
-    @ConditionalOnProperty(value = "hygge.utils.httpHelper.default.autoRegister", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(value = HttpHelperResponseEntityReader.class)
     public HttpHelperResponseEntityReader defaultHttpHelperResponseEntityReader() {
         return new DefaultHttpHelperResponseEntityReader();
     }
 
     @Bean("defaultHttpHelperLogger")
-    @ConditionalOnProperty(value = "hygge.utils.httpHelper.default.autoRegister", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(value = HttpHelperLogger.class)
     public HttpHelperLogger defaultHttpHelperLogger() {
         return new DefaultHttpHelperLogger();
     }
 
     @Bean("defaultHttpHelper")
-    @ConditionalOnProperty(value = "hygge.utils.httpHelper.default.autoRegister", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(value = HttpHelper.class)
-    public HttpHelper httpHelper(HttpHelperRestTemplateFactory httpHelperRestTemplateFactory, HttpHelperLogger httpHelperLogger, HttpHelperResponseEntityReader httpHelperResponseEntityReader) {
+    public HttpHelper defaultHttpHelper(HttpHelperRestTemplateFactory httpHelperRestTemplateFactory, HttpHelperLogger httpHelperLogger, HttpHelperResponseEntityReader httpHelperResponseEntityReader) {
+        log.info("DefaultHttpHelper start to init.");
         return new DefaultHttpHelper(httpHelperRestTemplateFactory, httpHelperLogger, httpHelperResponseEntityReader);
     }
 }
