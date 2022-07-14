@@ -1,7 +1,7 @@
 package hygge.web.utils.log.core.handler;
 
-import hygge.web.template.HyggeWebUtilContainer;
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
+import hygge.web.template.HyggeWebUtilContainer;
 import hygge.web.utils.log.bo.ControllerAutoLogType;
 import hygge.web.utils.log.bo.ControllerLogInfo;
 import hygge.web.utils.log.core.ControllerAutoLogContext;
@@ -66,6 +66,11 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
             }
             Expression expression = spelExpressionParser.parseExpression(item.value());
             currentExpressionCache.saveValue(item.name(), expression);
+        }
+        // 初始化 outputExpressionCache
+        for (HyggeExpressionInfo item : outputParamExpressions) {
+            Expression expression = spelExpressionParser.parseExpression(item.value());
+            outputExpressionCache.saveValue(item.name(), expression);
         }
     }
 
