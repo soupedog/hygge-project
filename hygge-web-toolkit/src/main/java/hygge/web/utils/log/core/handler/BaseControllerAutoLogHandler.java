@@ -39,8 +39,8 @@ public abstract class BaseControllerAutoLogHandler extends HyggeWebUtilContainer
     /**
      * key:{@link HyggeExpressionInfo#rootObjectName()}
      */
-    private final HashMap<String, ExpressionCache> inputExpressionCacheMap;
-    private final ExpressionCache outputExpressionCache;
+    protected final HashMap<String, ExpressionCache> inputExpressionCacheMap;
+    protected final ExpressionCache outputExpressionCache;
 
     /**
      * 在打印日志前的最后一刻执行的钩子函数
