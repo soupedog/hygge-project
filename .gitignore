@@ -8,4 +8,4 @@ out
 gen
 # versions-maven-plugin 版本回滚备份文件
 *.versionsBackup
-*.class
+/**/target
