@@ -2,6 +2,7 @@ package hygge.utils.json.jackson.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import hygge.commons.templates.core.HyggeLogInfoObject;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,12 @@ import java.io.IOException;
  * @since 1.0
  */
 public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    static {
+        mapper.registerModule(new HyggeLogInfoModule());
+    }
+
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (value instanceof HyggeLogInfoObject) {
@@ -28,7 +35,7 @@ public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
                 gen.writeNull();
             }
         } else {
-            gen.writeObject(value);
+            mapper.writeValue(gen, value);
         }
     }
 }
