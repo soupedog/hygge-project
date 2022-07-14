@@ -1,6 +1,7 @@
 package hygge.utils.definitions;
 
 import hygge.commons.enums.StringCategoryEnum;
+import hygge.utils.HyggeUtil;
 
 /**
  * 随机生成工具类
@@ -9,7 +10,7 @@ import hygge.commons.enums.StringCategoryEnum;
  * @date 2022/6/25
  * @since 1.0
  */
-public interface RandomHelper {
+public interface RandomHelper extends HyggeUtil {
     /**
      * 生成随机数字(闭区间)
      *
