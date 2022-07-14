@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import hygge.commons.templates.core.HyggeLogInfoObject;
+import hygge.utils.UtilsCreator;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -20,6 +21,11 @@ public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
+        Object defaultMapperTemp = UtilsCreator.INSTANCE.getDefaultJsonHelperInstance(false).getDependence();
+        if (defaultMapperTemp instanceof ObjectMapper) {
+            mapper.setConfig(((ObjectMapper) defaultMapperTemp).getSerializationConfig());
+            mapper.setConfig(((ObjectMapper) defaultMapperTemp).getDeserializationConfig());
+        }
         mapper.registerModule(new HyggeLogInfoModule());
     }
 
@@ -31,7 +37,7 @@ public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
                 gen.writeRawValue(jsonInfo);
             } else {
                 // "JsonInclude.Include.NON_NULL" 之类的配置项，影响到的是此处 value 不为 null 的才会进入这个 JsonSerializer
-                // value 是真的不为 null 导致没法把 key 抹除了
+                // value 是真的不为 null 导致没法把 key 抹除了(gen 不写入会报错)
                 gen.writeNull();
             }
         } else {
