@@ -21,7 +21,7 @@ public class HyggeLogbackJsonPatterHelper extends HyggeLogJsonPatterHelper {
 
     @Override
     public String getLevel(boolean enableColorful, ConverterModeEnum converterMode) {
-        return enableColorful ? "%clr{%5p}" : "%5p";
+        return enableColorful ? "%clr{%5p}" : "%p";
     }
 
     @Override
@@ -62,12 +62,12 @@ public class HyggeLogbackJsonPatterHelper extends HyggeLogJsonPatterHelper {
 
     @Override
     public String getThread(boolean enableColorful, ConverterModeEnum converterMode) {
-        return "%15.15t";
+        return "%t";
     }
 
     @Override
     public String getClassPath(boolean enableColorful, ConverterModeEnum converterMode) {
-        return enableColorful ? "%clr(%-40.40logger{39}){cyan}" : "%-40.40logger{39}";
+        return enableColorful ? "%clr(%-40.40logger{39}){cyan}" : "%logger{39}";
     }
 
     @Override

@@ -163,11 +163,15 @@ public abstract class HyggeLogConfiguration {
 
     public enum ConfigKey {
         /**
+         * 是否启动
+         */
+        ENABLE("hygge.logging.enable"),
+        /**
          * 项目名称
          */
         PROJECT_NAME("hygge.logging.projectName"),
         /**
-         * 应用名称
+         * 应用名称(默认会使用 spring.application.name)
          */
         APP_NAME("hygge.logging.appName"),
         /**
@@ -175,13 +179,9 @@ public abstract class HyggeLogConfiguration {
          */
         VERSION("hygge.logging.version"),
         /**
-         * 是否启动
+         * 是否覆写 {@link org.slf4j.Logger.ROOT_LOGGER_NAME} 对应的 Logger
          */
-        ENABLE("hygge.logging.enable"),
-        /**
-         * rootLogger 覆写是否开启
-         */
-        ROOT_OVERRIDE("hygge.logging.root.override.enable"),
+        ROOT_OVERRIDE("hygge.logging.rootOverride.enable"),
         /**
          * hygge 包路径范围
          */
@@ -204,13 +204,13 @@ public abstract class HyggeLogConfiguration {
          */
         ENABLE_JSON_TYPE("hygge.logging.pattern.jsonType.enable"),
         /**
-         * 日志输出模式
-         */
-        OUTPUT_MODE("hygge.logging.output.mode"),
-        /**
          * 日志内容编码模式
          */
         CONVERTER_MODE("hygge.logging.pattern.converter.mode"),
+        /**
+         * 日志输出模式
+         */
+        OUTPUT_MODE("hygge.logging.output.mode"),
         /**
          * log4j 专有配置项<br/>
          * 日志文件存储路径

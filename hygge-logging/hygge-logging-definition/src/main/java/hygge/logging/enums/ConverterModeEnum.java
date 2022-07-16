@@ -27,7 +27,7 @@ public enum ConverterModeEnum {
      *
      * @see LogConverter#jsonFriendlyConverter(CharSequence)
      */
-    JSON_FRIENDLY("JSON_STRING", "jsonString");
+    JSON_FRIENDLY("JSON_FRIENDLY", "jsonFriendly");
 
     ConverterModeEnum(String description, String converterKey) {
         this.description = description;
