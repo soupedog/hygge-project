@@ -79,10 +79,11 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
             config = defaultRequestConfiguration;
         }
 
-        if (containsKey(config)) {
-            return getValue(config);
+        RestTemplate result = getValue(config);
+        if (result == null) {
+            result = newInstance(config);
         }
-        return newInstance(config);
+        return result;
     }
 
     @Override
@@ -91,8 +92,9 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
     }
 
     private synchronized RestTemplate newInstance(HttpHelperRequestConfiguration config) {
-        if (containsKey(config)) {
-            return getValue(config);
+        RestTemplate result = getValue(config);
+        if (result != null) {
+            return result;
         }
 
         HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
@@ -103,7 +105,7 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
         httpRequestFactory.setConnectTimeout(parameterHelper.integerFormat("connectTimeOutMilliseconds", config.connectTimeOutMilliseconds()));
         httpRequestFactory.setReadTimeout(parameterHelper.integerFormat("readTimeOutMilliseconds", config.readTimeOutMilliseconds()));
 
-        RestTemplate result = new RestTemplate(httpRequestFactory);
+        result = new RestTemplate(httpRequestFactory);
         toSupportUTF8(result);
         result.setErrorHandler(getResponseErrorHandler());
 
