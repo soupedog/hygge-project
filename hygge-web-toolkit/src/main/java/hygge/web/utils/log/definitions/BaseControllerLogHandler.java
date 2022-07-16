@@ -2,10 +2,10 @@ package hygge.web.utils.log.definitions;
 
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
 import hygge.web.template.HyggeWebUtilContainer;
-import hygge.web.utils.log.bo.ControllerLogType;
-import hygge.web.utils.log.bo.ControllerLogInfo;
 import hygge.web.utils.log.ControllerLogContext;
 import hygge.web.utils.log.ExpressionCache;
+import hygge.web.utils.log.bo.ControllerLogInfo;
+import hygge.web.utils.log.bo.ControllerLogType;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +57,9 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
 
         // 初始化 inputExpressionCacheMap
         for (HyggeExpressionInfo item : inputParamGetExpressions) {
+            if (!item.enable()) {
+                continue;
+            }
             ExpressionCache currentExpressionCache;
             if (!inputExpressionCacheMap.containsKey(item.rootObjectName())) {
                 currentExpressionCache = new ExpressionCache();
@@ -69,6 +72,9 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
         }
         // 初始化 outputExpressionCache
         for (HyggeExpressionInfo item : outputParamExpressions) {
+            if (!item.enable()) {
+                continue;
+            }
             Expression expression = spelExpressionParser.parseExpression(item.value());
             outputExpressionCache.saveValue(item.name(), expression);
         }
