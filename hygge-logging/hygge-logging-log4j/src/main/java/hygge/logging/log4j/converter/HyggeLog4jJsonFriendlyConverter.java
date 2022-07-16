@@ -24,7 +24,7 @@ import java.util.List;
  * @since 1.0
  */
 @Plugin(name = "HyggeLog4jJsonFriendlyConverter", category = PatternConverter.CATEGORY)
-@ConverterKeys({"jsonString"})
+@ConverterKeys({"jsonFriendly"})
 public class HyggeLog4jJsonFriendlyConverter extends LogEventPatternConverter {
     private List<PatternFormatter> formatters;
 

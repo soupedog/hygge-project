@@ -53,7 +53,7 @@ public class HyggeLog4jJsonPatterHelper extends HyggeLogJsonPatterHelper {
 
     @Override
     public String getThread(boolean enableColorful, ConverterModeEnum converterMode) {
-        return "%15.15t";
+        return "%t";
     }
 
     @Override

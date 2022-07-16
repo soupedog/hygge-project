@@ -43,7 +43,7 @@ public class HyggeLog4JPatterHelper implements HyggeLogPatterHelper {
                     configuration.getAppName(),
                     configuration.getVersion()
             );
-            finalPatter = hyggeLog4jJsonPatterHelper.create(configuration.isEnableColorful(), configuration.getConverterMode());
+            finalPatter = hyggeLog4jJsonPatterHelper.create(configuration.isEnableColorful(), configuration.getConverterMode()) + "%n";
         } else {
             if (configuration.isEnableColorful()) {
                 finalPatter = hyggeScope ? HYGGE_DEFAULT_COLORFUL_PATTERN : ROOT_DEFAULT_COLORFUL_PATTERN;
