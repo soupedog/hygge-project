@@ -20,33 +20,11 @@
             <groupId>io.github.hyggeproject</groupId>
             <artifactId>hygge-web-toolkit</artifactId>
             <version>${hygge.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>hygge-logging-logback</artifactId>
-                    <groupId>io.github.hyggeproject</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>hygge-logging-log4j</artifactId>
-            <groupId>io.github.hyggeproject</groupId>
-            <version>${hygge.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>${spring.boot.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                    <groupId>org.springframework.boot</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
