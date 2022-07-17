@@ -13,10 +13,6 @@ import hygge.commons.exceptions.core.HyggeException;
  * @since 1.0
  */
 public class InternalException extends HyggeException {
-    public InternalException(HyggeCode<?, ?> hyggeCode) {
-        super(hyggeCode);
-    }
-
     public InternalException(String message) {
         super(message, GlobalHyggeCode.SERVER_END_EXCEPTION);
     }

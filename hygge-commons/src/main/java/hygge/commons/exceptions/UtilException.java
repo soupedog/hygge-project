@@ -13,10 +13,6 @@ import hygge.commons.exceptions.core.HyggeException;
  * @since 1.0
  */
 public class UtilException extends HyggeException {
-    public UtilException(HyggeCode<?, ?> hyggeCode) {
-        super(hyggeCode);
-    }
-
     public UtilException(String message) {
         super(message, GlobalHyggeCode.UTIL_EXCEPTION);
     }

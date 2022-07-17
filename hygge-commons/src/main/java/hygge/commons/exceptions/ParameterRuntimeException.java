@@ -13,10 +13,6 @@ import hygge.commons.exceptions.core.HyggeRuntimeException;
  * @since 1.0
  */
 public class ParameterRuntimeException extends HyggeRuntimeException {
-    public ParameterRuntimeException(HyggeCode<?, ?> hyggeCode) {
-        super(hyggeCode);
-    }
-
     public ParameterRuntimeException(String message) {
         super(message, GlobalHyggeCode.UNEXPECTED_PARAMETER);
     }
