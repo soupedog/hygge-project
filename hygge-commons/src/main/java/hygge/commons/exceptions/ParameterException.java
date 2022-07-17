@@ -13,6 +13,10 @@ import hygge.commons.exceptions.core.HyggeException;
  * @since 1.0
  */
 public class ParameterException extends HyggeException {
+    public ParameterException(HyggeCode<?, ?> hyggeCode) {
+        super(hyggeCode);
+    }
+
     public ParameterException(String message) {
         super(message, GlobalHyggeCode.UNEXPECTED_PARAMETER);
     }

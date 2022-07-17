@@ -13,6 +13,10 @@ import hygge.commons.exceptions.core.HyggeRuntimeException;
  * @since 1.0
  */
 public class LightRuntimeException extends HyggeRuntimeException {
+    public LightRuntimeException(HyggeCode<?, ?> hyggeCode) {
+        super(hyggeCode);
+    }
+
     public LightRuntimeException(String message) {
         super(message, GlobalHyggeCode.CLIENT_END_EXCEPTION);
     }
