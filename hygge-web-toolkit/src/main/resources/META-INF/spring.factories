@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=hygge.web.config.HttpHelperAutoConfiguration,hygge.web.utils.log.configuration.ControllerLogConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=hygge.web.config.HttpHelperAutoConfiguration,hygge.web.config.ControllerLogAutoConfiguration
