@@ -84,6 +84,9 @@ public class ColumnInfo {
                 case INTEGER:
                     result = parameterHelper.integerFormat(columnName, target, minLength.intValue(), maxLength.intValue());
                     break;
+                case LONG:
+                    result = parameterHelper.longFormat(columnName, target, minLength.longValue(), maxLength.longValue());
+                    break;
                 case FLOAT:
                     result = parameterHelper.floatFormat(columnName, target, minLength.floatValue(), maxLength.floatValue());
                     break;
@@ -111,6 +114,9 @@ public class ColumnInfo {
                 case INTEGER:
                     result = parameterHelper.integerFormatNotEmpty(columnName, target, minLength.intValue(), maxLength.intValue());
                     break;
+                case LONG:
+                    result = parameterHelper.longFormatNotEmpty(columnName, target, minLength.longValue(), maxLength.longValue());
+                    break;
                 case FLOAT:
                     result = parameterHelper.floatFormatNotEmpty(columnName, target, minLength.floatValue(), maxLength.floatValue());
                     break;
@@ -121,7 +127,7 @@ public class ColumnInfo {
                     result = parameterHelper.booleanFormatNotEmpty(columnName, target);
                     break;
                 default:
-                    throw new UtilRuntimeException(String.format("Unexpected ColumnInfo:%s,it should be STRING,BYTE,SHORT,INTEGER,FLOAT,DOUBLE,BOOLEAN.", columnTypeEnum));
+                    throw new UtilRuntimeException(String.format("Unexpected ColumnInfo:%s,it should be STRING,BYTE,SHORT,INTEGER,LONG,FLOAT,DOUBLE,BOOLEAN.", columnTypeEnum));
             }
         }
         return result;
