@@ -11,7 +11,7 @@ public class UtilsCreatorHyggeUtilKeeper extends AbstractHyggeKeeper<String, Hyg
     public UtilsCreatorHyggeUtilKeeper() {
     }
 
-    public UtilsCreatorHyggeUtilKeeper(int initialCapacity) {
-        super(initialCapacity);
+    public UtilsCreatorHyggeUtilKeeper(int initialCapacity, float loadFactor) {
+        super(initialCapacity, loadFactor);
     }
 }

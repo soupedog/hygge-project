@@ -15,8 +15,8 @@ public class HyggeConfigurationItemKeeper extends AbstractHyggeKeeper<String, Hy
     public HyggeConfigurationItemKeeper() {
     }
 
-    public HyggeConfigurationItemKeeper(int initialCapacity) {
-        super(initialCapacity);
+    public HyggeConfigurationItemKeeper(int initialCapacity, float loadFactor) {
+        super(initialCapacity, loadFactor);
     }
 
     public Map<String, HyggeConfigurationItem<?>> getContainer() {

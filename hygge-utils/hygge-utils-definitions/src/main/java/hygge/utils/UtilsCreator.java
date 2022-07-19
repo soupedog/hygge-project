@@ -30,7 +30,7 @@ public enum UtilsCreator implements UtilsCreatorAbility, InfoMessageSupplier {
     /**
      * 用于保存单例工具类的容器，key 是 {@link HyggeUtil#getHyggeName()}
      */
-    private static final UtilsCreatorHyggeUtilKeeper singletonObjects = new UtilsCreatorHyggeUtilKeeper(64);
+    private static final UtilsCreatorHyggeUtilKeeper singletonObjects = new UtilsCreatorHyggeUtilKeeper(64, 0.75F);
 
     /**
      * 先从 {@link UtilsCreator#singletonObjects} 里根据 cacheKey 取，如果没取到则通过构造方法获取实例，并将该实例缓存到 {@link UtilsCreator#singletonObjects}

@@ -17,15 +17,15 @@ public abstract class AbstractHyggeContext<K> implements HyggeContext<K> {
     protected Map<K, Object> container;
 
     protected AbstractHyggeContext() {
-        initContainer(16);
+        initContainer(16, 0.75F);
     }
 
-    protected AbstractHyggeContext(int initialCapacity) {
-        initContainer(initialCapacity);
+    protected AbstractHyggeContext(int initialCapacity, float loadFactor) {
+        initContainer(initialCapacity, loadFactor);
     }
 
-    protected void initContainer(int initialCapacity) {
-        this.container = new ConcurrentHashMap<>(initialCapacity);
+    protected void initContainer(int initialCapacity, float loadFactor) {
+        this.container = new ConcurrentHashMap<>(initialCapacity, loadFactor);
     }
 
     @Override

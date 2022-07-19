@@ -16,15 +16,15 @@ public abstract class AbstractHyggeKeeper<K, V> implements HyggeKeeper<K, V> {
     protected Map<K, V> container;
 
     protected AbstractHyggeKeeper() {
-        initContainer(16);
+        initContainer(16, 0.75F);
     }
 
-    protected AbstractHyggeKeeper(int initialCapacity) {
-        initContainer(initialCapacity);
+    protected AbstractHyggeKeeper(int initialCapacity, float loadFactor) {
+        initContainer(initialCapacity, loadFactor);
     }
 
-    protected void initContainer(int initialCapacity) {
-        this.container = new ConcurrentHashMap<>(initialCapacity);
+    protected void initContainer(int initialCapacity, float loadFactor) {
+        this.container = new ConcurrentHashMap<>(initialCapacity, loadFactor);
     }
 
     @Override

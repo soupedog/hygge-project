@@ -5,7 +5,12 @@ import hygge.commons.enums.ColumnTypeEnum;
 import hygge.commons.templates.configuration.inner.HyggeConfigurationItem;
 import hygge.commons.templates.configuration.inner.HyggeConfigurationItemKeeper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Hygge 配置项(每一个 key 都只能对应唯一的值)
@@ -29,7 +34,7 @@ public class DefaultHyggeConfiguration implements HyggeConfiguration {
     }
 
     public DefaultHyggeConfiguration(Properties properties, int order) {
-        this.propertiesKeeper = new HyggeConfigurationItemKeeper(properties.size());
+        this.propertiesKeeper = new HyggeConfigurationItemKeeper(properties.size(), 1F);
 
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             HyggeConfigurationItem<?> newItem = new HyggeConfigurationItem<>(entry.getKey().toString(), ColumnTypeEnum.analyseColumnType(entry.getValue()), entry.getValue(), order);
