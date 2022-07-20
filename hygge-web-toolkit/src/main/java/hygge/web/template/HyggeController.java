@@ -62,16 +62,21 @@ public interface HyggeController<R extends ResponseEntity<?>> {
         if (e.getHyggeCode().serious()) {
             log.error(e::getMessage, e);
             return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
-        } else {
-            log.warn(e::getMessage, e);
-            return fail(HttpStatus.BAD_REQUEST, e);
         }
+        if (!muteLessSeriousException()) {
+            log.warn(e::getMessage, e);
+        }
+        return fail(HttpStatus.BAD_REQUEST, e);
     }
 
     @ExceptionHandler(Throwable.class)
     default R serviceErrorHandler(Throwable e) {
         log.error(e::getMessage, e);
         return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
+    }
+
+    default boolean muteLessSeriousException() {
+        return false;
     }
 
     default R fail(HttpStatus httpStatus, Throwable e) {

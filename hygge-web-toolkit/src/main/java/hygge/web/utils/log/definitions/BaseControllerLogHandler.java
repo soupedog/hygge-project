@@ -119,13 +119,17 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
             return responseEntity;
         } catch (Exception e) {
             ControllerLogInfo logInfo = context.getLogInfo();
-            logInfo.setErrorMessage("An exception was triggered:" + e.getMessage());
+            logInfo.setErrorMessage(e.getMessage());
             throw e;
         } finally {
             ControllerLogInfo logInfo = context.getLogInfo();
             logInfo.setCost(System.currentTimeMillis() - startTs);
             String logInfoStringValue = getLogString(context);
-            log.info(logInfoStringValue);
+            if (logInfo.getErrorMessage() != null) {
+                log.warn(logInfoStringValue);
+            } else {
+                log.info(logInfoStringValue);
+            }
         }
     }
 
