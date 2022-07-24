@@ -96,6 +96,9 @@ public class ColumnInfo {
                 case BOOLEAN:
                     result = parameterHelper.booleanFormat(columnName, target);
                     break;
+                case OTHER_OBJECT:
+                    result = target;
+                    break;
                 default:
                     throw new UtilRuntimeException(String.format("Unexpected ColumnInfo:%s,it should be STRING,BYTE,SHORT,INTEGER,FLOAT,DOUBLE,BOOLEAN.", columnTypeEnum));
             }
@@ -125,6 +128,10 @@ public class ColumnInfo {
                     break;
                 case BOOLEAN:
                     result = parameterHelper.booleanFormatNotEmpty(columnName, target);
+                    break;
+                case OTHER_OBJECT:
+                    parameterHelper.objectNotNull(columnName, target);
+                    result = target;
                     break;
                 default:
                     throw new UtilRuntimeException(String.format("Unexpected ColumnInfo:%s,it should be STRING,BYTE,SHORT,INTEGER,LONG,FLOAT,DOUBLE,BOOLEAN.", columnTypeEnum));
