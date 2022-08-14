@@ -160,7 +160,7 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
     }
 
     protected Object getOutputParam(Object responseEntityForLog) {
-        if (inputExpressionCacheMap.isEmpty()) {
+        if (outputExpressionCache.getContainer().isEmpty()) {
             return responseEntityForLog;
         }
 
