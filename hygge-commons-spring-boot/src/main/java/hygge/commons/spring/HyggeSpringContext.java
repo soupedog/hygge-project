@@ -4,6 +4,8 @@ import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
 import hygge.commons.spring.listener.HyggeSpringContextInitListener;
 import org.springframework.core.env.ConfigurableEnvironment;
 
+import java.util.TimeZone;
+
 /**
  * Hygge Spring 环境下系统上下文
  *
@@ -56,9 +58,10 @@ public class HyggeSpringContext {
     }
 
     public static String toJsonVale() {
-        return String.format("{\"environmentModeEnum\":\"%s\",\"appName\":\"%s\"}",
+        return String.format("{\"environmentModeEnum\":\"%s\",\"appName\":\"%s\",\"timeZone\":\"%s\"}",
                 deploymentEnvironment,
-                appName);
+                appName,
+                TimeZone.getDefault().getID());
     }
 
     @Override
