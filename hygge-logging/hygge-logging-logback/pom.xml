@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>hygge-logging</artifactId>
-        <groupId>io.github.hyggeproject</groupId>
+        <groupId>io.github.soupedog</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,7 +18,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.hyggeproject</groupId>
+            <groupId>io.github.soupedog</groupId>
             <artifactId>hygge-logging-definition</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

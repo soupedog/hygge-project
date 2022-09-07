@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.hyggeproject</groupId>
+            <groupId>io.github.soupedog</groupId>
             <artifactId>hygge-web-toolkit</artifactId>
             <version>${hygge.version}</version>
         </dependency>
