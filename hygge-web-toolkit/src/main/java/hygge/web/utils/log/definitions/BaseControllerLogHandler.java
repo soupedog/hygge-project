@@ -38,6 +38,7 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
     protected Collection<String> ignoreParamNames;
     /**
      * key:{@link HyggeExpressionInfo#rootObjectName()}
+     * 入参不像出参之多只有一个，所以 ExpressionCache 之外还多一层 map
      */
     protected final HashMap<String, ExpressionCache> inputExpressionCacheMap;
     protected final ExpressionCache outputExpressionCache;
@@ -60,13 +61,14 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
             if (!item.enable()) {
                 continue;
             }
-            ExpressionCache currentExpressionCache;
-            if (!inputExpressionCacheMap.containsKey(item.rootObjectName())) {
+
+            ExpressionCache currentExpressionCache = inputExpressionCacheMap.get(item.rootObjectName());
+
+            if (currentExpressionCache == null) {
                 currentExpressionCache = new ExpressionCache();
                 inputExpressionCacheMap.put(item.rootObjectName(), currentExpressionCache);
-            } else {
-                currentExpressionCache = inputExpressionCacheMap.get(item.rootObjectName());
             }
+
             Expression expression = spelExpressionParser.parseExpression(item.value());
             currentExpressionCache.saveValue(item.name(), expression);
         }
@@ -78,10 +80,6 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
             Expression expression = spelExpressionParser.parseExpression(item.value());
             outputExpressionCache.saveValue(item.name(), expression);
         }
-    }
-
-    public boolean matches(ControllerLogType type) {
-        return this.type.equals(type);
     }
 
     /**
@@ -200,7 +198,7 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
         return logInfoStringValue;
     }
 
-    public HashMap<String, ExpressionCache> getInputExpressionCacheMap() {
+    public Map<String, ExpressionCache> getInputExpressionCacheMap() {
         return inputExpressionCacheMap;
     }
 
