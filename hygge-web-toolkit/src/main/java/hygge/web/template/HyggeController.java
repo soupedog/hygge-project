@@ -102,7 +102,7 @@ public interface HyggeController<R extends ResponseEntity<?>> {
     }
 
     default <T> R fail(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, Throwable e, HyggeControllerResponseWrapper<R> responseWrapper) {
-        return responseWrapper.createFailResponseData(httpStatus, headers, hyggeCode, msg, entity, e);
+        return responseWrapper.createResponse(httpStatus, headers, hyggeCode, msg, entity, e);
     }
 
     default R success() {
@@ -134,7 +134,7 @@ public interface HyggeController<R extends ResponseEntity<?>> {
     }
 
     default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
-        return responseWrapper.createFailResponseData(httpStatus, headers, hyggeCode, msg, entity, null);
+        return responseWrapper.createResponse(httpStatus, headers, hyggeCode, msg, entity, null);
     }
 
     default ResponseEntity.BodyBuilder getBuilder(HttpStatus httpStatus) {
@@ -150,6 +150,6 @@ public interface HyggeController<R extends ResponseEntity<?>> {
          *
          * @return HyggeControllerResponse 的实例
          */
-        R createFailResponseData(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, Object entity, Throwable throwable);
+        R createResponse(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, Object entity, Throwable throwable);
     }
 }

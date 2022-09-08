@@ -38,7 +38,7 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
     protected Collection<String> ignoreParamNames;
     /**
      * key:{@link HyggeExpressionInfo#rootObjectName()}
-     * 入参不像出参之多只有一个，所以 ExpressionCache 之外还多一层 map
+     * 入参不像出参至多只有一个，所以 ExpressionCache 之外还多一层 map
      */
     protected final HashMap<String, ExpressionCache> inputExpressionCacheMap;
     protected final ExpressionCache outputExpressionCache;
