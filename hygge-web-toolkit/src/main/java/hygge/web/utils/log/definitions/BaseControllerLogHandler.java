@@ -169,15 +169,31 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
     }
 
     private void initResultByExpressionCache(Object rootObject, LinkedHashMap<String, Object> result, ExpressionCache expressionCache) {
+        ArrayList<String> errorInfo = null;
+
         for (Map.Entry<String, Expression> entry : expressionCache.getContainer().entrySet()) {
             String parameterName = entry.getKey();
             Expression expression = entry.getValue();
 
-            Object value = expression.getValue(rootObject);
+            Object value = null;
+            try {
+                value = expression.getValue(rootObject);
+            } catch (Exception e) {
+                // 记日志发生的异常不应打断业务请求
+                if (errorInfo == null) {
+                    errorInfo = new ArrayList<>();
+                }
+                errorInfo.add(parameterName);
+            }
+
             if (value == null) {
                 continue;
             }
             result.put(parameterName, value);
+        }
+
+        if (errorInfo != null) {
+            result.put("errorParameters", errorInfo);
         }
     }
 
@@ -187,7 +203,7 @@ public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
         try {
             logInfoStringValue = "ControllerLog:" + jsonHelper.formatAsString(controllerLogInfo);
         } catch (Exception e) {
-            String message = "Cannot serialize correctly.";
+            String message = "Can't serialize correctly.";
             log.error(message, e);
             controllerLogInfo.setInput(message);
             controllerLogInfo.setOutput(message);
