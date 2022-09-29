@@ -35,45 +35,4 @@
 最基础可执行项目样例工程可参见 ``web-application-example``
 
 
-# 开发者参考书
-
-## hygge 异常
-``hygge-project`` 有全局的统一异常定义，相关代码可参见 ``hygge-commons`` 模块的 ``hygge.commons.exceptions`` 包。
-
-这些异常分为两大类，运行时异常和检查型异常。有相同名称前缀的异常都是类似的，仅仅是明确告知使用者哪些必须主动捕获并处理，而哪些不需要。
-
-举例：
-``InternalException``、``InternalRuntimeException`` 
-
-### HyggeCode
-每一个 ``hygge-project`` 定义的异常都具备返回 ``HyggeCode`` 的能力，下列
-
-```java
-public interface HyggeCode<C, E> {
-    boolean serious();
-    String getPublicMessage();
-    <Co> Co getCode();
-    <Ex>Ex getExtraInfo();
-}
-```
-
-- ``serious()`` 用于告知异常的捕获者，这个异常是可以自愈还是需要开发人员人工介入检查的，如果返回 ``false`` ，那么则认为这个异常应用正常运行时符合预期的异常，不代表应用功能不可用。
-- ``getPublicMessage()`` 用于隐藏异常原始信息，并指定已脱敏可对外暴露的公开信息。应用场景例子：如果数据库操作语句执行失败，有可能会返回具体执行的 ``sql`` 信息，我们可以通过这个强制用已脱敏的 "服务器正忙，请稍后再试。" 返回给客户端。
-  - 如果该方法返回 ``null``：意味着该异常携带的信息是无需对外保密的，``Throwable.getMessage()`` 可能会直接暴露给调用方。
-  - 如果该方法返回字符串：意味着该异常携带的信息是需对外保密的，应用日志里仍会忠实记录 ``Throwable.getMessage()`` 内容，但对客户端暴露的信息默认为 ``getPublicMessage()`` 返回的信息。
-- ``getCode()`` 用于指定当前异常异常对应的业务异常。这是体现异常语义，我们推荐任何业务异常都应该具有一个独立的 ``业务异常码``。我们可以发现，``业务异常码`` 类型是不固定的，开发者可以根据自行需要指定为数字、字符串或是别的什么。例如 100 代表 token 无效——已过期、101 代表 token 无效——不存在……
-- ``getExtraInfo()`` 这个方法不常用，用于令异常可携带除字符串以外的额外信息，默认均为 ``null``。你可以把它当做 ``Context`` 容器使用，便于为异常捕获者提供一些额外信息，如果需要的话。
-
-### 异常清单
-基于 web 应用开发场景，默认提供了下列异常
-
-| 名称    | ``serious()`` 默认值 | ``getPublicMessage()`` 默认值 | ``getCode()`` 默认值 | 备注                                        |
-| --- | --- | ------ | ------ | ------------ |
-| External* | true              | "External Server Error"    |          GlobalHyggeCode.EXTERNAL_SYSTEM_EXCEPTION                  | 用于表示当前服务调用外部依赖发生异常                        |
-| Internal* | true              | "Internal Server Error"    |          GlobalHyggeCode.SERVER_END_EXCEPTION                  | 用于表示当前服务内部发生未知异常或影响服务正常运行的异常              |
-| Util* | true              | "Internal Server Error"                       |          GlobalHyggeCode.UTIL_EXCEPTION                  | 服务端内部一些工具引发的未知异常                          |
-| Light* | false             | null                       |          GlobalHyggeCode.CLIENT_END_EXCEPTION                  | 用于表示当前服务因客户端而引发的错误，是当前服务正常运行时意料之内的异常      |
-| Parameter* | false             | null                       |          GlobalHyggeCode.UNEXPECTED_PARAMETER                  | 用于表示参数校验不符合预期的某种错误，通常这种错误也是服务正常运行时意料之内的异常 |
-
-
-当然你可以指定默认值之外的参数来创建异常，详情请自行查看异常的若干个构造函数。
+更多参考内容请参见  [hygge-project-wiki](https://github.com/soupedog/hygge-project/wiki)
