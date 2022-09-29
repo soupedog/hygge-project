@@ -1,7 +1,7 @@
 # hygge-project 简介
 作者在日常的工作的实践中发现，代码质量腐败变质通常是由于想偷懒引起的，为了满足短期需要，在当前项目里一切从简以 ”能跑起来就行“ 为目标，闭门造车重复制造了只能自己用又包含很多缺憾的 “轮子” 而引起的。
 
-本项目则是基于上述痛点，基于 Spring Boot 生态二次封装，基于 Spring Boot 生态二次封装，任何基于 spring 的 web 应用可开箱即用，自动装配了常见业务开发所需依赖与工具的库。
+本项目则是基于上述痛点，基于 Spring Boot 生态二次封装，任何基于 spring 的 web 应用可开箱即用，自动装配了常见业务开发所需依赖与工具的库。
 ``hygge-web-toolkit`` 是 ``hygge-project`` 中最核心的库，它整合了多个 ``hygge-project`` 下的多个子库。一旦你为自己的项目引入了 ``hygge-web-toolkit``，你就获取到了 ``hygge-project`` 的绝大多数特性。
 
 ***Tips：** ``hygge-web-toolkit`` 是在 ``spring-boot-starter-web`` 的基础上进行拓展，对业务代码的入侵性低，不会过多干预代码开发的自由度，旨在为规范化 web 应用开发提供一个基石。如果你熟悉为自己的应用引入 ``spring-boot-starter-web`` ，那么你同样会对引入 ``hygge-web-toolkit`` 感到亲切，他们的使用方法极其相似。*
