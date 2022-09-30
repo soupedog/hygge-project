@@ -19,6 +19,12 @@ This project is an out-of-the-box, providing common tools and template classes f
 
 # Quick Start
 
+Make sure you provide a name for the application, for example:
+in ``application.properties``, you have added
+```properties
+spring.application.name=xxx
+``` 
+
 ## Maven Dependencies
 
 ```xml
@@ -54,6 +60,6 @@ introduce ``hygge-web-toolkit`` and you can enjoy the following features of ``hy
 - Standardized exposed endpoint template tool.
 - Automatic logging the request and response for exposed endpoints.
 
-## Sample
+## Samples
 
 The basic runnable sample project see: [web-application-example](https://github.com/soupedog/hygge-project/tree/main/web-application-example)
