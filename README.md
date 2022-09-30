@@ -13,7 +13,7 @@ This project is an out-of-the-box, providing common tools and template classes f
 - hygge-utils: Tools for data transformation, validation, iteration, etc.
 - hygge-web-toolkit: Provide web application development template tools and network request tools
 
-``hygge-web-toolkit`` is the core library in ``hygge-project``, which aggregates ``hygge-commons``, ``hygge-commons-spring-boot``, ``hygge-logging``, ``hygge-utils` `` modules. Once you have introduced ``hygge-web-toolkit`` to your project, you get most of the features of ``hygge-project``.
+``hygge-web-toolkit`` is the core library in ``hygge-project``, which aggregates ``hygge-commons``, ``hygge-commons-spring-boot``, ``hygge-logging``, ``hygge-utils`` modules. Once you have introduced ``hygge-web-toolkit`` to your project, you get most of the features of ``hygge-project``.
 
 ***Tips：** After introducing ``hygge-web-toolkit``, ``spring-boot-starter-web`` will be introduced automatically, no additional configuration is needed*
 
