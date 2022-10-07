@@ -35,7 +35,7 @@ spring.application.name=xxx
 </dependency>
 ```
 
-``hygge-web-toolkit`` relies on ``spring-boot`` related components, but does not mandate the ``spring-boot`` version, you can actively specify the version, as in the following
+``hygge-web-toolkit`` relies on ``spring-boot`` related components, but no forced dependency on the ``spring-boot`` version, you can actively specify version, as in the following
 
 ```xml
 <parent>
