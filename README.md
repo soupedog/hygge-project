@@ -49,7 +49,7 @@ spring.application.name=xxx
 
 ## Features
 
-introduce ``hygge-web-toolkit`` and you can enjoy the following features of ``hygge-project``:
+After introducing  ``hygge-web-toolkit`` and you will obtain the following features of ``hygge-project``:
 
 - Global unified semantic exceptions.
 - Automatically configure the logging framework so that the application has good support for outputting ``json`` format logs. The following logging frameworks are supported:
