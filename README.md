@@ -31,6 +31,18 @@ This project is an out-of-the-box, providing common tools and template classes f
 
 ***Tips：** After introducing ``hygge-web-toolkit``, ``spring-boot-starter-web`` will be introduced automatically, no additional configuration is needed*
 
+## Features
+
+After introducing  ``hygge-web-toolkit`` and you will obtain the following features of ``hygge-project``:
+
+- Global unified semantic exceptions.
+- Automatically configure the logging framework so that the application has good support for outputting ``json`` format logs. The following logging frameworks are supported:
+  - logback
+  - log4j
+- Network request tool based on ``RestTemplate`` , each API call can be individually configured with parameters such as timeout time, automatic request logging, providing convenient and practical syntax sugar.
+- Some data validation, fetching, iterating and other tools that are often needed in your development.
+- Standardized exposed endpoint template tool.
+- Automatic logging the request and response for exposed endpoints.
 
 ## Samples
 
@@ -70,17 +82,4 @@ Java SDK v1.8 or higher
 </parent>
 ``` 
 
-
-## Features
-
-After introducing  ``hygge-web-toolkit`` and you will obtain the following features of ``hygge-project``:
-
-- Global unified semantic exceptions.
-- Automatically configure the logging framework so that the application has good support for outputting ``json`` format logs. The following logging frameworks are supported:
-  - logback
-  - log4j
-- Network request tool based on ``RestTemplate`` , each API call can be individually configured with parameters such as timeout time, automatic request logging, providing convenient and practical syntax sugar.
-- Some data validation, fetching, iterating and other tools that are often needed in your development.
-- Standardized exposed endpoint template tool.
-- Automatic logging the request and response for exposed endpoints.
 
