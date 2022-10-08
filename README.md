@@ -31,6 +31,11 @@ This project is an out-of-the-box, providing common tools and template classes f
 
 ***Tips：** After introducing ``hygge-web-toolkit``, ``spring-boot-starter-web`` will be introduced automatically, no additional configuration is needed*
 
+
+## Samples
+
+The basic runnable sample project see: [web-application-example](https://github.com/soupedog/hygge-project/tree/main/web-application-example)
+
 # Quick Start
 
 Make sure you provide a name for the application, for example:
@@ -38,6 +43,11 @@ in ``application.properties``, you have added
 ```properties
 spring.application.name=xxx
 ``` 
+## JDK Requirement 
+
+Java SDK v1.8 or higher
+
+***Warning:** this project relies on spring-boot, and if spring-boot drops low version java in the future, this project will also drop support for low version java.*
 
 ## Maven Dependencies
 
@@ -49,7 +59,7 @@ spring.application.name=xxx
 </dependency>
 ```
 
-``hygge-web-toolkit`` relies on ``spring-boot`` related components, but no forced dependency on the ``spring-boot`` version, you can actively specify version, as in the following
+``hygge-web-toolkit`` relies on ``spring-boot`` related components, but no forced dependency about the ``spring-boot`` version, you can actively specify version, as in the following
 
 ```xml
 <parent>
@@ -74,6 +84,3 @@ After introducing  ``hygge-web-toolkit`` and you will obtain the following featu
 - Standardized exposed endpoint template tool.
 - Automatic logging the request and response for exposed endpoints.
 
-## Samples
-
-The basic runnable sample project see: [web-application-example](https://github.com/soupedog/hygge-project/tree/main/web-application-example)
