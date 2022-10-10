@@ -55,7 +55,7 @@ in ``application.properties``, you have added
 ```properties
 spring.application.name=xxx
 ``` 
-## JDK Requirement 
+## JDK Requirement
 
 Java SDK v1.8 or higher
 
@@ -71,15 +71,34 @@ Java SDK v1.8 or higher
 </dependency>
 ```
 
-``hygge-web-toolkit`` relies on ``spring-boot`` related components, but no forced dependency about the ``spring-boot`` version, you can actively specify version, as in the following
+``hygge-web-toolkit`` relies on ``spring-boot`` related components, but no forced dependency about the ``spring-boot`` version, you can specify special versions in any of the following ways
 
-```xml
-<parent>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-parent</artifactId>
-  <version>2.7.4</version>
-  <relativePath/> <!-- lookup parent from repository -->
-</parent>
-``` 
+- ``<parent/>``
+  ```xml
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.7.4</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+  ``` 
 
+- ``<dependencyManagement/>``
+  ```xml
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>${Your specific spring-boot version}</version>
+      </dependency>
+      <!-- Omit the other spring-boot components you need-->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${Your specific spring-boot version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  ```
 
