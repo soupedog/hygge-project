@@ -105,6 +105,12 @@
       "name": "hygge.web-toolkit.controller.log.autoRegister",
       "type": "java.lang.Boolean",
       "defaultValue": true
+    },
+    {
+      "sourceType": "hygge.web.utils.log.configuration.ControllerLogConfiguration",
+      "name": "hygge.web-toolkit.controller.log.aspectOrder",
+      "type": "java.lang.Integer",
+      "defaultValue": 2147483645
     }
   ]
 }

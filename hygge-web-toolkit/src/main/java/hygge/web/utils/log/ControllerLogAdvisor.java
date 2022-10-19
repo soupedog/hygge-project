@@ -17,7 +17,8 @@ public class ControllerLogAdvisor extends AbstractBeanFactoryPointcutAdvisor {
      */
     private transient volatile Pointcut pointcut;
 
-    public ControllerLogAdvisor(MethodInterceptor methodInterceptor, Pointcut pointcut) {
+    public ControllerLogAdvisor(int order, MethodInterceptor methodInterceptor, Pointcut pointcut) {
+        setOrder(order);
         setAdvice(methodInterceptor);
         this.pointcut = pointcut;
     }

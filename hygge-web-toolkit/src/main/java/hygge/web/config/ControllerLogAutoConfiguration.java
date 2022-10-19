@@ -10,6 +10,7 @@ import hygge.web.utils.log.definitions.ControllerLogHandlerFactory;
 import hygge.web.utils.log.impl.DefaultControllerLogHandlerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,6 +30,9 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(value = "hygge.web-toolkit.controller.log.autoRegister", havingValue = "true", matchIfMissing = true)
 public class ControllerLogAutoConfiguration implements HyggeAutoConfiguration, BeanPostProcessor {
     private static final Logger log = LoggerFactory.getLogger(ControllerLogAutoConfiguration.class);
+
+    @Autowired
+    private ControllerLogConfiguration controllerLogConfiguration;
 
     @Bean("defaultControllerLogHandlerCache")
     @ConditionalOnMissingBean(value = ControllerLogHandlerCache.class)
@@ -58,6 +62,6 @@ public class ControllerLogAutoConfiguration implements HyggeAutoConfiguration, B
     @ConditionalOnMissingBean(value = ControllerLogAdvisor.class)
     public ControllerLogAdvisor controllerLogAdvisor(ControllerLogPointCut pointCut, ControllerLogInterceptor interceptor) {
         log.info("ControllerLog start to init.");
-        return new ControllerLogAdvisor(interceptor, pointCut);
+        return new ControllerLogAdvisor(controllerLogConfiguration.getAspectOrder(), interceptor, pointCut);
     }
 }
