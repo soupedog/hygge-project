@@ -67,7 +67,7 @@ Java SDK v1.8 or higher
 <dependency>
   <groupId>io.github.soupedog</groupId>
   <artifactId>hygge-web-toolkit</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 </dependency>
 ```
 

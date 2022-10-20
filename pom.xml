@@ -14,7 +14,7 @@
         automatic logging tools, network request tools ...
     </description>
     <url>https://github.com/soupedog/hygge-project</url>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <licenses>
         <license>
@@ -45,7 +45,7 @@
     </modules>
 
     <properties>
-        <hygge.version>0.0.1</hygge.version>
+        <hygge.version>0.0.2</hygge.version>
         <spring.boot.version>2.7.3</spring.boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
