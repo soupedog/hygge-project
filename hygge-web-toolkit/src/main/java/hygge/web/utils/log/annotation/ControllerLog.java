@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ControllerLog {
     /**
-     * 是否激活该注解。未激活时，该注解不会产生实质性作用。
+     * 被当前注解标记的方法是否激活 Controller 层日志。
      */
     boolean enable() default true;
 

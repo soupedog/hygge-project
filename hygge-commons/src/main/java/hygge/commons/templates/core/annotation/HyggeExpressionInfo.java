@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HyggeExpressionInfo {
     /**
-     * 是否激活该注解。未激活时，该注解不会产生实质性作用。
+     * 当前表达式是否启用。
      */
     boolean enable() default true;
 
