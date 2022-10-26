@@ -50,7 +50,7 @@ public enum ColumnTypeEnum {
      */
     BOOLEAN,
     /**
-     * 数字类型 [Byte,Short,Integer,Long,Float,Double]
+     * 数字类型统称 [Byte,Short,Integer,Long,Float,Double,BigDecimal]
      */
     NUMBER,
     /**
@@ -123,6 +123,7 @@ public enum ColumnTypeEnum {
                 case BYTE:
                 case SHORT:
                 case INTEGER:
+                case LONG:
                 case FLOAT:
                 case DOUBLE:
                 case BIG_DECIMAL:
