@@ -13,9 +13,11 @@ import org.springframework.core.Ordered;
  */
 @ConfigurationProperties(prefix = "hygge.web-toolkit.controller.log")
 public class ControllerLogConfiguration implements HyggeSpringProperties {
+    public static final int DEFAULT_ASPECT_ORDER = Ordered.LOWEST_PRECEDENCE - 2;
+
     private boolean autoRegister = true;
 
-    private int aspectOrder = Ordered.LOWEST_PRECEDENCE - 2;
+    private int aspectOrder = DEFAULT_ASPECT_ORDER;
 
     public boolean isAutoRegister() {
         return autoRegister;

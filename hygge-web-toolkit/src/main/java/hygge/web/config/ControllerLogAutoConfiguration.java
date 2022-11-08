@@ -18,6 +18,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Optional;
+
 /**
  * Controller 层日志自动注册器
  *
@@ -25,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2022/7/15
  * @since 1.0
  */
+@SuppressWarnings({"java:S3305"})
 @Configuration
 @EnableConfigurationProperties(value = ControllerLogConfiguration.class)
 @ConditionalOnProperty(value = "hygge.web-toolkit.controller.log.autoRegister", havingValue = "true", matchIfMissing = true)
@@ -62,6 +65,10 @@ public class ControllerLogAutoConfiguration implements HyggeAutoConfiguration, B
     @ConditionalOnMissingBean(value = ControllerLogAdvisor.class)
     public ControllerLogAdvisor controllerLogAdvisor(ControllerLogPointCut pointCut, ControllerLogInterceptor interceptor) {
         log.info("ControllerLog start to init.");
-        return new ControllerLogAdvisor(controllerLogConfiguration.getAspectOrder(), interceptor, pointCut);
+        return new ControllerLogAdvisor(
+                Optional.ofNullable(controllerLogConfiguration)
+                        .map(ControllerLogConfiguration::getAspectOrder)
+                        .orElse(ControllerLogConfiguration.DEFAULT_ASPECT_ORDER),
+                interceptor, pointCut);
     }
 }
