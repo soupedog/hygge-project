@@ -1,5 +1,6 @@
 package hygge.web.config;
 
+import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.config.HyggeAutoConfiguration;
 import hygge.web.utils.log.ControllerLogAdvisor;
 import hygge.web.utils.log.ControllerLogHandlerCache;
@@ -10,15 +11,12 @@ import hygge.web.utils.log.definitions.ControllerLogHandlerFactory;
 import hygge.web.utils.log.impl.DefaultControllerLogHandlerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Optional;
 
 /**
  * Controller 层日志自动注册器
@@ -33,9 +31,6 @@ import java.util.Optional;
 @ConditionalOnProperty(value = "hygge.web-toolkit.controller.log.autoRegister", havingValue = "true", matchIfMissing = true)
 public class ControllerLogAutoConfiguration implements HyggeAutoConfiguration, BeanPostProcessor {
     private static final Logger log = LoggerFactory.getLogger(ControllerLogAutoConfiguration.class);
-
-    @Autowired
-    private ControllerLogConfiguration controllerLogConfiguration;
 
     @Bean("defaultControllerLogHandlerCache")
     @ConditionalOnMissingBean(value = ControllerLogHandlerCache.class)
@@ -64,11 +59,11 @@ public class ControllerLogAutoConfiguration implements HyggeAutoConfiguration, B
     @Bean("defaultControllerLogAdvisor")
     @ConditionalOnMissingBean(value = ControllerLogAdvisor.class)
     public ControllerLogAdvisor controllerLogAdvisor(ControllerLogPointCut pointCut, ControllerLogInterceptor interceptor) {
-        log.info("ControllerLog start to init.");
-        return new ControllerLogAdvisor(
-                Optional.ofNullable(controllerLogConfiguration)
-                        .map(ControllerLogConfiguration::getAspectOrder)
-                        .orElse(ControllerLogConfiguration.DEFAULT_ASPECT_ORDER),
-                interceptor, pointCut);
+        int order = HyggeSpringContext.getConfigurableEnvironment().getProperty("hygge.web-toolkit.controller.log.aspectOrder",
+                Integer.class,
+                ControllerLogConfiguration.DEFAULT_ASPECT_ORDER);
+
+        log.info("ControllerLog start to init({}).", order);
+        return new ControllerLogAdvisor(order, interceptor, pointCut);
     }
 }
