@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
  * @date 2022/7/15
  * @since 1.0
  */
-@SuppressWarnings({"java:S3305"})
 @Configuration
 @EnableConfigurationProperties(value = ControllerLogConfiguration.class)
 @ConditionalOnProperty(value = "hygge.web-toolkit.controller.log.autoRegister", havingValue = "true", matchIfMissing = true)
