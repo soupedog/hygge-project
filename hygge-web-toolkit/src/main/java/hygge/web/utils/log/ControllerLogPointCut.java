@@ -1,7 +1,7 @@
 package hygge.web.utils.log;
 
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
-import hygge.web.template.HyggeController;
+import hygge.web.template.AutoLogController;
 import hygge.web.utils.log.annotation.ControllerLog;
 import hygge.web.utils.log.bo.ControllerLogType;
 import hygge.web.utils.log.definitions.BaseControllerLogHandler;
@@ -44,7 +44,7 @@ public class ControllerLogPointCut extends StaticMethodMatcherPointcut implement
 
     @Override
     public boolean matches(Method method, Class<?> targetClass) {
-        if (!HyggeController.class.isAssignableFrom(targetClass)) {
+        if (!AutoLogController.class.isAssignableFrom(targetClass)) {
             // 如果不是 HyggeController 的子类，直接跳过
             return false;
         }

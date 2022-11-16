@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * @since 1.0
  */
 @ControllerAdvice
-public interface HyggeController<R extends ResponseEntity<?>> {
+public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogController {
     Logger log = LogManager.getLogger(HyggeController.class);
 
     @ExceptionHandler({
