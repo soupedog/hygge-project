@@ -62,12 +62,17 @@ Java SDK v1.8 or higher
 ***Warning:** this project relies on spring-boot, and if spring-boot drops low version java in the future, this project will also drop support for low version java.*
 
 ## Maven Dependencies
+<p align="center">
+  <a href="https://search.maven.org/search?q=g:io.github.soupedog%20AND%20a:hygge-web-toolkit">
+    <img alt="maven" src="https://img.shields.io/maven-central/v/io.github.soupedog/hygge-web-toolkit.svg?style=flat-square">
+  </a>
+</p>
 
 ```xml
 <dependency>
   <groupId>io.github.soupedog</groupId>
   <artifactId>hygge-web-toolkit</artifactId>
-  <version>0.0.2</version>
+  <version>${latest.version}</version>
 </dependency>
 ```
 

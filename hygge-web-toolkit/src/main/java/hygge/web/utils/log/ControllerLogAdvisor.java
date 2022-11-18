@@ -3,6 +3,7 @@ package hygge.web.utils.log;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
  * Controller 层自动日志的 Advisor
@@ -11,7 +12,7 @@ import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
  * @date 2022/7/15
  * @since 1.0
  */
-public class ControllerLogAdvisor extends AbstractBeanFactoryPointcutAdvisor {
+public class ControllerLogAdvisor extends AbstractBeanFactoryPointcutAdvisor implements BeanPostProcessor {
     /**
      * i just copy from {@link AbstractBeanFactoryPointcutAdvisor#advice}
      */
