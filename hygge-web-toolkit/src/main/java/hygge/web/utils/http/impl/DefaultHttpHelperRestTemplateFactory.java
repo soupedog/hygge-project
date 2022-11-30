@@ -48,12 +48,12 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
     protected static final ResponseErrorHandler DEFAULT_RESPONSE_ERROR_HANDLER = new ResponseErrorHandler() {
         @Override
         public boolean hasError(ClientHttpResponse response) {
-            return true;
+            return false;
         }
 
         @Override
         public void handleError(ClientHttpResponse response) {
-            // 为了请求异常也不中断业务流程，不抛出异常
+            // hasError() 已经固定为 false 所以该方法永远不会被触发
         }
     };
 
