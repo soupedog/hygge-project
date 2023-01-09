@@ -45,8 +45,7 @@
     </modules>
 
     <properties>
-        <hygge.version>0.0.2</hygge.version>
-        <spring.boot.version>2.7.5</spring.boot.version>
+        <spring.boot.version>2.7.7</spring.boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,13 +57,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.8.2</version>
+            <version>5.9.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.5.1</version>
+            <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
