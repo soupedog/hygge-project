@@ -38,8 +38,7 @@ public interface HttpHelper {
     default HttpHeaders newHeaderWithBasicAuth(String name, String password, MediaType mediaType) {
         HttpHeaders result = new HttpHeaders();
         result.setContentType(mediaType);
-        String basicAuthString = getBaseAuth(name, password);
-        result.set(HttpHeaders.AUTHORIZATION, basicAuthString);
+        result.setBasicAuth(name, password);
         return result;
     }
 
