@@ -27,7 +27,7 @@ public interface HyggeCode {
     <C> C getCode();
 
     /**
-     * 用于自由拓展的额外的信息，你可以通过异常向外部传递某些信息
+     * 用于自由拓展的额外的信息，你可以通过该属性向 HyggeCode 的捕获者传递某些信息
      */
     <E> E getExtraInfo();
 }
