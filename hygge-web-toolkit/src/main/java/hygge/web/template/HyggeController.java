@@ -12,6 +12,7 @@ import hygge.commons.exceptions.UtilException;
 import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.commons.exceptions.code.GlobalHyggeCode;
 import hygge.commons.exceptions.code.HyggeCode;
+import hygge.commons.exceptions.code.HyggeInfo;
 import hygge.commons.exceptions.core.HyggeException;
 import hygge.commons.exceptions.core.HyggeRuntimeException;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +35,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogController {
     Logger log = LogManager.getLogger(HyggeController.class);
 
+    /**
+     * 非严重异常日志的简易开关(默认为 true ：进行打印)
+     *
+     * @param exception 异常信息
+     * @return 是否打印非严重异常日志
+     */
+    default boolean printNonSeriousExceptionLog(HyggeInfo exception) {
+        return true;
+    }
+
     @ExceptionHandler({
             ExternalException.class,
             InternalException.class,
@@ -46,7 +57,9 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
             log.error(e::getMessage, e);
             return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
         } else {
-            log.warn(e::getMessage, e);
+            if (printNonSeriousExceptionLog(e)) {
+                log.warn(e::getMessage, e);
+            }
             return fail(HttpStatus.BAD_REQUEST, e);
         }
     }
@@ -63,7 +76,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
             log.error(e::getMessage, e);
             return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
-        if (!muteLessSeriousException()) {
+        if (printNonSeriousExceptionLog(e)) {
             log.warn(e::getMessage, e);
         }
         return fail(HttpStatus.BAD_REQUEST, e);
@@ -73,10 +86,6 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
     default R serviceErrorHandler(Throwable e) {
         log.error(e::getMessage, e);
         return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
-
-    default boolean muteLessSeriousException() {
-        return false;
     }
 
     default R fail(HttpStatus httpStatus, Throwable e) {
