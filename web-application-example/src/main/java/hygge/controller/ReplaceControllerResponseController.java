@@ -2,7 +2,6 @@ package hygge.controller;
 
 import hygge.commons.exceptions.code.GlobalHyggeCode;
 import hygge.domain.ControllerResponse;
-import hygge.domain.CustomSystemCode;
 import hygge.domain.User;
 import hygge.web.template.HyggeController;
 import io.swagger.v3.oas.annotations.tags.Tag;
