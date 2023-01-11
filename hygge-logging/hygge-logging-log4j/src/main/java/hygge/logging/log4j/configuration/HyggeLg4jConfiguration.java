@@ -42,7 +42,7 @@ public class HyggeLg4jConfiguration extends HyggeLogConfiguration {
             this.filePath = parameterHelper.stringNotEmpty("filePath", (Object) filePath);
             this.fileMaxSize = parameterHelper.stringOfNullable(fileMaxSize, "2MB");
             // 默认 0 点截断日志文件
-            this.cronTrigger = parameterHelper.stringOfNullable(cronTrigger, "0 0 0 * * ? ");
+            this.cronTrigger = parameterHelper.stringOfNullable(cronTrigger, "0 0 0 * * ?");
         }
     }
 

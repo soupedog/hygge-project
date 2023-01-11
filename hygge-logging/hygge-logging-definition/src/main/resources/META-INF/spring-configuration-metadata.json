@@ -164,7 +164,7 @@
       "sourceType": "hygge.logging.configuration.HyggeLogConfiguration",
       "name": "hygge.logging.log4j.pattern.file.cron",
       "type": "java.lang.String",
-      "defaultValue": "0 0 0 * * ? "
+      "defaultValue": "0 0 0 * * ?"
     },
     {
       "sourceType": "hygge.logging.configuration.HyggeLogConfiguration",
