@@ -21,15 +21,15 @@ public class ExternalRuntimeException extends HyggeRuntimeException {
         super(message, GlobalHyggeCode.SERVER_END_EXCEPTION, cause);
     }
 
-    public ExternalRuntimeException(String message, HyggeCode<?, ?> hyggeCode) {
+    public ExternalRuntimeException(String message, HyggeCode hyggeCode) {
         super(message, hyggeCode);
     }
 
-    public ExternalRuntimeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public ExternalRuntimeException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, hyggeCode, cause);
     }
 
-    public ExternalRuntimeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ExternalRuntimeException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, hyggeCode, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -11,5 +11,5 @@ public interface HyggeInfo {
     /**
      * 获取业务码信息
      */
-    HyggeCode<?, ?> getHyggeCode();
+    HyggeCode getHyggeCode();
 }

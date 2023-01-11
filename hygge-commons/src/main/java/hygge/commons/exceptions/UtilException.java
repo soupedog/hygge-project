@@ -21,15 +21,15 @@ public class UtilException extends HyggeException {
         super(message, GlobalHyggeCode.UTIL_EXCEPTION, cause);
     }
 
-    public UtilException(String message, HyggeCode<?, ?> hyggeCode) {
+    public UtilException(String message, HyggeCode hyggeCode) {
         super(message, hyggeCode);
     }
 
-    public UtilException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public UtilException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, hyggeCode, cause);
     }
 
-    public UtilException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public UtilException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, hyggeCode, cause, enableSuppression, writableStackTrace);
     }
 }

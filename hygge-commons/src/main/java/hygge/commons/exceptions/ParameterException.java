@@ -21,15 +21,15 @@ public class ParameterException extends HyggeException {
         super(message, GlobalHyggeCode.UNEXPECTED_PARAMETER, cause);
     }
 
-    public ParameterException(String message, HyggeCode<?, ?> hyggeCode) {
+    public ParameterException(String message, HyggeCode hyggeCode) {
         super(message, hyggeCode);
     }
 
-    public ParameterException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public ParameterException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, hyggeCode, cause);
     }
 
-    public ParameterException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ParameterException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, hyggeCode, cause, enableSuppression, writableStackTrace);
     }
 }

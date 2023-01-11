@@ -21,15 +21,15 @@ public class ExternalException extends HyggeException {
         super(message, GlobalHyggeCode.EXTERNAL_SYSTEM_EXCEPTION, cause);
     }
 
-    public ExternalException(String message, HyggeCode<?, ?> hyggeCode) {
+    public ExternalException(String message, HyggeCode hyggeCode) {
         super(message, hyggeCode);
     }
 
-    public ExternalException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public ExternalException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, hyggeCode, cause);
     }
 
-    public ExternalException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ExternalException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, hyggeCode, cause, enableSuppression, writableStackTrace);
     }
 }

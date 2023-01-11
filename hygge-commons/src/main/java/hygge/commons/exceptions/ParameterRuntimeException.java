@@ -21,15 +21,15 @@ public class ParameterRuntimeException extends HyggeRuntimeException {
         super(message, GlobalHyggeCode.UNEXPECTED_PARAMETER, cause);
     }
 
-    public ParameterRuntimeException(String message, HyggeCode<?, ?> hyggeCode) {
+    public ParameterRuntimeException(String message, HyggeCode hyggeCode) {
         super(message, hyggeCode);
     }
 
-    public ParameterRuntimeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public ParameterRuntimeException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, hyggeCode, cause);
     }
 
-    public ParameterRuntimeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ParameterRuntimeException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, hyggeCode, cause, enableSuppression, writableStackTrace);
     }
 }

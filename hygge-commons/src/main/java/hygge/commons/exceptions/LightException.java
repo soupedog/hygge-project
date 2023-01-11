@@ -21,15 +21,15 @@ public class LightException extends HyggeException {
         super(message, GlobalHyggeCode.CLIENT_END_EXCEPTION, cause);
     }
 
-    public LightException(String message, HyggeCode<?, ?> hyggeCode) {
+    public LightException(String message, HyggeCode hyggeCode) {
         super(message, hyggeCode);
     }
 
-    public LightException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public LightException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, hyggeCode, cause);
     }
 
-    public LightException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public LightException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, hyggeCode, cause, enableSuppression, writableStackTrace);
     }
 }

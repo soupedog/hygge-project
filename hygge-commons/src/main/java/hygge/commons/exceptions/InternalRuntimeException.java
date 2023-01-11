@@ -21,15 +21,15 @@ public class InternalRuntimeException extends HyggeRuntimeException {
         super(message, GlobalHyggeCode.SERVER_END_EXCEPTION, cause);
     }
 
-    public InternalRuntimeException(String message, HyggeCode<?, ?> hyggeCode) {
+    public InternalRuntimeException(String message, HyggeCode hyggeCode) {
         super(message, hyggeCode);
     }
 
-    public InternalRuntimeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public InternalRuntimeException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, hyggeCode, cause);
     }
 
-    public InternalRuntimeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public InternalRuntimeException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, hyggeCode, cause, enableSuppression, writableStackTrace);
     }
 }

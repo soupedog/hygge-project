@@ -80,7 +80,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
     }
 
     default R fail(HttpStatus httpStatus, Throwable e) {
-        HyggeCode<?, ?> hyggeCode = null;
+        HyggeCode hyggeCode = null;
         if (e instanceof HyggeRuntimeException) {
             hyggeCode = ((HyggeRuntimeException) e).getHyggeCode();
         } else if (e instanceof HyggeException) {
@@ -101,7 +101,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
         return (R) builder.body(HyggeControllerResponse);
     }
 
-    default <T> R fail(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, Throwable e, HyggeControllerResponseWrapper<R> responseWrapper) {
+    default <T> R fail(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity, Throwable e, HyggeControllerResponseWrapper<R> responseWrapper) {
         return responseWrapper.createResponse(httpStatus, headers, hyggeCode, msg, entity, e);
     }
 
@@ -113,11 +113,11 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
         return success(HttpStatus.OK, null, GlobalHyggeCode.SUCCESS, null, entity);
     }
 
-    default <T> R success(HyggeCode<?, ?> hyggeCode, String msg, T entity) {
+    default <T> R success(HyggeCode hyggeCode, String msg, T entity) {
         return success(HttpStatus.OK, null, hyggeCode, msg, entity);
     }
 
-    default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity) {
+    default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity) {
         ResponseEntity.BodyBuilder builder = getBuilder(httpStatus);
         HyggeControllerResponse<?, T> HyggeControllerResponse = new HyggeControllerResponse<>();
         HyggeControllerResponse.setCode(hyggeCode.getCode());
@@ -133,7 +133,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
         return response;
     }
 
-    default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
+    default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
         return responseWrapper.createResponse(httpStatus, headers, hyggeCode, msg, entity, null);
     }
 
@@ -150,6 +150,6 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
          *
          * @return HyggeControllerResponse 的实例
          */
-        R createResponse(HttpStatus httpStatus, HttpHeaders headers, HyggeCode<?, ?> hyggeCode, String msg, Object entity, Throwable throwable);
+        R createResponse(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, Object entity, Throwable throwable);
     }
 }

@@ -11,30 +11,30 @@ import hygge.commons.exceptions.code.HyggeInfo;
  * @since 1.0
  */
 public class HyggeException extends Exception implements HyggeInfo {
-    protected final transient HyggeCode<?, ?> hyggeCode;
+    protected final transient HyggeCode hyggeCode;
 
-    public HyggeException(HyggeCode<?, ?> hyggeCode) {
+    public HyggeException(HyggeCode hyggeCode) {
         super(hyggeCode.getPublicMessage());
         this.hyggeCode = hyggeCode;
     }
 
-    public HyggeException(String message, HyggeCode<?, ?> hyggeCode) {
+    public HyggeException(String message, HyggeCode hyggeCode) {
         super(message);
         this.hyggeCode = hyggeCode;
     }
 
-    public HyggeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause) {
+    public HyggeException(String message, HyggeCode hyggeCode, Throwable cause) {
         super(message, cause);
         this.hyggeCode = hyggeCode;
     }
 
-    public HyggeException(String message, HyggeCode<?, ?> hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public HyggeException(String message, HyggeCode hyggeCode, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.hyggeCode = hyggeCode;
     }
 
     @Override
-    public HyggeCode<?, ?> getHyggeCode() {
+    public HyggeCode getHyggeCode() {
         return hyggeCode;
     }
 }

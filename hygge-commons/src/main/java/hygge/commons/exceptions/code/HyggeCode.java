@@ -7,7 +7,7 @@ package hygge.commons.exceptions.code;
  * @date 2022/6/25
  * @since 1.0
  */
-public interface HyggeCode<C, E> {
+public interface HyggeCode {
     /**
      * 是否为严重问题。
      * <p/>
@@ -24,10 +24,10 @@ public interface HyggeCode<C, E> {
     /**
      * 获取业务标识码
      */
-    <Co> Co getCode();
+    <C> C getCode();
 
     /**
      * 用于自由拓展的额外的信息，你可以通过异常向外部传递某些信息
      */
-    <Ex>Ex getExtraInfo();
+    <E> E getExtraInfo();
 }

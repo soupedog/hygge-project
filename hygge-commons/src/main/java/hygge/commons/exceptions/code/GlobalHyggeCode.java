@@ -7,7 +7,7 @@ package hygge.commons.exceptions.code;
  * @date 2022/6/25
  * @since 1.0
  */
-public enum GlobalHyggeCode implements HyggeCode<Object, Object> {
+public enum GlobalHyggeCode implements HyggeCode {
     /**
      * 响应正常
      */
@@ -50,13 +50,13 @@ public enum GlobalHyggeCode implements HyggeCode<Object, Object> {
     }
 
     @Override
-    public <Co> Co getCode() {
-        return (Co) code;
+    public <C> C getCode() {
+        return (C) code;
     }
 
     @Override
-    public <Ex> Ex getExtraInfo() {
-        return (Ex) extraInfo;
+    public <E> E getExtraInfo() {
+        return (E) extraInfo;
     }
 
     GlobalHyggeCode(boolean serious, String publicMessage, Object code, Object extraInfo) {
