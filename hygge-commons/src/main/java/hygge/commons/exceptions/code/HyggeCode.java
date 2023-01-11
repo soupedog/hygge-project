@@ -14,7 +14,7 @@ public interface HyggeCode {
      * 返回 false 通常代表是入参引发的问题，有可能通过重试自愈<br/>
      * 返回 true 时需要人工介入检查，通常无法自愈
      */
-    boolean serious();
+    boolean isSerious();
 
     /**
      * 获取已脱敏可暴露给系统外部的提示信息

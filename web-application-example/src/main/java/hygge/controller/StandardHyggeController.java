@@ -3,6 +3,7 @@ package hygge.controller;
 import hygge.commons.exceptions.InternalRuntimeException;
 import hygge.commons.exceptions.LightRuntimeException;
 import hygge.domain.ControllerResponse;
+import hygge.domain.CustomSystemCode;
 import hygge.domain.User;
 import hygge.web.template.HyggeController;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,5 +49,11 @@ public class StandardHyggeController implements HyggeController<ResponseEntity<?
         } else {
             throw new InternalRuntimeException("模拟服务端内部异常");
         }
+    }
+
+    @GetMapping("/standard/customHyggeCode")
+    public ResponseEntity<?> customHyggeCode() {
+        // GlobalHyggeCode 与 CustomSystemCode 完全等价
+        throw new LightRuntimeException("模拟抛出自定义业务码的异常", CustomSystemCode.LOGIN_ILLEGAL);
     }
 }

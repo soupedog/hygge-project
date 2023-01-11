@@ -53,7 +53,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
             ParameterException.class
     })
     default R hyggeExceptionHandler(HyggeException e) {
-        if (e.getHyggeCode().serious()) {
+        if (e.getHyggeCode().isSerious()) {
             log.error(e::getMessage, e);
             return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
         } else {
@@ -72,7 +72,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
             ParameterRuntimeException.class
     })
     default R hyggeRuntimeExceptionHandler(HyggeRuntimeException e) {
-        if (e.getHyggeCode().serious()) {
+        if (e.getHyggeCode().isSerious()) {
             log.error(e::getMessage, e);
             return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }

@@ -40,7 +40,7 @@ public enum GlobalHyggeCode implements HyggeCode {
     private Object extraInfo;
 
     @Override
-    public boolean serious() {
+    public boolean isSerious() {
         return serious;
     }
 
