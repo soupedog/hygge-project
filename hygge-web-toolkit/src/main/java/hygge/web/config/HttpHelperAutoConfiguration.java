@@ -51,7 +51,7 @@ public class HttpHelperAutoConfiguration implements HyggeAutoConfiguration {
 
     @Bean("defaultHttpHelper")
     @ConditionalOnMissingBean(value = HttpHelper.class)
-    public HttpHelper defaultHttpHelper(HttpHelperRestTemplateFactory httpHelperRestTemplateFactory, HttpHelperLogger httpHelperLogger, HttpHelperResponseEntityReader httpHelperResponseEntityReader) {
+    public DefaultHttpHelper defaultHttpHelper(HttpHelperRestTemplateFactory httpHelperRestTemplateFactory, HttpHelperLogger httpHelperLogger, HttpHelperResponseEntityReader httpHelperResponseEntityReader) {
         log.info("DefaultHttpHelper start to init.");
         return new DefaultHttpHelper(httpHelperRestTemplateFactory, httpHelperLogger, httpHelperResponseEntityReader);
     }
