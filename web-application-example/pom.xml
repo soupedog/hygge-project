@@ -29,7 +29,7 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.6.14</version>
-            <!--明确已经引入了 Jackson 相关内容，并以 Spring jackson 依赖版本为准，所以这里排除-->
+            <!--明确已经通过其他依赖引入了 jackson 相关内容，并以 Spring jackson 依赖版本为准，所以这里排除-->
             <exclusions>
                 <exclusion>
                     <artifactId>jackson-core</artifactId>
