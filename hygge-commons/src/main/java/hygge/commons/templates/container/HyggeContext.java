@@ -1,7 +1,9 @@
 package hygge.commons.templates.container;
 
 /**
- * 多个函数间数据交互操作的上下文容器(并不限制对象是否属于同一类型)
+ * 非特定类型对象的容器。不与 {@link HyggeKeeper} 合并成同一个接口的原因是，该接口对外暴露的方法不对容器内元素类型强制限定，而 {@link HyggeKeeper} 对外暴露方法限定容器内元素类型，这便是他们之间的区别。
+ * <p>
+ * 语义上该接口实例作为多个函数间数据交互操作的上下文容器
  *
  * @author Xavier
  * @date 2022/6/25

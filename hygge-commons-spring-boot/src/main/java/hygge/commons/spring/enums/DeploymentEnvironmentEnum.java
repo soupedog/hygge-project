@@ -17,7 +17,7 @@ public enum DeploymentEnvironmentEnum {
      */
     SIT(100, "SIT"),
     /**
-     * Use Acceptance Test
+     * User Acceptance Test
      */
     UAT(200, "UAT"),
     /**

@@ -13,7 +13,7 @@ public enum CustomSystemCode implements HyggeCode {
     /**
      * 用户登录信息有误
      */
-    LOGIN_ILLEGAL(false, "Unexpected login info.", 403000, null),
+    LOGIN_ILLEGAL(false, "Unexpected login info.", 403000, HttpStatus.FORBIDDEN),
     ;
 
     private final boolean serious;

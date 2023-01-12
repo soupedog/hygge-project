@@ -145,7 +145,7 @@ public abstract class HyggeLogConfiguration {
         this.enable = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE.getKey(), this.enable, true);
 
         this.enableRootOverride = parameterHelper.booleanFormatOfNullable(ConfigKey.ROOT_OVERRIDE.getKey(), this.enableRootOverride, true);
-        this.enableJsonType = parameterHelper.booleanFormatOfNullable("simulateJsonPatter.enable", this.enableJsonType, false);
+        this.enableJsonType = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_JSON_TYPE.getKey(), this.enableJsonType, false);
 
         // DEV 环境外默认使用
         if (HyggeSpringContext.getDeploymentEnvironment().getPrivilegeLevel() > DeploymentEnvironmentEnum.DEV.getPrivilegeLevel()) {

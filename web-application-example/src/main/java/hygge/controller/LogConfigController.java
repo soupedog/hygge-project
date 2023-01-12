@@ -34,7 +34,7 @@ public class LogConfigController extends HyggeWebUtilContainer implements HyggeC
     @Override
     public boolean printNonSeriousExceptionLog(HyggeInfo exception) {
         // 修改这个方法会影响 “非严重异常” 的日志是否需要打印，用于快捷过虑掉非重要日志
-        // 此处仍然恒定返回 true ,运行日志打印，有兴趣可以自行本地修改后调试
+        // 此处仍然恒定返回 true ,允许日志打印，有兴趣可以自行本地修改后调试
         return HyggeController.super.printNonSeriousExceptionLog(exception);
     }
 

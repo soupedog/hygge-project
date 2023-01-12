@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReplaceControllerResponseController implements HyggeController<ResponseEntity<?>> {
 
     static {
-        // 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，为了确保数据类型的统一性，你需要为 GlobalHyggeCode 下的所有实例重新调整 code/extraInfo 的值，就像下面这样：
+        // 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，为了确保数据类型的统一性，你需要为 HyggeCode 的所有实例重新调整 code/extraInfo 的值，就像下面这样：
         GlobalHyggeCode.SUCCESS.setCode("200");
         GlobalHyggeCode.SUCCESS.setExtraInfo(HttpStatus.OK);
 
-        // 默认情况 code 是数字类型，此处二次赋值为回滚操作(为了不影响其他 Controller 演示，因为这是全局会受影响的改动)
+        // 默认情况 GlobalHyggeCode.code 是数字类型，此处二次赋值为回滚操作(为了不影响其他 Controller 演示，因为这是全局会受影响的改动)
         GlobalHyggeCode.SUCCESS.setCode(200);
     }
 
