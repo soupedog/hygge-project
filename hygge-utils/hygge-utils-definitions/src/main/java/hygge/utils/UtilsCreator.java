@@ -35,7 +35,7 @@ public enum UtilsCreator implements UtilsCreatorAbility, InfoMessageSupplier {
     /**
      * 先从 {@link UtilsCreator#singletonObjects} 里根据 cacheKey 取，如果没取到则通过构造方法获取实例，并将该实例缓存到 {@link UtilsCreator#singletonObjects}
      */
-    protected static <H extends HyggeUtil> H getAndCacheInstance(String cacheKey, Supplier<H> constructor) {
+    private static <H extends HyggeUtil> H getAndCacheInstance(String cacheKey, Supplier<H> constructor) {
         H result = (H) singletonObjects.getValue(cacheKey);
         if (result == null) {
             synchronized (singletonObjects) {
