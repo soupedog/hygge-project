@@ -1,11 +1,9 @@
 package hygge.utils.lg4j.impl;
 
+import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.logging.configuration.HyggeLogConfiguration;
-import hygge.logging.enums.ConverterModeEnum;
+import hygge.logging.enums.OutputModeEnum;
 import hygge.utils.definitions.HyggeLogPatterHelper;
-
-import static hygge.logging.enums.ConverterModeEnum.ESCAPE;
-import static hygge.logging.enums.ConverterModeEnum.JSON_FRIENDLY;
 
 /**
  * 基于 log4j 的 LogPatterHelper 默认实现
@@ -33,45 +31,33 @@ public class HyggeLog4JPatterHelper implements HyggeLogPatterHelper {
     public static final String ROOT_DEFAULT_COLORFUL_PATTERN = "%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx";
 
     @Override
-    public String createPatter(HyggeLogConfiguration configuration, boolean hyggeScope) {
+    public String createPatter(HyggeLogConfiguration configuration, boolean actualHyggeScope, boolean actualEnableColorful, OutputModeEnum actualOutputMode) {
+        if (actualOutputMode.equals(OutputModeEnum.CONSOLE_AND_FILE)) {
+            // 生成阶段不允许指定组合模式
+            throw new UtilRuntimeException(String.format("OutputMode(%s) is not allowed in the final creation phase.", actualOutputMode));
+        }
+
         String finalPatter;
 
         if (configuration.isEnableJsonType()) {
+            String type = actualHyggeScope ? "hygge" : "root";
+
             HyggeLog4jJsonPatterHelper hyggeLog4jJsonPatterHelper = new HyggeLog4jJsonPatterHelper(
-                    hyggeScope ? "hygge" : "root",
+                    type,
                     configuration.getProjectName(),
                     configuration.getAppName(),
                     configuration.getVersion()
             );
-            finalPatter = hyggeLog4jJsonPatterHelper.create(configuration.isEnableColorful(), configuration.getConverterMode()) + "%n";
+            finalPatter = hyggeLog4jJsonPatterHelper.create(actualEnableColorful, configuration.getConverterMode()) + "%n";
         } else {
-            if (configuration.isEnableColorful()) {
-                finalPatter = hyggeScope ? HYGGE_DEFAULT_COLORFUL_PATTERN : ROOT_DEFAULT_COLORFUL_PATTERN;
+            // 非 json 类型
+            if (actualEnableColorful) {
+                finalPatter = actualHyggeScope ? HYGGE_DEFAULT_COLORFUL_PATTERN : ROOT_DEFAULT_COLORFUL_PATTERN;
             } else {
-                finalPatter = hyggeScope ? HYGGE_DEFAULT_PATTERN : ROOT_DEFAULT_PATTERN;
+                finalPatter = actualHyggeScope ? HYGGE_DEFAULT_PATTERN : ROOT_DEFAULT_PATTERN;
             }
         }
 
-        finalPatter = initConverter(configuration.getConverterMode(), finalPatter);
-        return finalPatter;
-    }
-
-    private String initConverter(ConverterModeEnum converterMode, String finalPatter) {
-        switch (converterMode) {
-            case ESCAPE:
-                finalPatter = finalPatter
-                        .replace("%m", "%" + ESCAPE.getConverterKey() + "{%m}")
-                        .replace("%xwEx", "%" + ESCAPE.getConverterKey() + "{%xwEx}");
-                break;
-            case JSON_FRIENDLY:
-                finalPatter = finalPatter
-                        .replace("%m", "%" + JSON_FRIENDLY.getConverterKey() + "{%m}")
-                        .replace("%xwEx", "%" + JSON_FRIENDLY.getConverterKey() + "{%xwEx}");
-                break;
-            default:
-                // 维持原状
-                break;
-        }
         return finalPatter;
     }
 }

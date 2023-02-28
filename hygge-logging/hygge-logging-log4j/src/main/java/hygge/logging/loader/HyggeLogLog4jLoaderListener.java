@@ -26,6 +26,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -68,42 +70,50 @@ public class HyggeLogLog4jLoaderListener implements Ordered, ApplicationListener
         Configuration configuration = loggerContext.getConfiguration();
 
         if (hyggeLg4jConfiguration.isEnableRootOverride()) {
-            PatternLayout layout = createLayout(false, hyggeLg4jConfiguration, configuration);
-            Appender rootAppender = createAppender(false, hyggeLg4jConfiguration, configuration, layout);
-            rootAppender.start();
+            List<Appender> rootAppenderList = createAppenderList(false, hyggeLg4jConfiguration, configuration);
 
-            // 移除旧的 rootLogger
+            // 剔除默认的 appender
             configuration.getRootLogger().removeAppender("Console");
-            configuration.getRootLogger().addAppender(rootAppender, configuration.getRootLogger().getLevel(), configuration.getFilter());
-            configuration.addAppender(rootAppender);
+
+            for (Appender appender : rootAppenderList) {
+                appender.start();
+                configuration.getRootLogger().addAppender(appender, configuration.getRootLogger().getLevel(), configuration.getFilter());
+                configuration.addAppender(appender);
+            }
+
             restLogger(loggerContext, configuration);
         }
 
         Map<String, Boolean> hyggeScopePathsMap = hyggeLg4jConfiguration.getHyggeScopePaths();
-        if (!hyggeScopePathsMap.isEmpty()) {
-            AppenderRef appenderRef = AppenderRef.createAppenderRef(LOGGER_PREFIX + "AppenderRef", Level.INFO, null);
-            AppenderRef[] appenderRefArray = new AppenderRef[]{appenderRef};
+        // 不存在 hygge 目录定义时直接跳过初始化
+        if (hyggeScopePathsMap.isEmpty()) {
+            return;
+        }
 
-            LoggerConfig hyggeLoggerConfiguration = LoggerConfig.newBuilder()
-                    .withLoggerName(LOGGER_PREFIX + "LoggerConfig")
-                    // 以 Root 配置为默认值
-                    .withConfig(configuration)
-                    // additivity：false 子 Logger 的  appender 不传递给 root logger 防止日志输出两次
-                    .withAdditivity(false)
-                    .withIncludeLocation("true")
-                    .withRefs(appenderRefArray)
-                    .build();
+        AppenderRef appenderRef = AppenderRef.createAppenderRef(LOGGER_PREFIX + "AppenderRef", Level.INFO, null);
+        AppenderRef[] appenderRefArray = new AppenderRef[]{appenderRef};
 
-            PatternLayout hyggeLayout = createLayout(true, hyggeLg4jConfiguration, configuration);
-            Appender hyggeAppender = createAppender(true, hyggeLg4jConfiguration, configuration, hyggeLayout);
-            hyggeAppender.start();
-            hyggeLoggerConfiguration.addAppender(hyggeAppender, Level.INFO, null);
+        LoggerConfig hyggeLoggerConfiguration = LoggerConfig.newBuilder()
+                .withLoggerName(LOGGER_PREFIX + "LoggerConfig")
+                // 以 Root 配置为默认值
+                .withConfig(configuration)
+                // additivity：false 子 Logger 的  appender 不传递给 root logger 防止日志输出两次
+                .withAdditivity(false)
+                .withIncludeLocation("true")
+                .withRefs(appenderRefArray)
+                .build();
 
-            // 初始化 hyggeLogger
-            for (Map.Entry<String, Boolean> entry : hyggeScopePathsMap.entrySet()) {
-                if (Boolean.TRUE.equals(entry.getValue())) {
-                    configuration.addLogger(entry.getKey(), hyggeLoggerConfiguration);
-                }
+        List<Appender> hyggeAppenderList = createAppenderList(true, hyggeLg4jConfiguration, configuration);
+
+        for (Appender appender : hyggeAppenderList) {
+            appender.start();
+            hyggeLoggerConfiguration.addAppender(appender, Level.INFO, null);
+        }
+
+        // 初始化 hyggeLogger
+        for (Map.Entry<String, Boolean> entry : hyggeScopePathsMap.entrySet()) {
+            if (Boolean.TRUE.equals(entry.getValue())) {
+                configuration.addLogger(entry.getKey(), hyggeLoggerConfiguration);
             }
         }
 
@@ -115,31 +125,54 @@ public class HyggeLogLog4jLoaderListener implements Ordered, ApplicationListener
         loggerContext.updateLoggers(configuration);
     }
 
-    private Appender createAppender(boolean isHyggeScope, HyggeLg4jConfiguration hyggeLg4jConfiguration, Configuration configuration, Layout<?> layout) {
-        if (OutputModeEnum.FILE.equals(hyggeLg4jConfiguration.getOutputMode())) {
+    private List<Appender> createAppenderList(boolean actualHyggeScope, HyggeLg4jConfiguration hyggeLg4jConfiguration, Configuration configuration) {
+        List<Appender> result = new ArrayList<>();
+
+        OutputModeEnum outputMode = hyggeLg4jConfiguration.getOutputMode();
+
+        if (OutputModeEnum.CONSOLE.equals(outputMode)
+                || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
+            Layout<?> consoleLayout = createLayout(configuration, hyggeLg4jConfiguration, actualHyggeScope, hyggeLg4jConfiguration.getEnableColorfulConsole(), OutputModeEnum.CONSOLE);
+
+            ConsoleAppender consoleAppender = ConsoleAppender.newBuilder()
+                    .setName("HyggeConsoleAppender")
+                    .setLayout(consoleLayout)
+                    .build();
+
+            result.add(consoleAppender);
+        }
+
+        if (OutputModeEnum.FILE.equals(outputMode)
+                || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
+
+            Layout<?> fileLayout = createLayout(configuration, hyggeLg4jConfiguration, actualHyggeScope, hyggeLg4jConfiguration.getEnableColorfulFile(), OutputModeEnum.FILE);
+
             SizeBasedTriggeringPolicy sizeBasedTriggeringPolicy = SizeBasedTriggeringPolicy.createPolicy(hyggeLg4jConfiguration.getFileMaxSize());
             // false 服务启动时，不立即做文件迁移评估，只有 Cron 表达式被触发的时刻才做文件迁移评估
             CronTriggeringPolicy cronTriggeringPolicy = CronTriggeringPolicy.createPolicy(configuration, Boolean.FALSE.toString(), hyggeLg4jConfiguration.getCronTrigger());
             // 定时触发、文件大小触发
             CompositeTriggeringPolicy compositeTriggeringPolicy = CompositeTriggeringPolicy.createPolicy(sizeBasedTriggeringPolicy, cronTriggeringPolicy);
-            String fileTypeName = isHyggeScope ? "hygge" : "framework";
+            String fileTypeName = actualHyggeScope ? "hygge" : "root";
             String filePrefix = hyggeLg4jConfiguration.getFilePath() + File.separator + hyggeLg4jConfiguration.getProjectName() + "_" + hyggeLg4jConfiguration.getAppName() + "_" + fileTypeName;
-            return RollingFileAppender.newBuilder()
+
+            RollingFileAppender fileAppender = RollingFileAppender.newBuilder()
                     .withFileName(filePrefix + ".log")
                     .withFilePattern(filePrefix + "%d{yyyy-MM-dd}_%i.log")
                     .setName("HyggeRollingFileAppender")
                     .withPolicy(compositeTriggeringPolicy)
-                    .setLayout(layout)
+                    .setLayout(fileLayout)
                     .withLocking(false)
                     .build();
-        } else {
-            return ConsoleAppender.newBuilder().setName("HyggeConsoleAppender").setLayout(layout).build();
+
+            result.add(fileAppender);
         }
+
+        return result;
     }
 
-    private PatternLayout createLayout(boolean isHyggeScope, HyggeLg4jConfiguration hyggeLg4jConfiguration, Configuration configuration) {
+    private PatternLayout createLayout(Configuration configuration, HyggeLg4jConfiguration hyggeLg4jConfiguration, boolean actualHyggeScope, boolean actualEnableColorful, OutputModeEnum actualOutputMode) {
         HyggeLog4JPatterHelper patterHelper = new HyggeLog4JPatterHelper();
-        String finalPatter = patterHelper.createPatter(hyggeLg4jConfiguration, isHyggeScope);
+        String finalPatter = patterHelper.createPatter(hyggeLg4jConfiguration, actualHyggeScope, actualEnableColorful, actualOutputMode);
 
         return PatternLayout.newBuilder()
                 .withCharset(UTF_8)

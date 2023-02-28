@@ -37,8 +37,9 @@ public class HyggeLg4jConfiguration extends HyggeLogConfiguration {
 
     @Override
     protected void exclusiveCheckAndInit() {
-        // 如果是文件输出
-        if (OutputModeEnum.FILE.equals(outputMode)) {
+        // 包含文件类型输出时，校验文件输出相关参数
+        if (OutputModeEnum.FILE.equals(outputMode)
+                || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
             this.filePath = parameterHelper.stringNotEmpty("filePath", (Object) filePath);
             this.fileMaxSize = parameterHelper.stringOfNullable(fileMaxSize, "2MB");
             // 默认 0 点截断日志文件
