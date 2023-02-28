@@ -2,6 +2,7 @@ package hygge.commons.spring;
 
 import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
 import hygge.commons.spring.listener.HyggeSpringContextInitListener;
+import org.springframework.boot.SpringBootVersion;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.util.Locale;
@@ -59,7 +60,8 @@ public class HyggeSpringContext {
     }
 
     public static String toJsonVale() {
-        return String.format("{\"environmentModeEnum\":\"%s\",\"appName\":\"%s\",\"language\":\"%s\",\"timeZone\":\"%s\"}",
+        return String.format("{\"spring-boot-version\":\"%s\",\"environmentModeEnum\":\"%s\",\"appName\":\"%s\",\"language\":\"%s\",\"timeZone\":\"%s\"}",
+                SpringBootVersion.getVersion(),
                 deploymentEnvironment,
                 appName,
                 Locale.getDefault().getLanguage(),
