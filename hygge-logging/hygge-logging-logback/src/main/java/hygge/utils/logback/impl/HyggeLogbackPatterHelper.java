@@ -1,6 +1,8 @@
 package hygge.utils.logback.impl;
 
+import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.logging.configuration.HyggeLogConfiguration;
+import hygge.logging.enums.OutputModeEnum;
 import hygge.utils.definitions.HyggeLogPatterHelper;
 
 import java.lang.management.ManagementFactory;
@@ -31,22 +33,30 @@ public class HyggeLogbackPatterHelper implements HyggeLogPatterHelper {
     public static final String ROOT_DEFAULT_COLORFUL_PATTERN = "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(%pid){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx";
 
     @Override
-    public String createPatter(HyggeLogConfiguration configuration, boolean hyggeScope) {
+    public String createPatter(HyggeLogConfiguration configuration, boolean actualHyggeScope, boolean actualEnableColorful, OutputModeEnum actualOutputMode) {
+        if (actualOutputMode.equals(OutputModeEnum.CONSOLE_AND_FILE)) {
+            // 生成阶段不允许指定组合模式
+            throw new UtilRuntimeException(String.format("OutputMode(%s) is not allowed in the final creation phase.", actualOutputMode));
+        }
+
         String finalPatter;
 
         if (configuration.isEnableJsonType()) {
+            String type = actualHyggeScope ? "hygge" : "root";
+
             HyggeLogbackJsonPatterHelper hyggeLogbackJsonPatterHelper = new HyggeLogbackJsonPatterHelper(
-                    hyggeScope ? "hygge" : "root",
+                    type,
                     configuration.getProjectName(),
                     configuration.getAppName(),
                     configuration.getVersion()
             );
-            finalPatter = hyggeLogbackJsonPatterHelper.create(configuration.isEnableColorful(), configuration.getConverterMode()) + "%n";
+            finalPatter = hyggeLogbackJsonPatterHelper.create(actualEnableColorful, configuration.getConverterMode()) + "%n";
         } else {
-            if (configuration.isEnableColorful()) {
-                finalPatter = hyggeScope ? HYGGE_DEFAULT_COLORFUL_PATTERN : ROOT_DEFAULT_COLORFUL_PATTERN;
+            // 非 json 类型
+            if (actualEnableColorful) {
+                finalPatter = actualHyggeScope ? HYGGE_DEFAULT_COLORFUL_PATTERN : ROOT_DEFAULT_COLORFUL_PATTERN;
             } else {
-                finalPatter = hyggeScope ? HYGGE_DEFAULT_PATTERN : ROOT_DEFAULT_PATTERN;
+                finalPatter = actualHyggeScope ? HYGGE_DEFAULT_PATTERN : ROOT_DEFAULT_PATTERN;
             }
         }
 

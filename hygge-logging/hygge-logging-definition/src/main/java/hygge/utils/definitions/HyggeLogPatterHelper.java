@@ -1,6 +1,7 @@
 package hygge.utils.definitions;
 
 import hygge.logging.configuration.HyggeLogConfiguration;
+import hygge.logging.enums.OutputModeEnum;
 import hygge.utils.HyggeUtil;
 
 /**
@@ -14,8 +15,10 @@ public interface HyggeLogPatterHelper extends HyggeUtil {
     /**
      * 创建日志格式模板
      *
-     * @param hyggeScope 是否为 hygge 范围组件
+     * @param actualHyggeScope     实际的是否为 hygge 范围组件
+     * @param actualEnableColorful 实际的是否开启彩色日志
+     * @param actualOutputMode     实际的日志输出类型
      * @return 日志格式模板
      */
-    String createPatter(HyggeLogConfiguration configuration, boolean hyggeScope);
+    String createPatter(HyggeLogConfiguration configuration, boolean actualHyggeScope, boolean actualEnableColorful, OutputModeEnum actualOutputMode);
 }

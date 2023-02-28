@@ -77,6 +77,9 @@
         },
         {
           "value": "FILE"
+        },
+        {
+          "value": "CONSOLE_AND_FILE"
         }
       ]
     }
@@ -119,9 +122,15 @@
     },
     {
       "sourceType": "hygge.logging.configuration.HyggeLogConfiguration",
-      "name": "hygge.logging.pattern.colorful.enable",
+      "name": "hygge.logging.pattern.colorful.console.enable",
       "type": "java.lang.Boolean",
       "defaultValue": true
+    },
+    {
+      "sourceType": "hygge.logging.configuration.HyggeLogConfiguration",
+      "name": "hygge.logging.pattern.colorful.file.enable",
+      "type": "java.lang.Boolean",
+      "defaultValue": false
     },
     {
       "sourceType": "hygge.logging.configuration.HyggeLogConfiguration",

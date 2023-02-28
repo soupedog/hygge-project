@@ -64,9 +64,13 @@ public abstract class HyggeLogConfiguration {
      */
     protected Boolean enableJsonType;
     /**
-     * 日志模板是否启用彩色
+     * 控制台日志模板是否启用彩色
      */
-    protected Boolean enableColorful;
+    protected Boolean enableColorfulConsole;
+    /**
+     * 文件日志模板是否启用彩色
+     */
+    protected Boolean enableColorfulFile;
     /**
      * root pattern
      */
@@ -121,7 +125,7 @@ public abstract class HyggeLogConfiguration {
 
         this.enableRootOverride = parameterHelper.booleanFormat(ConfigKey.ROOT_OVERRIDE.getKey(), configurableEnvironment.getProperty(ConfigKey.ROOT_OVERRIDE.getKey()));
         this.enableJsonType = parameterHelper.booleanFormat(ConfigKey.ENABLE_JSON_TYPE.getKey(), configurableEnvironment.getProperty(ConfigKey.ENABLE_JSON_TYPE.getKey()));
-        this.enableColorful = parameterHelper.booleanFormat(ConfigKey.ENABLE_COLORFUL.getKey(), configurableEnvironment.getProperty(ConfigKey.ENABLE_COLORFUL.getKey()));
+        this.enableColorfulConsole = parameterHelper.booleanFormat(ConfigKey.ENABLE_COLORFUL_CONSOLE.getKey(), configurableEnvironment.getProperty(ConfigKey.ENABLE_COLORFUL_CONSOLE.getKey()));
         this.rootPattern = configurableEnvironment.getProperty(ConfigKey.ROOT_PATTERN.getKey());
         this.hyggePattern = configurableEnvironment.getProperty(ConfigKey.HYGGE_PATTERN.getKey());
 
@@ -147,18 +151,22 @@ public abstract class HyggeLogConfiguration {
         this.enableRootOverride = parameterHelper.booleanFormatOfNullable(ConfigKey.ROOT_OVERRIDE.getKey(), this.enableRootOverride, true);
         this.enableJsonType = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_JSON_TYPE.getKey(), this.enableJsonType, false);
 
-        // DEV 环境外默认使用
+        // 非 DEV 环境默认值
         if (HyggeSpringContext.getDeploymentEnvironment().getPrivilegeLevel() > DeploymentEnvironmentEnum.DEV.getPrivilegeLevel()) {
             this.outputMode = parameterHelper.parseObjectOfNullable(ConfigKey.OUTPUT_MODE.getKey(), this.outputMode, OutputModeEnum.FILE);
             this.converterMode = parameterHelper.parseObjectOfNullable(ConfigKey.OUTPUT_MODE.getKey(), this.converterMode, ConverterModeEnum.JSON_FRIENDLY);
-            // 默认关闭彩色
-            this.enableColorful = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_COLORFUL.getKey(), this.enableColorful, false);
+            // 默认关闭控制台彩色日志
+            this.enableColorfulConsole = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_COLORFUL_CONSOLE.getKey(), this.enableColorfulConsole, false);
         } else {
+            // DEV 环境默认值
             this.outputMode = parameterHelper.parseObjectOfNullable(ConfigKey.OUTPUT_MODE.getKey(), this.outputMode, OutputModeEnum.CONSOLE);
             this.converterMode = parameterHelper.parseObjectOfNullable(ConfigKey.OUTPUT_MODE.getKey(), this.converterMode, ConverterModeEnum.DEFAULT);
-            // DEV 默认开启彩色
-            this.enableColorful = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_COLORFUL.getKey(), this.enableColorful, true);
+            // DEV 默认开启控制台彩色日志
+            this.enableColorfulConsole = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_COLORFUL_CONSOLE.getKey(), this.enableColorfulConsole, true);
         }
+
+        // 全环境默认关闭文件彩色日志
+        this.enableColorfulFile = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_COLORFUL_FILE.getKey(), this.enableColorfulFile, false);
     }
 
     public enum ConfigKey {
@@ -189,7 +197,11 @@ public abstract class HyggeLogConfiguration {
         /**
          * 日志模板是否启用彩色
          */
-        ENABLE_COLORFUL("hygge.logging.pattern.colorful.enable"),
+        ENABLE_COLORFUL_CONSOLE("hygge.logging.pattern.colorful.console.enable"),
+        /**
+         * 日志模板是否启用彩色
+         */
+        ENABLE_COLORFUL_FILE("hygge.logging.pattern.colorful.file.enable"),
         /**
          * Root Pattern
          */
@@ -322,12 +334,20 @@ public abstract class HyggeLogConfiguration {
         this.enableJsonType = enableJsonType;
     }
 
-    public boolean isEnableColorful() {
-        return enableColorful;
+    public boolean getEnableColorfulConsole() {
+        return enableColorfulConsole;
     }
 
-    public void setEnableColorful(boolean enableColorful) {
-        this.enableColorful = enableColorful;
+    public void setEnableColorfulConsole(boolean enableColorfulConsole) {
+        this.enableColorfulConsole = enableColorfulConsole;
+    }
+
+    public Boolean getEnableColorfulFile() {
+        return enableColorfulFile;
+    }
+
+    public void setEnableColorfulFile(boolean enableColorfulFile) {
+        this.enableColorfulFile = enableColorfulFile;
     }
 
     public String getRootPattern() {

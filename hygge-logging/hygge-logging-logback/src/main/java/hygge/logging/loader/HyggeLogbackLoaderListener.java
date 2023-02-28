@@ -32,6 +32,8 @@ import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,19 +72,19 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 
         if (configuration.isEnableRootOverride()) {
-            LayoutWrappingEncoder<ILoggingEvent> rootEncoder = createEncoder(false, configuration, loggerContext);
-            Appender<ILoggingEvent> rootAppender = createAppender(false, loggerContext, configuration, rootEncoder);
+            List<Appender<ILoggingEvent>> rootAppenderList = createAppenderList(false, loggerContext, configuration);
+
             // 重置 rootLogger
-            restRootLogger(loggerContext, rootAppender);
+            restRootLogger(loggerContext, rootAppenderList);
         }
 
         Map<String, Boolean> hyggeScopePathsMap = configuration.getHyggeScopePaths();
+        // 不存在 hygge 目录定义时直接跳过初始化
         if (hyggeScopePathsMap.isEmpty()) {
             return;
         }
 
-        LayoutWrappingEncoder<ILoggingEvent> hyggeEncoder = createEncoder(true, configuration, loggerContext);
-        Appender<ILoggingEvent> hyggeAppender = createAppender(true, loggerContext, configuration, hyggeEncoder);
+        List<Appender<ILoggingEvent>> hyggeAppenderList = createAppenderList(true, loggerContext, configuration);
 
         // 初始化 hyggeLogger
         for (Map.Entry<String, Boolean> entry : hyggeScopePathsMap.entrySet()) {
@@ -91,65 +93,94 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
                 // 不向上传播日志事件，防止多次打印(例如传递给了 Root)
                 logger.setAdditive(false);
                 logger.setLevel(logger.getLevel());
-                logger.addAppender(hyggeAppender);
+
+                for (Appender<ILoggingEvent> hyggeAppender : hyggeAppenderList) {
+                    logger.addAppender(hyggeAppender);
+                }
             }
         }
     }
 
-    private void restRootLogger(LoggerContext loggerContext, Appender<ILoggingEvent> rootAppender) {
+    private void restRootLogger(LoggerContext loggerContext, List<Appender<ILoggingEvent>> rootAppenderList) {
         Logger logger = loggerContext.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+        // 剔除默认的 appender
         logger.detachAppender("CONSOLE");
-        logger.addAppender(rootAppender);
-    }
 
-    private Appender<ILoggingEvent> createAppender(boolean isHyggeScope, LoggerContext loggerContext, HyggeLogbackConfiguration configuration, LayoutWrappingEncoder<ILoggingEvent> encoder) {
-        if (OutputModeEnum.CONSOLE.equals(configuration.getOutputMode())) {
-            // 控制台输出
-            ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
-            consoleAppender.setName(isHyggeScope ? "CONSOLE_HYGGE" : "CONSOLE");
-            consoleAppender.setContext(loggerContext);
-            consoleAppender.setEncoder(encoder);
-            consoleAppender.start();
-            return consoleAppender;
-        } else {
-            // 文件输出
-            RollingFileAppender<ILoggingEvent> rollingFileAppender = new RollingFileAppender<>();
-            rollingFileAppender.setContext(loggerContext);
-            rollingFileAppender.setEncoder(encoder);
-
-            SizeAndTimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new SizeAndTimeBasedRollingPolicy<>();
-            rollingPolicy.setContext(loggerContext);
-            rollingPolicy.setMaxFileSize(FileSize.valueOf(configuration.getFileMaxSize()));
-            rollingPolicy.setMaxHistory(configuration.getFileMaxHistory());
-
-            String fileNamePattern;
-            if (isHyggeScope) {
-                if (StringUtils.hasText(configuration.getFileNamePatternHygge())) {
-                    fileNamePattern = configuration.getFileNamePatternHygge();
-                } else {
-                    fileNamePattern = File.separator + "hygge-%d{yyyy-MM-dd}.%i.log";
-                    configuration.setFileNamePatternHygge(fileNamePattern);
-                }
-            } else {
-                if (StringUtils.hasText(configuration.getFileNamePatternRoot())) {
-                    fileNamePattern = configuration.getFileNamePatternRoot();
-                } else {
-                    fileNamePattern = File.separator + "root-%d{yyyy-MM-dd}.%i.log";
-                    configuration.setFileNamePatternRoot(fileNamePattern);
-                }
-            }
-
-            rollingPolicy.setFileNamePattern(fileNamePattern);
-            rollingPolicy.setParent(rollingFileAppender);
-            rollingPolicy.start();
-
-            rollingFileAppender.setRollingPolicy(rollingPolicy);
-            rollingFileAppender.start();
-            return rollingFileAppender;
+        for (Appender<ILoggingEvent> appender : rootAppenderList) {
+            logger.addAppender(appender);
         }
     }
 
-    private LayoutWrappingEncoder<ILoggingEvent> createEncoder(boolean isHyggeScope, HyggeLogbackConfiguration configuration, LoggerContext loggerContext) {
+    /**
+     * 创建所需的全部 Appender
+     */
+    private List<Appender<ILoggingEvent>> createAppenderList(boolean isHyggeScope, LoggerContext loggerContext, HyggeLogbackConfiguration configuration) {
+        List<Appender<ILoggingEvent>> result = new ArrayList<>();
+
+        OutputModeEnum outputMode = configuration.getOutputMode();
+
+        // 包含控制台输出模式时，往结果集里添加控制台 Appender
+        if (outputMode.equals(OutputModeEnum.CONSOLE) || outputMode.equals(OutputModeEnum.CONSOLE_AND_FILE)) {
+            LayoutWrappingEncoder<ILoggingEvent> consoleEncoder = createEncoder(configuration, isHyggeScope, configuration.getEnableColorfulConsole(), OutputModeEnum.CONSOLE, loggerContext);
+            result.add(createConsoleAppender(isHyggeScope, loggerContext, consoleEncoder));
+        }
+
+        // 包含控制台输出模式时，往结果集里添加文件输出 Appender
+        if (outputMode.equals(OutputModeEnum.FILE) || outputMode.equals(OutputModeEnum.CONSOLE_AND_FILE)) {
+            LayoutWrappingEncoder<ILoggingEvent> fileEncoder = createEncoder(configuration, isHyggeScope, configuration.getEnableColorfulFile(), OutputModeEnum.FILE, loggerContext);
+            result.add(createFileAppender(isHyggeScope, loggerContext, configuration, fileEncoder));
+        }
+
+        return result;
+    }
+
+    private ConsoleAppender<ILoggingEvent> createConsoleAppender(boolean isHyggeScope, LoggerContext loggerContext, LayoutWrappingEncoder<ILoggingEvent> encoder) {
+        ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
+        consoleAppender.setName(isHyggeScope ? "CONSOLE_HYGGE" : "CONSOLE");
+        consoleAppender.setContext(loggerContext);
+        consoleAppender.setEncoder(encoder);
+        consoleAppender.start();
+        return consoleAppender;
+    }
+
+    private RollingFileAppender<ILoggingEvent> createFileAppender(boolean isHyggeScope, LoggerContext loggerContext, HyggeLogbackConfiguration configuration, LayoutWrappingEncoder<ILoggingEvent> encoder) {
+        // 文件输出
+        RollingFileAppender<ILoggingEvent> rollingFileAppender = new RollingFileAppender<>();
+        rollingFileAppender.setContext(loggerContext);
+        rollingFileAppender.setEncoder(encoder);
+
+        SizeAndTimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new SizeAndTimeBasedRollingPolicy<>();
+        rollingPolicy.setContext(loggerContext);
+        rollingPolicy.setMaxFileSize(FileSize.valueOf(configuration.getFileMaxSize()));
+        rollingPolicy.setMaxHistory(configuration.getFileMaxHistory());
+
+        String fileNamePattern;
+        if (isHyggeScope) {
+            if (StringUtils.hasText(configuration.getFileNamePatternHygge())) {
+                fileNamePattern = configuration.getFileNamePatternHygge();
+            } else {
+                fileNamePattern = File.separator + "hygge-%d{yyyy-MM-dd}.%i.log";
+                configuration.setFileNamePatternHygge(fileNamePattern);
+            }
+        } else {
+            if (StringUtils.hasText(configuration.getFileNamePatternRoot())) {
+                fileNamePattern = configuration.getFileNamePatternRoot();
+            } else {
+                fileNamePattern = File.separator + "root-%d{yyyy-MM-dd}.%i.log";
+                configuration.setFileNamePatternRoot(fileNamePattern);
+            }
+        }
+
+        rollingPolicy.setFileNamePattern(fileNamePattern);
+        rollingPolicy.setParent(rollingFileAppender);
+        rollingPolicy.start();
+
+        rollingFileAppender.setRollingPolicy(rollingPolicy);
+        rollingFileAppender.start();
+        return rollingFileAppender;
+    }
+
+    private LayoutWrappingEncoder<ILoggingEvent> createEncoder(HyggeLogbackConfiguration configuration, boolean actualHyggeScope, boolean actualEnableColorful, OutputModeEnum actualOutputMode, LoggerContext loggerContext) {
         LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
         encoder.setContext(loggerContext);
 
@@ -160,17 +191,21 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
 
         String finalPatter;
 
-        if (isHyggeScope) {
+        if (actualHyggeScope) {
             if (StringUtils.hasText(configuration.getHyggePattern())) {
+                // 用户主动指定的 Pattern 优先级更高
                 finalPatter = configuration.getHyggePattern();
             } else {
-                finalPatter = hyggeLogbackPatterHelper.createPatter(configuration, true);
+                // 默认值
+                finalPatter = hyggeLogbackPatterHelper.createPatter(configuration, true, actualEnableColorful, actualOutputMode);
             }
         } else {
             if (StringUtils.hasText(configuration.getRootPattern())) {
+                // 用户主动指定的 Pattern 优先级更高
                 finalPatter = configuration.getRootPattern();
             } else {
-                finalPatter = hyggeLogbackPatterHelper.createPatter(configuration, false);
+                // 默认值
+                finalPatter = hyggeLogbackPatterHelper.createPatter(configuration, false, actualEnableColorful, actualOutputMode);
             }
         }
 

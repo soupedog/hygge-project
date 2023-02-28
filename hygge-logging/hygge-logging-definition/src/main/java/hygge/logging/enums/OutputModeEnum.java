@@ -15,7 +15,12 @@ public enum OutputModeEnum {
     /**
      * 文件模式
      */
-    FILE("FILE");
+    FILE("FILE"),
+    /**
+     * 控制台、文件均进行日志输出
+     */
+    CONSOLE_AND_FILE("CONSOLE_AND_FILE"),
+    ;
 
     OutputModeEnum(String description) {
         this.description = description;
