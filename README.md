@@ -38,8 +38,7 @@ If you answered yes, then I would strongly recommend you to use the ``hygge-proj
 
 Java SDK v1.8 or higher
 
-***Warning:** this project relies on spring-boot, and if spring-boot drops low version java in the future, this project
-will also drop support for low version java.*
+***Warning:** this project relies on spring-boot, and if ``spring-boot`` drops support for lower versions of java in the future, this project will also drop support for lower versions of java.*
 
 ## Features
 
