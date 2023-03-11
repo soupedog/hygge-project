@@ -8,6 +8,7 @@ import hygge.commons.templates.container.inner.FIFOLinkedHashMap;
  *
  * @author Xavier
  * @date 2023/1/15
+ * @since 1.0
  */
 public class LRUHyggeContext<K> extends AbstractHyggeContext<K> {
     private final Integer maxSize;

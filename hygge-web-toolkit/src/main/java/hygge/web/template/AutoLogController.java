@@ -8,6 +8,7 @@ import hygge.web.utils.log.ControllerLogPointCut;
  * @author Xavier
  * @date 2022/11/16
  * @see ControllerLogPointCut
+ * @since 1.0
  */
 public interface AutoLogController {
 }

@@ -10,6 +10,7 @@ import java.util.Map;
  *
  * @author Xavier
  * @date 2023/1/15
+ * @since 1.0
  */
 public class FIFOLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
     private final Integer maxSize;
