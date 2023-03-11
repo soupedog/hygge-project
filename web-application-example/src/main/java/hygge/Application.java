@@ -4,7 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * API 链接 "http://localhost:8080/swagger-ui/index.html"
+ * 监控端点列表 "http://localhost:8080/actuator"
+ * Swagger 链接 "http://localhost:8080/swagger-ui/index.html"
  *
  * @author Xavier
  * @date 2022/7/2
