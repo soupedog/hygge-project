@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Scanner;
 
+import static hygge.constant.ConstantParameters.LINE_SEPARATOR;
+
 /**
  * 参数校验工具类基类
  *
@@ -910,10 +912,10 @@ public abstract class BaseParameterHelper implements ParameterHelper {
                 if (!needAppend && line.contains(startMark)) {
                     needAppend = true;
                     result.append(line);
-                    result.append(LINE_FEED);
+                    result.append(LINE_SEPARATOR);
                 } else if (needAppend) {
                     result.append(line);
-                    result.append(LINE_FEED);
+                    result.append(LINE_SEPARATOR);
                     if (line.contains(endMark)) {
                         break;
                     }

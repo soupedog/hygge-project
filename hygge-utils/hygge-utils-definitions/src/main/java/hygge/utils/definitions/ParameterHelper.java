@@ -28,8 +28,6 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      */
     int LOWER_CASE_FIRST_LETTER_MIN_LENGTH = 2;
 
-    String LINE_FEED = "\r\n";
-
     /**
      * 默认的异常处理函数
      *
@@ -1484,6 +1482,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
         }
         return result;
     }
+
     /**
      * 将传入字符串首字母大写
      *

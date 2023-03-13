@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static hygge.constant.ConstantParameters.LINE_SEPARATOR;
+
 /**
  * FileHelper 处理工具类基类
  *
@@ -30,7 +32,6 @@ public abstract class BaseFileHelper implements FileHelper {
     protected static final ConcurrentHashMap<String, FileFilter> FILE_NAME_FILTER_CACHE = new ConcurrentHashMap<>();
     protected static final ConcurrentHashMap<String, FileFilter> FILE_EXTENSION_NAME_FILTER_CACHE = new ConcurrentHashMap<>();
     protected static final ReentrantLock FILE_FILTER_CREATE_LOCK = new ReentrantLock();
-    protected static final String LINE_FEED = "\r\n";
 
     @Override
     public StringBuilder getTextFileContent(File file) {
@@ -44,14 +45,14 @@ public abstract class BaseFileHelper implements FileHelper {
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             while ((lineContent = in.readLine()) != null) {
                 result.append(lineContent);
-                result.append(LINE_FEED);
+                result.append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new UtilRuntimeException("Fail to read File(" + file.getAbsolutePath() + ").", e);
         }
 
         if (result.length() > 0) {
-            PROPERTIES_HELPER.removeStringFormTail(result, LINE_FEED, 1);
+            PROPERTIES_HELPER.removeStringFormTail(result, LINE_SEPARATOR, 1);
         }
         return result;
     }
