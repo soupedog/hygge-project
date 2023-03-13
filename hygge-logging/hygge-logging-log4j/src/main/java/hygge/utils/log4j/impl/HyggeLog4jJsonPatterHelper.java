@@ -1,4 +1,4 @@
-package hygge.utils.lg4j.impl;
+package hygge.utils.log4j.impl;
 
 import hygge.logging.enums.ConverterModeEnum;
 import hygge.utils.definitions.HyggeLogJsonPatterHelper;

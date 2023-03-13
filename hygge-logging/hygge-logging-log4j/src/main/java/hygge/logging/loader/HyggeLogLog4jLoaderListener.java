@@ -4,7 +4,7 @@ import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.listener.HyggeSpringContextInitListener;
 import hygge.logging.enums.OutputModeEnum;
 import hygge.logging.log4j.configuration.HyggeLg4jConfiguration;
-import hygge.utils.lg4j.impl.HyggeLog4JPatterHelper;
+import hygge.utils.log4j.impl.HyggeLog4JPatterHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

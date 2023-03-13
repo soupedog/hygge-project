@@ -1,4 +1,4 @@
-package hygge.utils.lg4j.impl;
+package hygge.utils.log4j.impl;
 
 import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.logging.configuration.HyggeLogConfiguration;
