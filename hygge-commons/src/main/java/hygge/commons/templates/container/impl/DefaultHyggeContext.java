@@ -1,4 +1,4 @@
-package hygge.commons.templates.container;
+package hygge.commons.templates.container.impl;
 
 import hygge.commons.templates.container.base.AbstractHyggeContext;
 
