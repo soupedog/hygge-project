@@ -3,7 +3,7 @@ package hygge.web.utils.log.definitions;
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
 import hygge.web.template.HyggeWebUtilContainer;
 import hygge.web.utils.log.ControllerLogContext;
-import hygge.web.utils.log.ExpressionCache;
+import hygge.web.utils.log.bo.ExpressionCache;
 import hygge.web.utils.log.bo.ControllerLogInfo;
 import hygge.web.utils.log.bo.ControllerLogType;
 import org.aopalliance.intercept.MethodInvocation;

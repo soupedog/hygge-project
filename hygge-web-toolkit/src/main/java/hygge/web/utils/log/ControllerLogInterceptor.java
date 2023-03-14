@@ -1,5 +1,6 @@
 package hygge.web.utils.log;
 
+import hygge.web.utils.log.bo.ControllerLogHandlerCache;
 import hygge.web.utils.log.definitions.BaseControllerLogHandler;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

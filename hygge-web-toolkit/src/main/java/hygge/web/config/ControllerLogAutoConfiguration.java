@@ -3,7 +3,7 @@ package hygge.web.config;
 import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.config.HyggeAutoConfiguration;
 import hygge.web.utils.log.ControllerLogAdvisor;
-import hygge.web.utils.log.ControllerLogHandlerCache;
+import hygge.web.utils.log.bo.ControllerLogHandlerCache;
 import hygge.web.utils.log.ControllerLogInterceptor;
 import hygge.web.utils.log.ControllerLogPointCut;
 import hygge.web.utils.log.configuration.ControllerLogConfiguration;

@@ -3,6 +3,7 @@ package hygge.web.utils.log;
 import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
 import hygge.web.template.AutoLogController;
 import hygge.web.utils.log.annotation.ControllerLog;
+import hygge.web.utils.log.bo.ControllerLogHandlerCache;
 import hygge.web.utils.log.bo.ControllerLogType;
 import hygge.web.utils.log.definitions.BaseControllerLogHandler;
 import hygge.web.utils.log.definitions.ControllerLogHandlerFactory;
