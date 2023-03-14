@@ -3,7 +3,7 @@ package hygge.web.utils.http.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.UtilsCreator;
 import hygge.utils.definitions.JsonHelper;
 import hygge.web.utils.http.definitions.HttpHelperResponseEntityReader;

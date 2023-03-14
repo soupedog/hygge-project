@@ -1,7 +1,7 @@
 package hygge.controller;
 
-import hygge.commons.exceptions.InternalRuntimeException;
-import hygge.commons.exceptions.LightRuntimeException;
+import hygge.commons.exception.InternalRuntimeException;
+import hygge.commons.exception.LightRuntimeException;
 import hygge.web.template.HyggeController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;

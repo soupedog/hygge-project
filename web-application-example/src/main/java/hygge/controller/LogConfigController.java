@@ -1,8 +1,8 @@
 package hygge.controller;
 
-import hygge.commons.constants.enums.StringCategoryEnum;
-import hygge.commons.exceptions.definitions.HyggeInfo;
-import hygge.commons.templates.definitions.HyggeLogInfoObject;
+import hygge.commons.constant.enums.StringCategoryEnum;
+import hygge.commons.exception.definition.HyggeInfo;
+import hygge.commons.template.definitions.HyggeLogInfoObject;
 import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.domain.User;
 import hygge.domain.UserSpecialForLog;

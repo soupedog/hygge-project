@@ -1,6 +1,6 @@
 package hygge.utils.base;
 
-import hygge.commons.exceptions.ParameterRuntimeException;
+import hygge.commons.exception.ParameterRuntimeException;
 import hygge.utils.UtilsCreator;
 import hygge.utils.bo.ColumnInfo;
 import hygge.utils.definitions.DaoHelper;

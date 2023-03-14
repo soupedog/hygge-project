@@ -1,6 +1,6 @@
 package hygge.utils.definitions;
 
-import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.HyggeUtil;
 
 import java.util.Properties;

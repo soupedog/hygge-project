@@ -1,6 +1,6 @@
 package hygge.logging.utils;
 
-import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.exception.UtilRuntimeException;
 import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.LookupTranslator;
 

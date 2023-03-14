@@ -1,8 +1,8 @@
 package hygge.utils.bo;
 
 
-import hygge.commons.constants.enums.ColumnTypeEnum;
-import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.constant.enums.ColumnTypeEnum;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.UtilsCreator;
 import hygge.utils.definitions.ParameterHelper;
 

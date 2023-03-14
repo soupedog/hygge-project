@@ -1,6 +1,6 @@
 package hygge.web.utils.log;
 
-import hygge.commons.templates.container.base.AbstractHyggeContext;
+import hygge.commons.template.container.base.AbstractHyggeContext;
 import hygge.web.utils.log.bo.ControllerLogInfo;
 
 /**

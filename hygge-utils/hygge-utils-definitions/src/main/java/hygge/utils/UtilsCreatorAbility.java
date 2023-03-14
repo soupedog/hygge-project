@@ -1,6 +1,6 @@
 package hygge.utils;
 
-import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.definitions.CollectionHelper;
 import hygge.utils.definitions.DaoHelper;
 import hygge.utils.definitions.FileHelper;

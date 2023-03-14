@@ -1,6 +1,6 @@
 package hygge.utils.logback.impl;
 
-import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.logging.configuration.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;
 import hygge.utils.definitions.HyggeLogPatterHelper;

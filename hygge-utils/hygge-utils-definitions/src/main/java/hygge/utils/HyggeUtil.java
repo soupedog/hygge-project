@@ -1,6 +1,6 @@
 package hygge.utils;
 
-import hygge.commons.templates.definitions.WithHyggeName;
+import hygge.commons.template.definitions.WithHyggeName;
 
 /**
  * hygge 工具 root

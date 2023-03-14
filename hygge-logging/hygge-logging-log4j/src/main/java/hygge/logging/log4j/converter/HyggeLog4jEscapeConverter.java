@@ -1,6 +1,6 @@
 package hygge.logging.log4j.converter;
 
-import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.logging.enums.ConverterModeEnum;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.core.LogEvent;

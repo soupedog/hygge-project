@@ -1,7 +1,7 @@
 package hygge.controller;
 
-import hygge.commons.exceptions.InternalRuntimeException;
-import hygge.commons.exceptions.LightRuntimeException;
+import hygge.commons.exception.InternalRuntimeException;
+import hygge.commons.exception.LightRuntimeException;
 import hygge.domain.ControllerResponse;
 import hygge.domain.CustomSystemCode;
 import hygge.domain.User;

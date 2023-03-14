@@ -1,8 +1,8 @@
 package hygge.utils.definitions;
 
-import hygge.commons.constants.enums.StringFormatModeEnum;
-import hygge.commons.exceptions.ParameterRuntimeException;
-import hygge.commons.templates.definitions.InfoMessageSupplier;
+import hygge.commons.constant.enums.StringFormatModeEnum;
+import hygge.commons.exception.ParameterRuntimeException;
+import hygge.commons.template.definitions.InfoMessageSupplier;
 import hygge.utils.HyggeUtil;
 
 import java.math.BigDecimal;
