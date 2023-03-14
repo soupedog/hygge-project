@@ -7,7 +7,7 @@ import hygge.util.template.HyggeCoreUtilContainer;
 /**
  * web 服务 Hygge 工具容器
  * <p>
- * 写作抽象类，本体其实方便子类获取 HyggeUtil 示例的代码模板。(利用抽象类不可被实例化的特性)
+ * 写作抽象类，本体其实方是便子类获取 HyggeUtil 实例的代码模板。(利用抽象类不可被实例化的特性)
  *
  * @author Xavier
  * @date 2022/7/14

@@ -1,15 +1,15 @@
 package hygge.web.config;
 
 import hygge.commons.spring.config.definition.HyggeAutoConfiguration;
-import hygge.web.utils.http.configuration.HttpHelperConfiguration;
-import hygge.web.utils.http.definitions.HttpHelper;
-import hygge.web.utils.http.definitions.HttpHelperLogger;
-import hygge.web.utils.http.definitions.HttpHelperResponseEntityReader;
-import hygge.web.utils.http.definitions.HttpHelperRestTemplateFactory;
-import hygge.web.utils.http.impl.DefaultHttpHelper;
-import hygge.web.utils.http.impl.DefaultHttpHelperLogger;
-import hygge.web.utils.http.impl.DefaultHttpHelperResponseEntityReader;
-import hygge.web.utils.http.impl.DefaultHttpHelperRestTemplateFactory;
+import hygge.web.util.http.configuration.HttpHelperConfiguration;
+import hygge.web.util.http.definition.HttpHelper;
+import hygge.web.util.http.definition.HttpHelperLogger;
+import hygge.web.util.http.definition.HttpHelperResponseEntityReader;
+import hygge.web.util.http.definition.HttpHelperRestTemplateFactory;
+import hygge.web.util.http.impl.DefaultHttpHelper;
+import hygge.web.util.http.impl.DefaultHttpHelperLogger;
+import hygge.web.util.http.impl.DefaultHttpHelperResponseEntityReader;
+import hygge.web.util.http.impl.DefaultHttpHelperRestTemplateFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

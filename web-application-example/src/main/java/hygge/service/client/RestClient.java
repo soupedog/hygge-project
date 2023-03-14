@@ -2,10 +2,10 @@ package hygge.service.client;
 
 import hygge.domain.RestApiRequest;
 import hygge.domain.RestApiResponse;
-import hygge.web.utils.http.bo.HttpResponse;
-import hygge.web.utils.http.configuration.HttpHelperRequestConfiguration;
-import hygge.web.utils.http.configuration.inner.HttpLogType;
-import hygge.web.utils.http.impl.DefaultHttpHelper;
+import hygge.web.util.http.bo.HttpResponse;
+import hygge.web.util.http.configuration.HttpHelperRequestConfiguration;
+import hygge.web.util.http.configuration.inner.HttpLogType;
+import hygge.web.util.http.impl.DefaultHttpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

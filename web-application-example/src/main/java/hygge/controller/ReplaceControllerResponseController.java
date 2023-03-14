@@ -3,7 +3,7 @@ package hygge.controller;
 import hygge.commons.constant.enums.GlobalHyggeCode;
 import hygge.domain.ControllerResponse;
 import hygge.domain.User;
-import hygge.web.template.HyggeController;
+import hygge.web.template.definition.HyggeController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -5,7 +5,7 @@ import hygge.commons.exception.LightRuntimeException;
 import hygge.domain.ControllerResponse;
 import hygge.domain.CustomSystemCode;
 import hygge.domain.User;
-import hygge.web.template.HyggeController;
+import hygge.web.template.definition.HyggeController;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
