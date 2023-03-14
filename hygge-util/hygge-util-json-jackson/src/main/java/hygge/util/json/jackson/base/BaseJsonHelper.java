@@ -1,4 +1,4 @@
-package hygge.utils.json.jackson.base;
+package hygge.util.json.jackson.base;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;

@@ -14,7 +14,7 @@ public class UtilCreatorConfigurationKeeper extends AbstractHyggeKeeper<String, 
     /**
      * 基于 jackson 的 JsonHelper 默认实现类
      */
-    public static final String DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME = "hygge.utils.json.jackson.impl.DefaultJsonHelper";
+    public static final String DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME = "hygge.util.json.jackson.impl.DefaultJsonHelper";
     /**
      * 如果需要修改默认 JsonHelper 实现类，请用新实现类全类名覆盖这个 key 的值
      *

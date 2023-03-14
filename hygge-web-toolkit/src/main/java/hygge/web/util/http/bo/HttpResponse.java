@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
-import hygge.utils.json.jackson.serializer.HyggeLogInfoSerializer;
+import hygge.util.json.jackson.serializer.HyggeLogInfoSerializer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

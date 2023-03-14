@@ -1,4 +1,4 @@
-package hygge.utils.json.jackson.serializer;
+package hygge.util.json.jackson.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
