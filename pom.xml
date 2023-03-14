@@ -40,7 +40,7 @@
         <module>hygge-commons</module>
         <module>hygge-commons-spring-boot</module>
         <module>hygge-logging</module>
-        <module>hygge-utils</module>
+        <module>hygge-util</module>
         <module>hygge-web-toolkit</module>
     </modules>
 

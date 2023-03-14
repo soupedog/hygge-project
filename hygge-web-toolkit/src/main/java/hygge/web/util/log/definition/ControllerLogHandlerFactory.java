@@ -2,7 +2,7 @@ package hygge.web.util.log.definition;
 
 import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.web.util.log.base.BaseControllerLogHandler;
-import hygge.web.util.log.bo.ControllerLogType;
+import hygge.web.util.log.enums.ControllerLogType;
 
 import java.util.Collection;
 

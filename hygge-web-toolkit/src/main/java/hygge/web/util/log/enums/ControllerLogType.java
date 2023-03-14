@@ -1,4 +1,4 @@
-package hygge.web.util.log.bo;
+package hygge.web.util.log.enums;
 
 /**
  * Controller 层自动日志的类型

@@ -1,4 +1,4 @@
-package hygge.web.util.log.bo;
+package hygge.web.util.log.inner;
 
 import hygge.commons.template.container.base.AbstractHyggeKeeper;
 import hygge.web.util.log.base.BaseControllerLogHandler;

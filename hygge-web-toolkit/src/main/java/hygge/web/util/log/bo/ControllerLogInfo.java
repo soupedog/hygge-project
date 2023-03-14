@@ -3,6 +3,7 @@ package hygge.web.util.log.bo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import hygge.utils.json.jackson.serializer.HyggeLogInfoSerializer;
+import hygge.web.util.log.enums.ControllerLogType;
 
 /**
  * Controller 层自动日志对象

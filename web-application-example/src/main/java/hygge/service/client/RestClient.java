@@ -4,7 +4,7 @@ import hygge.domain.RestApiRequest;
 import hygge.domain.RestApiResponse;
 import hygge.web.util.http.bo.HttpResponse;
 import hygge.web.util.http.configuration.HttpHelperRequestConfiguration;
-import hygge.web.util.http.configuration.inner.HttpLogType;
+import hygge.web.util.http.configuration.enums.HttpLogType;
 import hygge.web.util.http.impl.DefaultHttpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;

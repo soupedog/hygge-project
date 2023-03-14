@@ -11,12 +11,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>hygge-utils-definitions</module>
-        <module>hygge-utils-core</module>
-        <module>hygge-utils-json-jackson</module>
+        <module>hygge-util-definition</module>
+        <module>hygge-util-core</module>
+        <module>hygge-util-json-jackson</module>
     </modules>
 
-    <artifactId>hygge-utils</artifactId>
+    <artifactId>hygge-util</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

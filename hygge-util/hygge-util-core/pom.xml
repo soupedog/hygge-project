@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>hygge-utils</artifactId>
+        <artifactId>hygge-util</artifactId>
         <groupId>io.github.soupedog</groupId>
         <version>0.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hygge-utils-definitions</artifactId>
+    <artifactId>hygge-util-core</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.soupedog</groupId>
-            <artifactId>hygge-commons</artifactId>
+            <artifactId>hygge-util-definition</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

@@ -1,6 +1,6 @@
 package hygge.web.util.http.configuration;
 
-import hygge.web.util.http.configuration.inner.HttpLogType;
+import hygge.web.util.http.configuration.enums.HttpLogType;
 
 import java.util.StringJoiner;
 

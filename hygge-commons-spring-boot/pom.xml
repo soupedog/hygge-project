@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.soupedog</groupId>
-            <artifactId>hygge-utils-definitions</artifactId>
+            <artifactId>hygge-util-definition</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
