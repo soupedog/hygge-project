@@ -1,6 +1,6 @@
 package hygge.commons.templates.container.base;
 
-import hygge.commons.templates.container.HyggeContext;
+import hygge.commons.templates.container.definitions.HyggeContext;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

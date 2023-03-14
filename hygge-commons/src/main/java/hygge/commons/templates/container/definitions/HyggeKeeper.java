@@ -1,4 +1,4 @@
-package hygge.commons.templates.container;
+package hygge.commons.templates.container.definitions;
 
 /**
  * 特定类型对象的容器

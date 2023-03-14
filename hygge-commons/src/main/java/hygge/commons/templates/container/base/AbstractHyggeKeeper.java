@@ -1,12 +1,12 @@
 package hygge.commons.templates.container.base;
 
-import hygge.commons.templates.container.HyggeKeeper;
+import hygge.commons.templates.container.definitions.HyggeKeeper;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 特定类型对象的容器基类
+ * 特定类型对象的容器基类，常作为缓存容器
  *
  * @author Xavier
  * @date 2022/6/25
