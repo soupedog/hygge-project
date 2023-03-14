@@ -1,4 +1,4 @@
-package hygge.utils.definitions;
+package hygge.util.definition;
 
 
 import hygge.commons.constant.enums.definition.DateTimeFormatMode;

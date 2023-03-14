@@ -1,9 +1,9 @@
-package hygge.utils.logback.impl;
+package hygge.logging.util;
 
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.logging.configuration.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;
-import hygge.utils.definitions.HyggeLogPatterHelper;
+import hygge.logging.util.definition.HyggeLogPatterHelper;
 
 import java.lang.management.ManagementFactory;
 

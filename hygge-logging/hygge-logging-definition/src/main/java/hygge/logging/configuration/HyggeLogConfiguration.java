@@ -5,7 +5,7 @@ import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
 import hygge.logging.enums.ConverterModeEnum;
 import hygge.logging.enums.OutputModeEnum;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.ParameterHelper;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;

@@ -1,6 +1,6 @@
 package hygge.web.config;
 
-import hygge.commons.spring.config.definitions.HyggeAutoConfiguration;
+import hygge.commons.spring.config.definition.HyggeAutoConfiguration;
 import hygge.web.utils.http.configuration.HttpHelperConfiguration;
 import hygge.web.utils.http.definitions.HttpHelper;
 import hygge.web.utils.http.definitions.HttpHelperLogger;

@@ -1,7 +1,7 @@
 package hygge.web.config;
 
 import hygge.commons.spring.HyggeSpringContext;
-import hygge.commons.spring.config.definitions.HyggeAutoConfiguration;
+import hygge.commons.spring.config.definition.HyggeAutoConfiguration;
 import hygge.web.utils.log.ControllerLogAdvisor;
 import hygge.web.utils.log.bo.ControllerLogHandlerCache;
 import hygge.web.utils.log.ControllerLogInterceptor;

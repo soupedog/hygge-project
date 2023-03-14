@@ -4,9 +4,9 @@ package hygge.utils.impl;
 import hygge.commons.constant.enums.DateTimeFormatModeEnum;
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.ParameterHelper;
-import hygge.utils.definitions.RandomUniqueGenerator;
-import hygge.utils.definitions.TimeHelper;
+import hygge.util.definition.ParameterHelper;
+import hygge.util.definition.RandomUniqueGenerator;
+import hygge.util.definition.TimeHelper;
 
 import java.util.Properties;
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.JsonHelper;
+import hygge.util.definition.JsonHelper;
 import hygge.web.utils.http.definitions.HttpHelperResponseEntityReader;
 
 /**

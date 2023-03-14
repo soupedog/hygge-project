@@ -3,7 +3,7 @@ package hygge.logging.logback.converter;
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import hygge.logging.enums.ConverterModeEnum;
-import hygge.logging.utils.LogConverter;
+import hygge.logging.util.LogConverter;
 
 /**
  * logback json 友好型转换工具

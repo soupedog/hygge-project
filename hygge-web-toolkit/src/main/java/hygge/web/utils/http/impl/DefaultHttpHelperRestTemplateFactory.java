@@ -3,7 +3,7 @@ package hygge.web.utils.http.impl;
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.container.base.AbstractHyggeKeeper;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.ParameterHelper;
 import hygge.web.utils.http.configuration.HttpHelperConfiguration;
 import hygge.web.utils.http.configuration.HttpHelperRequestConfiguration;
 import hygge.web.utils.http.definitions.HttpHelperRestTemplateFactory;

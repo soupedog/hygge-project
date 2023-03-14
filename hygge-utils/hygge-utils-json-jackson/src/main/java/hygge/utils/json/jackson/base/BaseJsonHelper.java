@@ -13,8 +13,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.definitions.InfoMessageSupplier;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.JsonHelper;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.JsonHelper;
+import hygge.util.definition.ParameterHelper;
 
 import java.io.IOException;
 import java.util.HashMap;

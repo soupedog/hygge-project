@@ -1,6 +1,6 @@
 package hygge.logging.enums;
 
-import hygge.logging.utils.LogConverter;
+import hygge.logging.util.LogConverter;
 import org.apache.commons.text.StringEscapeUtils;
 
 /**

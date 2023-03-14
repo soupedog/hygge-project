@@ -1,4 +1,4 @@
-package hygge.utils.definitions;
+package hygge.logging.util.definition;
 
 import hygge.logging.configuration.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;

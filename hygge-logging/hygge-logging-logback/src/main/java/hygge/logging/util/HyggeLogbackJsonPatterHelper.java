@@ -1,7 +1,7 @@
-package hygge.utils.logback.impl;
+package hygge.logging.util;
 
 import hygge.logging.enums.ConverterModeEnum;
-import hygge.utils.definitions.HyggeLogJsonPatterHelper;
+import hygge.logging.util.base.HyggeLogJsonPatterHelper;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -1,7 +1,9 @@
-package hygge.utils.definitions;
+package hygge.logging.util.base;
 
 
 import hygge.logging.enums.ConverterModeEnum;
+import hygge.util.definition.JsonHelper;
+import hygge.util.definition.ParameterHelper;
 import hygge.utils.UtilsCreator;
 
 import java.util.LinkedHashMap;

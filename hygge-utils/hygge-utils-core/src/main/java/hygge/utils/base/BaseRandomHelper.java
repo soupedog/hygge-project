@@ -3,8 +3,8 @@ package hygge.utils.base;
 
 import hygge.commons.constant.enums.StringCategoryEnum;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.ParameterHelper;
-import hygge.utils.definitions.RandomHelper;
+import hygge.util.definition.ParameterHelper;
+import hygge.util.definition.RandomHelper;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;

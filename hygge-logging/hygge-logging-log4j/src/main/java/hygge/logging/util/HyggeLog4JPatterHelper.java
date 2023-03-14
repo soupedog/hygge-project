@@ -1,9 +1,9 @@
-package hygge.utils.log4j.impl;
+package hygge.logging.util;
 
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.logging.configuration.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;
-import hygge.utils.definitions.HyggeLogPatterHelper;
+import hygge.logging.util.definition.HyggeLogPatterHelper;
 
 /**
  * 基于 log4j 的 LogPatterHelper 默认实现

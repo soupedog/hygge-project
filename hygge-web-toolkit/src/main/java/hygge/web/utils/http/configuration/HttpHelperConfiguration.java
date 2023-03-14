@@ -1,6 +1,6 @@
 package hygge.web.utils.http.configuration;
 
-import hygge.commons.spring.config.definitions.HyggeSpringConfigurationProperties;
+import hygge.commons.spring.config.definition.HyggeSpringConfigurationProperties;
 import hygge.web.utils.http.configuration.inner.ConnectionConfiguration;
 import hygge.web.utils.http.configuration.inner.HttpLogType;
 import org.springframework.boot.context.properties.ConfigurationProperties;

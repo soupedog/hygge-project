@@ -1,14 +1,14 @@
 package hygge.utils;
 
 import hygge.commons.exception.UtilRuntimeException;
-import hygge.utils.definitions.CollectionHelper;
-import hygge.utils.definitions.DaoHelper;
-import hygge.utils.definitions.FileHelper;
-import hygge.utils.definitions.JsonHelper;
-import hygge.utils.definitions.ParameterHelper;
-import hygge.utils.definitions.RandomHelper;
-import hygge.utils.definitions.RandomUniqueGenerator;
-import hygge.utils.definitions.TimeHelper;
+import hygge.util.definition.CollectionHelper;
+import hygge.util.definition.DaoHelper;
+import hygge.util.definition.FileHelper;
+import hygge.util.definition.JsonHelper;
+import hygge.util.definition.ParameterHelper;
+import hygge.util.definition.RandomHelper;
+import hygge.util.definition.RandomUniqueGenerator;
+import hygge.util.definition.TimeHelper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

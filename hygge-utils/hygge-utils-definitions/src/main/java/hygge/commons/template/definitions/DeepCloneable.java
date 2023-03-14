@@ -2,7 +2,7 @@ package hygge.commons.template.definitions;
 
 
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.JsonHelper;
+import hygge.util.definition.JsonHelper;
 
 /**
  * 可深度克隆接口

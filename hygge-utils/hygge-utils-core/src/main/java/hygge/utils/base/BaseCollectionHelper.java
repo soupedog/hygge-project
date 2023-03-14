@@ -3,8 +3,8 @@ package hygge.utils.base;
 
 import hygge.commons.exception.ParameterRuntimeException;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.CollectionHelper;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.CollectionHelper;
+import hygge.util.definition.ParameterHelper;
 
 import java.text.Collator;
 import java.util.ArrayList;

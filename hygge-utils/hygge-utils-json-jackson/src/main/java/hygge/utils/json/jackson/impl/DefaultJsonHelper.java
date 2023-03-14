@@ -1,7 +1,7 @@
 package hygge.utils.json.jackson.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.ParameterHelper;
 import hygge.utils.json.jackson.base.BaseJsonHelper;
 
 import java.util.Properties;

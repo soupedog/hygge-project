@@ -2,7 +2,7 @@ package hygge.utils.base;
 
 
 import hygge.commons.constant.enums.StringFormatModeEnum;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.ParameterHelper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

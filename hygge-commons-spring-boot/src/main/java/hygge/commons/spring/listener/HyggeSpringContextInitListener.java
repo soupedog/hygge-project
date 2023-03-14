@@ -3,7 +3,7 @@ package hygge.commons.spring.listener;
 import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.ParameterHelper;
 import org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;

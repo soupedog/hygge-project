@@ -1,7 +1,7 @@
 package hygge.web.template;
 
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.JsonHelper;
+import hygge.util.definition.JsonHelper;
 import hygge.utils.template.HyggeCoreUtilContainer;
 
 /**

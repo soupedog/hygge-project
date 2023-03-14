@@ -1,10 +1,10 @@
 package hygge.utils.template;
 
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.CollectionHelper;
-import hygge.utils.definitions.ParameterHelper;
-import hygge.utils.definitions.RandomHelper;
-import hygge.utils.definitions.TimeHelper;
+import hygge.util.definition.CollectionHelper;
+import hygge.util.definition.ParameterHelper;
+import hygge.util.definition.RandomHelper;
+import hygge.util.definition.TimeHelper;
 
 /**
  * 核心 Hygge 工具容器

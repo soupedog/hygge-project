@@ -4,7 +4,7 @@ package hygge.utils.bo;
 import hygge.commons.constant.enums.ColumnTypeEnum;
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.ParameterHelper;
 
 /**
  * DAO 操作的属性信息

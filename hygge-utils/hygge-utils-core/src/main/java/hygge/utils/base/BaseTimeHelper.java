@@ -5,8 +5,8 @@ import hygge.commons.constant.enums.definition.DateTimeFormatMode;
 import hygge.commons.constant.enums.DateTimeFormatModeEnum;
 import hygge.commons.exception.ParameterRuntimeException;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.ParameterHelper;
-import hygge.utils.definitions.TimeHelper;
+import hygge.util.definition.ParameterHelper;
+import hygge.util.definition.TimeHelper;
 
 import java.time.DateTimeException;
 import java.time.Instant;

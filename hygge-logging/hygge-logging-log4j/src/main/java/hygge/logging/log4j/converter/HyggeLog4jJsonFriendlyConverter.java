@@ -2,7 +2,7 @@ package hygge.logging.log4j.converter;
 
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.logging.enums.ConverterModeEnum;
-import hygge.logging.utils.LogConverter;
+import hygge.logging.util.LogConverter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;

@@ -3,8 +3,8 @@ package hygge.utils.base;
 import hygge.commons.exception.ParameterRuntimeException;
 import hygge.utils.UtilsCreator;
 import hygge.utils.bo.ColumnInfo;
-import hygge.utils.definitions.DaoHelper;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.DaoHelper;
+import hygge.util.definition.ParameterHelper;
 
 import java.util.Collection;
 import java.util.HashMap;

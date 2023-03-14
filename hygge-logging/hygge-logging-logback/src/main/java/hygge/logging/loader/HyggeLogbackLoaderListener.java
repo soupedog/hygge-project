@@ -23,7 +23,7 @@ import hygge.logging.logback.converter.HyggeLogbackJsonFriendlyFirstRootCauseThr
 import hygge.logging.logback.converter.HyggeLogbackJsonFriendlyMessageConverter;
 import hygge.logging.logback.converter.HyggeLogbackJsonFriendlyThrowableProxyConverter;
 import hygge.logging.logback.converter.HyggeLogbackTimeStampConverter;
-import hygge.utils.logback.impl.HyggeLogbackPatterHelper;
+import hygge.logging.util.HyggeLogbackPatterHelper;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;

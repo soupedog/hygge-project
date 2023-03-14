@@ -2,8 +2,8 @@ package hygge.utils;
 
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.definitions.InfoMessageSupplier;
-import hygge.utils.definitions.JsonHelper;
-import hygge.utils.definitions.RandomUniqueGenerator;
+import hygge.util.definition.JsonHelper;
+import hygge.util.definition.RandomUniqueGenerator;
 
 import java.util.Properties;
 import java.util.function.Supplier;

@@ -3,8 +3,8 @@ package hygge.utils.base;
 
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.utils.UtilsCreator;
-import hygge.utils.definitions.FileHelper;
-import hygge.utils.definitions.ParameterHelper;
+import hygge.util.definition.FileHelper;
+import hygge.util.definition.ParameterHelper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
