@@ -1,8 +1,8 @@
 package hygge.commons.exceptions;
 
 
-import hygge.commons.exceptions.constants.enums.GlobalHyggeCode;
-import hygge.commons.exceptions.definitions.HyggeCode;
+import hygge.commons.constants.enums.GlobalHyggeCode;
+import hygge.commons.constants.enums.definitions.HyggeCode;
 import hygge.commons.exceptions.core.HyggeException;
 
 /**

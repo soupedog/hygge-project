@@ -1,6 +1,6 @@
 package hygge.commons.exceptions.core;
 
-import hygge.commons.exceptions.definitions.HyggeCode;
+import hygge.commons.constants.enums.definitions.HyggeCode;
 import hygge.commons.exceptions.definitions.HyggeInfo;
 
 /**

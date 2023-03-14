@@ -1,6 +1,6 @@
-package hygge.commons.exceptions.constants.enums;
+package hygge.commons.constants.enums;
 
-import hygge.commons.exceptions.definitions.HyggeCode;
+import hygge.commons.constants.enums.definitions.HyggeCode;
 
 /**
  * 通用型全局业务码

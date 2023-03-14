@@ -1,4 +1,4 @@
-package hygge.commons.exceptions.definitions;
+package hygge.commons.constants.enums.definitions;
 
 /**
  * 业务码

@@ -1,5 +1,7 @@
 package hygge.commons.exceptions.definitions;
 
+import hygge.commons.constants.enums.definitions.HyggeCode;
+
 /**
  * Hygge 信息对象
  *

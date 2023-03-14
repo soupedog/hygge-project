@@ -1,6 +1,6 @@
 package hygge.controller;
 
-import hygge.commons.exceptions.constants.enums.GlobalHyggeCode;
+import hygge.commons.constants.enums.GlobalHyggeCode;
 import hygge.domain.ControllerResponse;
 import hygge.domain.User;
 import hygge.web.template.HyggeController;
