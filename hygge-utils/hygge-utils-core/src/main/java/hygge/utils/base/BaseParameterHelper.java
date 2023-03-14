@@ -1,14 +1,14 @@
 package hygge.utils.base;
 
 
-import hygge.commons.enums.StringFormatModeEnum;
+import hygge.commons.constants.enums.StringFormatModeEnum;
 import hygge.utils.definitions.ParameterHelper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Scanner;
 
-import static hygge.constant.ConstantParameters.LINE_SEPARATOR;
+import static hygge.commons.constants.ConstantParameters.LINE_SEPARATOR;
 
 /**
  * 参数校验工具类基类

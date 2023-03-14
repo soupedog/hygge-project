@@ -1,6 +1,6 @@
 package hygge.domain;
 
-import hygge.commons.exceptions.code.HyggeCode;
+import hygge.commons.exceptions.definitions.HyggeCode;
 import org.springframework.http.HttpStatus;
 
 /**

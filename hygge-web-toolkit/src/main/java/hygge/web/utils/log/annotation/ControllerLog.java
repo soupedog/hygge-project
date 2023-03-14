@@ -1,6 +1,6 @@
 package hygge.web.utils.log.annotation;
 
-import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
+import hygge.commons.annotation.HyggeExpressionInfo;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package hygge.constant;
+package hygge.commons.constants;
 
 import java.io.File;
 

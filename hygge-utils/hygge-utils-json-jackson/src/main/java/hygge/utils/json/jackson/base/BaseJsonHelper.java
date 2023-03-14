@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import hygge.commons.exceptions.UtilRuntimeException;
-import hygge.utils.InfoMessageSupplier;
+import hygge.commons.templates.definitions.InfoMessageSupplier;
 import hygge.utils.UtilsCreator;
 import hygge.utils.definitions.JsonHelper;
 import hygge.utils.definitions.ParameterHelper;

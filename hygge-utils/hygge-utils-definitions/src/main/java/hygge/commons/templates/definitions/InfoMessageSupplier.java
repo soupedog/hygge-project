@@ -1,4 +1,4 @@
-package hygge.utils;
+package hygge.commons.templates.definitions;
 
 /**
  * 信息提供者，内部包含一些标准新消息生成方法

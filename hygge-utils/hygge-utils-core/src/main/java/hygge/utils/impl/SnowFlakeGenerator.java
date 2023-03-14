@@ -1,7 +1,7 @@
 package hygge.utils.impl;
 
 
-import hygge.commons.enums.DateTimeFormatMode;
+import hygge.commons.constants.enums.DateTimeFormatModeEnum;
 import hygge.commons.exceptions.UtilRuntimeException;
 import hygge.utils.UtilsCreator;
 import hygge.utils.definitions.ParameterHelper;
@@ -244,8 +244,8 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
     public String toString() {
         return String.format("{\"stablePart\":\"%s\",\"startTs\":%s,\"endTs\":%s,\"sequencePartLength\":%d,\"part1Val\":%d,\"part2Val\":%d}",
                 Long.toBinaryString(stablePartOrTarget),
-                timeHelper.format(startTs, DateTimeFormatMode.DateTimeFormatModeEnum.FULL_TRIM),
-                timeHelper.format(endTs, DateTimeFormatMode.DateTimeFormatModeEnum.FULL_TRIM),
+                timeHelper.format(startTs, DateTimeFormatModeEnum.FULL_TRIM),
+                timeHelper.format(endTs, DateTimeFormatModeEnum.FULL_TRIM),
                 sequencePartLength,
                 part1Val,
                 part2Val

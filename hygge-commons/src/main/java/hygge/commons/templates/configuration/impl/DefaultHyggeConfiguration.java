@@ -1,7 +1,8 @@
-package hygge.commons.templates.configuration;
+package hygge.commons.templates.configuration.impl;
 
 
-import hygge.commons.enums.ColumnTypeEnum;
+import hygge.commons.constants.enums.ColumnTypeEnum;
+import hygge.commons.templates.configuration.definitions.HyggeConfiguration;
 import hygge.commons.templates.configuration.inner.HyggeConfigurationItem;
 import hygge.commons.templates.configuration.inner.HyggeConfigurationItemKeeper;
 

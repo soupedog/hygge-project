@@ -1,6 +1,7 @@
 package hygge.utils;
 
 import hygge.commons.exceptions.UtilRuntimeException;
+import hygge.commons.templates.definitions.InfoMessageSupplier;
 import hygge.utils.definitions.JsonHelper;
 import hygge.utils.definitions.RandomUniqueGenerator;
 

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static hygge.constant.ConstantParameters.LINE_SEPARATOR;
+import static hygge.commons.constants.ConstantParameters.LINE_SEPARATOR;
 
 /**
  * FileHelper 处理工具类基类

@@ -1,7 +1,7 @@
 package hygge.web.utils.log.bo;
 
 import hygge.commons.templates.container.base.AbstractHyggeKeeper;
-import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
+import hygge.commons.annotation.HyggeExpressionInfo;
 import org.springframework.expression.Expression;
 
 import java.util.Map;

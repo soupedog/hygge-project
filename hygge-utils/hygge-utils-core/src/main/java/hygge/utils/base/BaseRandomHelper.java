@@ -1,7 +1,7 @@
 package hygge.utils.base;
 
 
-import hygge.commons.enums.StringCategoryEnum;
+import hygge.commons.constants.enums.StringCategoryEnum;
 import hygge.utils.UtilsCreator;
 import hygge.utils.definitions.ParameterHelper;
 import hygge.utils.definitions.RandomHelper;

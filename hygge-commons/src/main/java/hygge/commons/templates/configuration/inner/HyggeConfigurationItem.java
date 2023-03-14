@@ -1,7 +1,7 @@
 package hygge.commons.templates.configuration.inner;
 
 
-import hygge.commons.enums.ColumnTypeEnum;
+import hygge.commons.constants.enums.ColumnTypeEnum;
 
 /**
  * Hygge 配置项键值实体

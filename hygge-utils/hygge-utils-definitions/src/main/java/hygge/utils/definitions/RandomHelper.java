@@ -1,6 +1,6 @@
 package hygge.utils.definitions;
 
-import hygge.commons.enums.StringCategoryEnum;
+import hygge.commons.constants.enums.StringCategoryEnum;
 import hygge.utils.HyggeUtil;
 
 /**

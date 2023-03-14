@@ -1,4 +1,4 @@
-package hygge.commons.enums;
+package hygge.commons.constants.enums;
 
 /**
  * 指定 String 类型枚举

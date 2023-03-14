@@ -1,4 +1,4 @@
-package hygge.commons.templates.core;
+package hygge.commons.templates.definitions;
 
 /**
  * 标记当前对象为日志对象，提供了生成自定义日志(用于日志信息的脱敏、剔除冗余信息等操作)的专有方法

@@ -1,4 +1,4 @@
-package hygge.commons.enums;
+package hygge.commons.constants.enums;
 
 import java.math.BigDecimal;
 import java.util.List;

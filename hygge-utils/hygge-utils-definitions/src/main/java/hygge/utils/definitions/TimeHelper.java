@@ -1,7 +1,7 @@
 package hygge.utils.definitions;
 
 
-import hygge.commons.enums.DateTimeFormatMode;
+import hygge.commons.constants.enums.definitions.DateTimeFormatMode;
 import hygge.utils.HyggeUtil;
 
 import java.time.ZoneOffset;

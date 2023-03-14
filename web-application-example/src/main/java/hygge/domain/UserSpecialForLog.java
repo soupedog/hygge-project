@@ -1,6 +1,6 @@
 package hygge.domain;
 
-import hygge.commons.templates.core.HyggeLogInfoObject;
+import hygge.commons.templates.definitions.HyggeLogInfoObject;
 
 /**
  * @author Xavier

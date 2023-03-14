@@ -1,6 +1,6 @@
 package hygge.web.utils.log.definitions;
 
-import hygge.commons.templates.core.annotation.HyggeExpressionInfo;
+import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.web.utils.log.bo.ControllerLogType;
 
 import java.util.Collection;

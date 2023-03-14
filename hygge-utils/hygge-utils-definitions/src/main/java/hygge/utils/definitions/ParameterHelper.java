@@ -1,9 +1,9 @@
 package hygge.utils.definitions;
 
-import hygge.commons.enums.StringFormatModeEnum;
+import hygge.commons.constants.enums.StringFormatModeEnum;
 import hygge.commons.exceptions.ParameterRuntimeException;
+import hygge.commons.templates.definitions.InfoMessageSupplier;
 import hygge.utils.HyggeUtil;
-import hygge.utils.InfoMessageSupplier;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

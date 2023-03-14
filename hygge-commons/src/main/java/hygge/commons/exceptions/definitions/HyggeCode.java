@@ -1,4 +1,4 @@
-package hygge.commons.exceptions.code;
+package hygge.commons.exceptions.definitions;
 
 /**
  * 业务码

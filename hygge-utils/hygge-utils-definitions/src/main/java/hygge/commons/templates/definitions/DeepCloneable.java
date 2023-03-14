@@ -1,4 +1,4 @@
-package hygge.commons.templates;
+package hygge.commons.templates.definitions;
 
 
 import hygge.utils.UtilsCreator;

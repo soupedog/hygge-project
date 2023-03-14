@@ -1,4 +1,4 @@
-package hygge.commons.templates.core;
+package hygge.commons.templates.definitions;
 
 /**
  * 存在 Hygge 组件名称的

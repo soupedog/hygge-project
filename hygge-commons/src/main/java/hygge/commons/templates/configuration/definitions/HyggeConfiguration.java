@@ -1,4 +1,4 @@
-package hygge.commons.templates.configuration;
+package hygge.commons.templates.configuration.definitions;
 
 import hygge.commons.templates.configuration.inner.HyggeConfigurationItem;
 
@@ -14,7 +14,7 @@ import java.util.Set;
  * @date 2022/6/25
  * @since 1.0
  */
-interface HyggeConfiguration {
+public interface HyggeConfiguration {
     /**
      * 获取默认优先级
      */

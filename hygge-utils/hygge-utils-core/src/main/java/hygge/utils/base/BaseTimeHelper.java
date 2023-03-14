@@ -1,7 +1,8 @@
 package hygge.utils.base;
 
 
-import hygge.commons.enums.DateTimeFormatMode;
+import hygge.commons.constants.enums.definitions.DateTimeFormatMode;
+import hygge.commons.constants.enums.DateTimeFormatModeEnum;
 import hygge.commons.exceptions.ParameterRuntimeException;
 import hygge.utils.UtilsCreator;
 import hygge.utils.definitions.ParameterHelper;
@@ -59,7 +60,7 @@ public abstract class BaseTimeHelper implements TimeHelper {
                 result = targetZonedDateTime.toInstant().toEpochMilli();
             } else {
                 LocalDateTime targetLocalTime;
-                if (DateTimeFormatMode.DateTimeFormatModeEnum.FULL_TRIM.equals(dateTimeFormatMode)) {
+                if (DateTimeFormatModeEnum.FULL_TRIM.equals(dateTimeFormatMode)) {
                     // Warning  parse(target, DateTimeFormatMode.FULL_TRIM, targetZoneOffset)
                     // @see "https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8031085"
                     // jdk 8 存在 bug，jdk 9 以后才能正确运行携带毫秒信息的时间模板
@@ -68,7 +69,7 @@ public abstract class BaseTimeHelper implements TimeHelper {
                     long millisecondVal = Long.parseLong(target.substring(14, 17)) * 1000000;
                     targetLocalTime = LocalDateTime.parse(theFirstPart, dateTimeFormatMode.getDateTimeFormatter());
                     targetLocalTime = targetLocalTime.plusNanos(millisecondVal);
-                } else if (DateTimeFormatMode.DateTimeFormatModeEnum.DATE.equals(dateTimeFormatMode)) {
+                } else if (DateTimeFormatModeEnum.DATE.equals(dateTimeFormatMode)) {
                     targetLocalTime = LocalDateTime.parse(target + " 00:00:00", dateTimeFormatMode.getDateTimeFormatter());
                 } else {
                     targetLocalTime = LocalDateTime.parse(target, dateTimeFormatMode.getDateTimeFormatter());

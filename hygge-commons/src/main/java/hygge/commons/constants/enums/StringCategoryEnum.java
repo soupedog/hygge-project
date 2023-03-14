@@ -1,4 +1,4 @@
-package hygge.commons.enums;
+package hygge.commons.constants.enums;
 
 /**
  * 字符串取值范围类型枚举
