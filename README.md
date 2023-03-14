@@ -31,7 +31,7 @@ If you answered yes, then I would strongly recommend you to use the ``hygge-proj
 | hygge-commons             | hygge core entity(includes Exception、POJO)                                                                         |
 | hygge-commons-spring-boot | For initializing ``HyggeSpringContext`` to provide support to other modules                                        |
 | hygge-logging             | Simplify the logging framework configuration and make the logs have good support for exporting json format records |
-| hygge-utils               | Tools for data transformation, validation, iteration, etc.                                                         |
+| hygge-util                | Tools for data transformation, validation, iteration, etc.                                                         |
 | hygge-web-toolkit         | Provide web application development template tools and network request tools                                       |
 
 ## JDK Requirement
@@ -49,7 +49,7 @@ following dependencies, which you no longer need to add manually, will be added 
     - hygge-commons
     - hygge-commons-spring-boot
     - hygge-logging
-    - hygge-utils
+    - hygge-util
 - Third Party Dependencies
     - spring-boot-starter-web
     - spring-boot-starter-aop
