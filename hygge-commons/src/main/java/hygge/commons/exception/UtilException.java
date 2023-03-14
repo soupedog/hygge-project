@@ -3,7 +3,7 @@ package hygge.commons.exception;
 
 import hygge.commons.constant.enums.GlobalHyggeCode;
 import hygge.commons.constant.enums.definition.HyggeCode;
-import hygge.commons.exception.core.HyggeException;
+import hygge.commons.exception.main.HyggeException;
 
 /**
  * 工具类异常
