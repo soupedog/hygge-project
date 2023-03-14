@@ -3,8 +3,8 @@ package hygge.util;
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.definition.Alterego;
 import hygge.commons.template.definition.InfoMessageSupplier;
-import hygge.util.inner.UtilsCreatorConfigurationKeeper;
-import hygge.util.inner.UtilsCreatorHyggeUtilKeeper;
+import hygge.util.inner.UtilCreatorConfigurationKeeper;
+import hygge.util.inner.UtilCreatorHyggeUtilKeeper;
 import hygge.util.definition.HyggeUtil;
 import hygge.util.definition.JsonHelper;
 import hygge.util.definition.RandomUniqueGenerator;
@@ -31,11 +31,11 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
     /**
      * UtilsCreator 配置项容器
      */
-    public static final UtilsCreatorConfigurationKeeper CONFIG_KEEPER = new UtilsCreatorConfigurationKeeper();
+    public static final UtilCreatorConfigurationKeeper CONFIG_KEEPER = new UtilCreatorConfigurationKeeper();
     /**
      * 用于保存单例工具类的容器，key 是 {@link HyggeUtil#getHyggeName()}
      */
-    private static final UtilsCreatorHyggeUtilKeeper singletonObjects = new UtilsCreatorHyggeUtilKeeper(64, 0.75F);
+    private static final UtilCreatorHyggeUtilKeeper singletonObjects = new UtilCreatorHyggeUtilKeeper(64, 0.75F);
 
     /**
      * 先从 {@link UtilCreator#singletonObjects} 里根据 cacheKey 取，如果没取到则通过构造方法获取实例，并将该实例缓存到 {@link UtilCreator#singletonObjects}
@@ -88,11 +88,11 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
                 }
                 className = getDefaultJacksonJsonHelperPath();
             } else if (RandomUniqueGenerator.class.isAssignableFrom(target)) {
-                className = String.format("hygge.utils.impl.%s", "SnowFlakeGenerator");
+                className = String.format("hygge.util.impl.%s", "SnowFlakeGenerator");
             }
 
             if (className == null) {
-                className = String.format("hygge.utils.impl.Default%s", cacheKey);
+                className = String.format("hygge.util.impl.Default%s", cacheKey);
             }
             return createHelper(className);
         });
@@ -110,7 +110,7 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
                 throw new UtilRuntimeException(unexpectedClass("defaultJsonHelper", jsonHelperClass, JsonHelper.class));
             }
             //基于 jackson 默认实现需要先检查依赖
-            if (UtilsCreatorConfigurationKeeper.DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME.equals(jsonHelperClass.getName()) && tryToGetClass("com.fasterxml.jackson.databind.ObjectMapper") == null) {
+            if (UtilCreatorConfigurationKeeper.DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME.equals(jsonHelperClass.getName()) && tryToGetClass("com.fasterxml.jackson.databind.ObjectMapper") == null) {
                 throw new UtilRuntimeException("Default \"JsonHelper\" implementation class lacks jackson dependencies:com.fasterxml.jackson.databind.ObjectMapper.");
             }
             Properties properties = new Properties();
@@ -123,6 +123,6 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
      * 用的返回当前实际的 JsonHelper 默认实现类名称
      */
     private String getDefaultJacksonJsonHelperPath() {
-        return CONFIG_KEEPER.getValue(UtilsCreatorConfigurationKeeper.KEY_ACTUAL_DEFAULT_JSON_HELPER).toString();
+        return CONFIG_KEEPER.getValue(UtilCreatorConfigurationKeeper.KEY_ACTUAL_DEFAULT_JSON_HELPER).toString();
     }
 }

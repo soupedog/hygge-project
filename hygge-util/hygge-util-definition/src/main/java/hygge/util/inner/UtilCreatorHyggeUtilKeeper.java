@@ -8,11 +8,11 @@ import hygge.util.definition.HyggeUtil;
  * @date 2022/6/25
  * @since 1.0
  */
-public class UtilsCreatorHyggeUtilKeeper extends AbstractHyggeKeeper<String, HyggeUtil> {
-    public UtilsCreatorHyggeUtilKeeper() {
+public class UtilCreatorHyggeUtilKeeper extends AbstractHyggeKeeper<String, HyggeUtil> {
+    public UtilCreatorHyggeUtilKeeper() {
     }
 
-    public UtilsCreatorHyggeUtilKeeper(int initialCapacity, float loadFactor) {
+    public UtilCreatorHyggeUtilKeeper(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 }
