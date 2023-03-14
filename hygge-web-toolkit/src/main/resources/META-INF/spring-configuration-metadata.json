@@ -1,7 +1,7 @@
 {
   "hints": [
     {
-      "name": "hygge.utils.httpHelper.default.autoRegister",
+      "name": "hygge.util.httpHelper.default.autoRegister",
       "values": [
         {
           "value": true
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "name": "hygge.utils.httpHelper.default.ignoreSSL",
+      "name": "hygge.util.httpHelper.default.ignoreSSL",
       "values": [
         {
           "value": true
@@ -23,7 +23,7 @@
       ]
     },
     {
-      "name": "hygge.utils.httpHelper.default.logType",
+      "name": "hygge.util.httpHelper.default.logType",
       "values": [
         {
           "value": "NONE"
@@ -60,43 +60,43 @@
   "properties": [
     {
       "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
-      "name": "hygge.utils.httpHelper.default.autoRegister",
+      "name": "hygge.util.httpHelper.default.autoRegister",
       "type": "java.lang.Boolean",
       "defaultValue": true
     },
     {
       "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
-      "name": "hygge.utils.httpHelper.default.ignoreSSL",
+      "name": "hygge.util.httpHelper.default.ignoreSSL",
       "type": "java.lang.Boolean",
       "defaultValue": false
     },
     {
       "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
-      "name": "hygge.utils.httpHelper.default.logType",
-      "type": "org.hygge.web.toolkit.http.configuration.HttpLogType",
+      "name": "hygge.util.httpHelper.default.logType",
+      "type": "hygge.web.util.log.enums.ControllerLogType",
       "defaultValue": "NO_RESPONSE_HEADERS"
     },
     {
       "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
-      "name": "hygge.utils.httpHelper.default.connection.connectTimeOut",
+      "name": "hygge.util.httpHelper.default.connection.connectTimeOut",
       "type": "java.time.Duration",
       "defaultValue": "30S"
     },
     {
       "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
-      "name": "hygge.utils.httpHelper.default.connection.readTimeOut",
+      "name": "hygge.util.httpHelper.default.connection.readTimeOut",
       "type": "java.time.Duration",
       "defaultValue": "30S"
     },
     {
       "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
-      "name": "hygge.utils.httpHelper.default.connection.maxTotal",
+      "name": "hygge.util.httpHelper.default.connection.maxTotal",
       "type": "java.lang.Integer",
       "defaultValue": 400
     },
     {
       "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
-      "name": "hygge.utils.httpHelper.default.connection.maxPerRoute",
+      "name": "hygge.util.httpHelper.default.connection.maxPerRoute",
       "type": "java.lang.Integer",
       "defaultValue": 200
     },

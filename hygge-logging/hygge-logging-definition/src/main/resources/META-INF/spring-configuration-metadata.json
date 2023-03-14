@@ -150,13 +150,13 @@
     {
       "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.converter.mode",
-      "type": "java.lang.String",
+      "type": "hygge.logging.enums.ConverterModeEnum",
       "defaultValue": "DEFAULT"
     },
     {
       "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.output.mode",
-      "type": "java.lang.String"
+      "type": "hygge.logging.enums.OutputModeEnum"
     },
     {
       "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
