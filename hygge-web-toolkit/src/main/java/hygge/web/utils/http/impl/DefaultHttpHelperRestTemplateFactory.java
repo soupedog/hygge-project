@@ -2,7 +2,7 @@ package hygge.web.utils.http.impl;
 
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.container.base.AbstractHyggeKeeper;
-import hygge.utils.UtilsCreator;
+import hygge.util.UtilCreator;
 import hygge.util.definition.ParameterHelper;
 import hygge.web.utils.http.configuration.HttpHelperConfiguration;
 import hygge.web.utils.http.configuration.HttpHelperRequestConfiguration;
@@ -38,7 +38,7 @@ import java.util.List;
  * @since 1.0
  */
 public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<HttpHelperRequestConfiguration, RestTemplate> implements HttpHelperRestTemplateFactory {
-    protected static ParameterHelper parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+    protected static ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     protected HttpHelperConfiguration httpHelperConfiguration;
     protected HttpHelperRequestConfiguration defaultRequestConfiguration;

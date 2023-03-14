@@ -4,7 +4,7 @@ package hygge.logging.util.base;
 import hygge.logging.enums.ConverterModeEnum;
 import hygge.util.definition.JsonHelper;
 import hygge.util.definition.ParameterHelper;
-import hygge.utils.UtilsCreator;
+import hygge.util.UtilCreator;
 
 import java.util.LinkedHashMap;
 
@@ -21,7 +21,7 @@ public abstract class HyggeLogJsonPatterHelper {
     protected String appName;
     protected String version;
 
-    protected static final ParameterHelper parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+    protected static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     protected HyggeLogJsonPatterHelper(String type, String projectName, String appName, String version) {
         this.type = parameterHelper.stringNotEmpty("type", (Object) type);
@@ -44,7 +44,7 @@ public abstract class HyggeLogJsonPatterHelper {
         temp.put("ts", getTs(enableColorful, converterMode));
         temp.put("msg", getMsg(enableColorful, converterMode));
         temp.put("thrown", getThrown(enableColorful, converterMode));
-        JsonHelper<?> jsonHelper = UtilsCreator.INSTANCE.getDefaultJsonHelperInstance(false);
+        JsonHelper<?> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
         return jsonHelper.formatAsString(temp);
     }
 

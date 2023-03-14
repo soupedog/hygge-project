@@ -1,7 +1,6 @@
 package hygge.util.definition;
 
 import hygge.commons.constant.enums.StringCategoryEnum;
-import hygge.utils.HyggeUtil;
 
 /**
  * 随机生成工具类

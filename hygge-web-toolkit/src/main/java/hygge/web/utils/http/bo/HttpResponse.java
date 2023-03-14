@@ -3,7 +3,7 @@ package hygge.web.utils.http.bo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import hygge.utils.UtilsCreator;
+import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.utils.json.jackson.serializer.HyggeLogInfoSerializer;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HttpResponse<R, T> {
-    protected static final JsonHelper<?> jsonHelper = UtilsCreator.INSTANCE.getDefaultJsonHelperInstance(false);
+    protected static final JsonHelper<?> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
 
     protected Long startTs;
     protected Long cost;

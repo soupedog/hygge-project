@@ -1,6 +1,7 @@
 package hygge.logging.util;
 
 import hygge.commons.exception.UtilRuntimeException;
+import hygge.commons.template.definition.Alterego;
 import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.LookupTranslator;
 
@@ -13,12 +14,14 @@ import java.util.Map;
 
 /**
  * 日志内容转换器
+ * <p>
+ * 写作枚举，本体其实是一个工具实体类。(利用枚举单例特性)
  *
  * @author Xavier
  * @date 2022/6/28
  * @since 1.0
  */
-public enum LogConverter {
+public enum LogConverter implements Alterego {
     INSTANCE;
 
     private static final AggregateTranslator JSON_FRIENDLY_TRANSLATOR;

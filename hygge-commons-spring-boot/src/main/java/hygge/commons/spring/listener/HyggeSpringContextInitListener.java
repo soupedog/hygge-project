@@ -2,7 +2,7 @@ package hygge.commons.spring.listener;
 
 import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
-import hygge.utils.UtilsCreator;
+import hygge.util.UtilCreator;
 import hygge.util.definition.ParameterHelper;
 import org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
@@ -18,7 +18,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
  * @since 1.0
  */
 public class HyggeSpringContextInitListener implements Ordered, ApplicationListener<ApplicationEnvironmentPreparedEvent> {
-    private static final ParameterHelper parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+    private static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     @Override
     public int getOrder() {

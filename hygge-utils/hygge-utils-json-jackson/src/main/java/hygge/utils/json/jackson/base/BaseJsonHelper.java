@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import hygge.commons.exception.UtilRuntimeException;
-import hygge.commons.template.definitions.InfoMessageSupplier;
-import hygge.utils.UtilsCreator;
+import hygge.commons.template.definition.InfoMessageSupplier;
+import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.util.definition.ParameterHelper;
 
@@ -34,12 +34,12 @@ public abstract class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMe
     protected ObjectMapper objectMapper;
 
     protected BaseJsonHelper(Properties properties) {
-        this.parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+        this.parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
         initConfig(properties, new ObjectMapper());
     }
 
     protected BaseJsonHelper(Properties properties, ObjectMapper objectMapper) {
-        this.parameterHelper = UtilsCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+        this.parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
         initConfig(properties, objectMapper);
     }
 

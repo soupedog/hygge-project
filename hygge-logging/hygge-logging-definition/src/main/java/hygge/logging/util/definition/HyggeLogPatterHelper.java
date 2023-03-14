@@ -1,8 +1,8 @@
 package hygge.logging.util.definition;
 
-import hygge.logging.configuration.HyggeLogConfiguration;
+import hygge.logging.configuration.base.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;
-import hygge.utils.HyggeUtil;
+import hygge.util.definition.HyggeUtil;
 
 /**
  * 日志模板生成器

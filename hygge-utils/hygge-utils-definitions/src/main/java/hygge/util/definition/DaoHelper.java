@@ -1,8 +1,7 @@
 package hygge.util.definition;
 
 
-import hygge.utils.HyggeUtil;
-import hygge.utils.bo.ColumnInfo;
+import hygge.util.bo.ColumnInfo;
 
 import java.util.Collection;
 import java.util.HashMap;

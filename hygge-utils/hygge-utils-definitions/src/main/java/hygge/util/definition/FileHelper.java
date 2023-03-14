@@ -1,7 +1,5 @@
 package hygge.util.definition;
 
-import hygge.utils.HyggeUtil;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.List;

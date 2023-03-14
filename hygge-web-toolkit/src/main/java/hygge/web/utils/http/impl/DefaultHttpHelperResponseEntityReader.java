@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hygge.commons.exception.UtilRuntimeException;
-import hygge.utils.UtilsCreator;
+import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.web.utils.http.definitions.HttpHelperResponseEntityReader;
 
@@ -16,7 +16,7 @@ import hygge.web.utils.http.definitions.HttpHelperResponseEntityReader;
  * @since 1.0
  */
 public class DefaultHttpHelperResponseEntityReader implements HttpHelperResponseEntityReader {
-    private static final JsonHelper<?> jsonHelper = UtilsCreator.INSTANCE.getDefaultJsonHelperInstance(false);
+    private static final JsonHelper<?> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
 
     @Override
     public <T> T readAsObject(String originalResponse, Class<T> tClass) {

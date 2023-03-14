@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import hygge.commons.template.definitions.HyggeLogInfoObject;
-import hygge.utils.UtilsCreator;
+import hygge.commons.template.definition.HyggeLogInfoObject;
+import hygge.util.UtilCreator;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
-        Object defaultMapperTemp = UtilsCreator.INSTANCE.getDefaultJsonHelperInstance(false).getDependence();
+        Object defaultMapperTemp = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false).getDependence();
         if (defaultMapperTemp instanceof ObjectMapper) {
             mapper.setConfig(((ObjectMapper) defaultMapperTemp).getSerializationConfig());
             mapper.setConfig(((ObjectMapper) defaultMapperTemp).getDeserializationConfig());

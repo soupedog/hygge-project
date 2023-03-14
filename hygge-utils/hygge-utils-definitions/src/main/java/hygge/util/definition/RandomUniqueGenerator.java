@@ -1,7 +1,5 @@
 package hygge.util.definition;
 
-import hygge.utils.HyggeUtil;
-
 /**
  * 随机唯一标识生成器
  *

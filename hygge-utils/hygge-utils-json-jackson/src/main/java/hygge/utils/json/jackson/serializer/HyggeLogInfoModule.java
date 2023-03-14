@@ -1,7 +1,7 @@
 package hygge.utils.json.jackson.serializer;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import hygge.commons.template.definitions.HyggeLogInfoObject;
+import hygge.commons.template.definition.HyggeLogInfoObject;
 
 /**
  * 用于支持 {@link HyggeLogInfoObject} 对象序列化

@@ -2,8 +2,7 @@ package hygge.util.definition;
 
 import hygge.commons.constant.enums.StringFormatModeEnum;
 import hygge.commons.exception.ParameterRuntimeException;
-import hygge.commons.template.definitions.InfoMessageSupplier;
-import hygge.utils.HyggeUtil;
+import hygge.commons.template.definition.InfoMessageSupplier;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

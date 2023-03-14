@@ -2,11 +2,11 @@ package hygge.controller;
 
 import hygge.commons.constant.enums.StringCategoryEnum;
 import hygge.commons.exception.definition.HyggeInfo;
-import hygge.commons.template.definitions.HyggeLogInfoObject;
+import hygge.commons.template.definition.HyggeLogInfoObject;
 import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.domain.User;
 import hygge.domain.UserSpecialForLog;
-import hygge.utils.UtilsCreator;
+import hygge.util.UtilCreator;
 import hygge.web.template.HyggeController;
 import hygge.web.template.HyggeControllerResponse;
 import hygge.web.template.HyggeWebUtilContainer;
@@ -105,7 +105,7 @@ public class LogConfigController extends HyggeWebUtilContainer implements HyggeC
         log.info("info 模拟的日志信息");
         Map<Object, Object> mockObject = new HashMap<>();
         mockObject.put("1", 1);
-        String mockObjectStringVal = UtilsCreator.INSTANCE.getDefaultJsonHelperInstance(true).formatAsString(mockObject);
+        String mockObjectStringVal = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(true).formatAsString(mockObject);
         log.warn("warn 模拟的日志对象 {}", mockObjectStringVal);
         log.error("error 模拟的日志信息");
         return success();
