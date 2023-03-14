@@ -1,4 +1,4 @@
-package hygge.commons.spring.config.configuration;
+package hygge.commons.spring.config.definitions;
 
 /**
  * 标识当前类是个托管给 Spring 自动绑定的配置项类<br/>
@@ -8,5 +8,5 @@ package hygge.commons.spring.config.configuration;
  * @date 2022/7/11
  * @since 1.0
  */
-public interface HyggeSpringProperties {
+public interface HyggeSpringConfigurationProperties {
 }

@@ -1,6 +1,6 @@
 package hygge.web.utils.log.configuration;
 
-import hygge.commons.spring.config.configuration.HyggeSpringProperties;
+import hygge.commons.spring.config.definitions.HyggeSpringConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.Ordered;
 
@@ -12,7 +12,7 @@ import org.springframework.core.Ordered;
  * @since 1.0
  */
 @ConfigurationProperties(prefix = "hygge.web-toolkit.controller.log")
-public class ControllerLogConfiguration implements HyggeSpringProperties {
+public class ControllerLogConfiguration implements HyggeSpringConfigurationProperties {
     public static final int DEFAULT_ASPECT_ORDER = Ordered.LOWEST_PRECEDENCE - 2;
 
     private boolean autoRegister = true;

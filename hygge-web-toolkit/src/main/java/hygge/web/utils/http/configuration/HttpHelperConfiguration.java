@@ -1,6 +1,6 @@
 package hygge.web.utils.http.configuration;
 
-import hygge.commons.spring.config.configuration.HyggeSpringProperties;
+import hygge.commons.spring.config.definitions.HyggeSpringConfigurationProperties;
 import hygge.web.utils.http.configuration.inner.ConnectionConfiguration;
 import hygge.web.utils.http.configuration.inner.HttpLogType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @since 1.0
  */
 @ConfigurationProperties(prefix = "hygge.utils.http-helper.default")
-public class HttpHelperConfiguration implements HyggeSpringProperties {
+public class HttpHelperConfiguration implements HyggeSpringConfigurationProperties {
     private boolean autoRegister = true;
     private boolean ignoreSSL = false;
     private HttpLogType logType = HttpLogType.NO_RESPONSE_HEADERS;
