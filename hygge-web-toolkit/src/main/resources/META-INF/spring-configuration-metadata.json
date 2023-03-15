@@ -77,25 +77,25 @@
       "defaultValue": "NO_RESPONSE_HEADERS"
     },
     {
-      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
+      "sourceType": "hygge.web.util.http.configuration.inner.ConnectionConfiguration",
       "name": "hygge.util.httpHelper.default.connection.connectTimeOut",
       "type": "java.time.Duration",
       "defaultValue": "30S"
     },
     {
-      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
+      "sourceType": "hygge.web.util.http.configuration.inner.ConnectionConfiguration",
       "name": "hygge.util.httpHelper.default.connection.readTimeOut",
       "type": "java.time.Duration",
       "defaultValue": "30S"
     },
     {
-      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
+      "sourceType": "hygge.web.util.http.configuration.inner.ConnectionConfiguration",
       "name": "hygge.util.httpHelper.default.connection.maxTotal",
       "type": "java.lang.Integer",
       "defaultValue": 400
     },
     {
-      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
+      "sourceType": "hygge.web.util.http.configuration.inner.ConnectionConfiguration",
       "name": "hygge.util.httpHelper.default.connection.maxPerRoute",
       "type": "java.lang.Integer",
       "defaultValue": 200
