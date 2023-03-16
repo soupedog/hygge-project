@@ -1,6 +1,6 @@
 package hygge.web.util.log.configuration;
 
-import hygge.commons.spring.config.definition.HyggeSpringConfigurationProperties;
+import hygge.commons.spring.config.configuration.definition.HyggeSpringConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.Ordered;
 
