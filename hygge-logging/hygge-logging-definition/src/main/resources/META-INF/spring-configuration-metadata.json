@@ -86,113 +86,113 @@
   ],
   "properties": [
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.enable",
       "type": "java.lang.Boolean",
       "defaultValue": true
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.projectName",
       "type": "java.lang.String",
       "defaultValue": "hygge"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.appName",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.version",
       "type": "java.lang.String",
       "defaultValue": "1.0.0"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.rootOverride.enable",
       "type": "java.lang.Boolean",
       "defaultValue": true
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.scope.paths",
       "type": "java.util.Map<java.lang.String,java.lang.Boolean>",
       "description": "激活 Hygge 日志的包目录"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.colorful.console.enable",
       "type": "java.lang.Boolean",
       "defaultValue": true
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.colorful.file.enable",
       "type": "java.lang.Boolean",
       "defaultValue": false
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.root",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.hygge",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.jsonType.enable",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.converter.mode",
       "type": "hygge.logging.enums.ConverterModeEnum",
       "defaultValue": "DEFAULT"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.output.mode",
       "type": "hygge.logging.enums.OutputModeEnum"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.log4j.pattern.file.path",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.log4j.pattern.file.maxSize",
       "type": "org.springframework.util.unit.DataSize",
       "defaultValue": "2MB"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.log4j.pattern.file.cron",
       "type": "java.lang.String",
       "defaultValue": "0 0 0 * * ?"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.logback.pattern.fileNamePattern.root",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.logback.pattern.fileNamePattern.hygge",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.logback.pattern.file.maxSize",
       "type": "org.springframework.util.unit.DataSize",
       "defaultValue": "2MB"
     },
     {
-      "sourceType": "hygge.logging.configuration.base.HyggeLogConfiguration",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.logback.pattern.file.maxHistory",
       "type": "java.lang.Integer",
       "defaultValue": 0

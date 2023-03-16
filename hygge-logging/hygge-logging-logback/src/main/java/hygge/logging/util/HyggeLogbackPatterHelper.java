@@ -1,7 +1,7 @@
 package hygge.logging.util;
 
 import hygge.commons.exception.UtilRuntimeException;
-import hygge.logging.configuration.base.HyggeLogConfiguration;
+import hygge.logging.config.configuration.base.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;
 import hygge.logging.util.definition.HyggeLogPatterHelper;
 

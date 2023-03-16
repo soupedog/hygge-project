@@ -1,6 +1,6 @@
 package hygge.logging.logback.configuration;
 
-import hygge.logging.configuration.base.HyggeLogConfiguration;
+import hygge.logging.config.configuration.base.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;
 import org.springframework.core.env.ConfigurableEnvironment;
 

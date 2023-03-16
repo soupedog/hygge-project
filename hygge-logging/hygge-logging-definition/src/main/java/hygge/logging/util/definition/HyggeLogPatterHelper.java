@@ -1,6 +1,6 @@
 package hygge.logging.util.definition;
 
-import hygge.logging.configuration.base.HyggeLogConfiguration;
+import hygge.logging.config.configuration.base.HyggeLogConfiguration;
 import hygge.logging.enums.OutputModeEnum;
 import hygge.util.definition.HyggeUtil;
 

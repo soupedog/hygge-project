@@ -1,4 +1,4 @@
-package hygge.logging.configuration.base;
+package hygge.logging.config.configuration.base;
 
 import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
