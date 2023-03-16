@@ -1,7 +1,7 @@
 package hygge.commons.exception.main;
 
-import hygge.commons.constant.enums.definition.HyggeCode;
-import hygge.commons.exception.definition.HyggeInfo;
+import hygge.commons.template.definition.HyggeCode;
+import hygge.commons.template.definition.HyggeInfo;
 
 /**
  * Hygge 异常

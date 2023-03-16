@@ -1,7 +1,7 @@
 package hygge.controller;
 
 import hygge.commons.constant.enums.StringCategoryEnum;
-import hygge.commons.exception.definition.HyggeInfo;
+import hygge.commons.template.definition.HyggeInfo;
 import hygge.commons.template.definition.HyggeLogInfoObject;
 import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.domain.User;

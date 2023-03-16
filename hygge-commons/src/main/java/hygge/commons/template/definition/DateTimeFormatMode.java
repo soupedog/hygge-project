@@ -1,4 +1,4 @@
-package hygge.commons.constant.enums.definition;
+package hygge.commons.template.definition;
 
 import java.time.format.DateTimeFormatter;
 

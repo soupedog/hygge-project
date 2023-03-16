@@ -1,8 +1,8 @@
 package hygge.commons.exception;
 
 
-import hygge.commons.constant.enums.GlobalHyggeCode;
-import hygge.commons.constant.enums.definition.HyggeCode;
+import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
+import hygge.commons.template.definition.HyggeCode;
 import hygge.commons.exception.main.HyggeException;
 
 /**
@@ -14,11 +14,11 @@ import hygge.commons.exception.main.HyggeException;
  */
 public class ParameterException extends HyggeException {
     public ParameterException(String message) {
-        super(message, GlobalHyggeCode.UNEXPECTED_PARAMETER);
+        super(message, GlobalHyggeCodeEnum.UNEXPECTED_PARAMETER);
     }
 
     public ParameterException(String message, Throwable cause) {
-        super(message, GlobalHyggeCode.UNEXPECTED_PARAMETER, cause);
+        super(message, GlobalHyggeCodeEnum.UNEXPECTED_PARAMETER, cause);
     }
 
     public ParameterException(String message, HyggeCode hyggeCode) {

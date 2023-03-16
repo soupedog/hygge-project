@@ -10,9 +10,9 @@ import hygge.commons.exception.ParameterException;
 import hygge.commons.exception.ParameterRuntimeException;
 import hygge.commons.exception.UtilException;
 import hygge.commons.exception.UtilRuntimeException;
-import hygge.commons.constant.enums.GlobalHyggeCode;
-import hygge.commons.constant.enums.definition.HyggeCode;
-import hygge.commons.exception.definition.HyggeInfo;
+import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
+import hygge.commons.template.definition.HyggeCode;
+import hygge.commons.template.definition.HyggeInfo;
 import hygge.commons.exception.main.HyggeException;
 import hygge.commons.exception.main.HyggeRuntimeException;
 import hygge.web.template.HyggeControllerResponse;
@@ -105,8 +105,8 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
             HyggeControllerResponse.setCode(hyggeCode.getCode());
             HyggeControllerResponse.setMsg(hyggeCode.getPublicMessage() == null ? e.getMessage() : hyggeCode.getPublicMessage());
         } else {
-            HyggeControllerResponse.setCode(GlobalHyggeCode.SERVER_END_EXCEPTION.getCode());
-            HyggeControllerResponse.setMsg(GlobalHyggeCode.SERVER_END_EXCEPTION.getPublicMessage());
+            HyggeControllerResponse.setCode(GlobalHyggeCodeEnum.SERVER_END_EXCEPTION.getCode());
+            HyggeControllerResponse.setMsg(GlobalHyggeCodeEnum.SERVER_END_EXCEPTION.getPublicMessage());
         }
         return (R) builder.body(HyggeControllerResponse);
     }
@@ -116,11 +116,11 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
     }
 
     default R success() {
-        return success(HttpStatus.OK, null, GlobalHyggeCode.SUCCESS, null, null);
+        return success(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, null);
     }
 
     default <T> R success(T entity) {
-        return success(HttpStatus.OK, null, GlobalHyggeCode.SUCCESS, null, entity);
+        return success(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, entity);
     }
 
     default <T> R success(HyggeCode hyggeCode, String msg, T entity) {

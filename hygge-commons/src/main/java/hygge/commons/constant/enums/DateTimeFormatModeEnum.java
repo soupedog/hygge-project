@@ -1,6 +1,6 @@
 package hygge.commons.constant.enums;
 
-import hygge.commons.constant.enums.definition.DateTimeFormatMode;
+import hygge.commons.template.definition.DateTimeFormatMode;
 
 import java.time.format.DateTimeFormatter;
 

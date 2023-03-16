@@ -1,6 +1,6 @@
 package hygge.commons.constant.enums;
 
-import hygge.commons.constant.enums.definition.HyggeCode;
+import hygge.commons.template.definition.HyggeCode;
 
 /**
  * 通用型全局业务码
@@ -9,7 +9,7 @@ import hygge.commons.constant.enums.definition.HyggeCode;
  * @date 2022/6/25
  * @since 1.0
  */
-public enum GlobalHyggeCode implements HyggeCode {
+public enum GlobalHyggeCodeEnum implements HyggeCode {
     /**
      * 响应正常
      */
@@ -61,7 +61,7 @@ public enum GlobalHyggeCode implements HyggeCode {
         return (E) extraInfo;
     }
 
-    GlobalHyggeCode(boolean serious, String publicMessage, Object code, Object extraInfo) {
+    GlobalHyggeCodeEnum(boolean serious, String publicMessage, Object code, Object extraInfo) {
         this.extraInfo = extraInfo;
         this.serious = serious;
         this.publicMessage = publicMessage;

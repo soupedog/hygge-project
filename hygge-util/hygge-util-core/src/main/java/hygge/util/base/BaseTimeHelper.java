@@ -1,7 +1,7 @@
 package hygge.util.base;
 
 
-import hygge.commons.constant.enums.definition.DateTimeFormatMode;
+import hygge.commons.template.definition.DateTimeFormatMode;
 import hygge.commons.constant.enums.DateTimeFormatModeEnum;
 import hygge.commons.exception.ParameterRuntimeException;
 import hygge.util.UtilCreator;

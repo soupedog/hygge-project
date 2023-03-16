@@ -1,6 +1,4 @@
-package hygge.commons.exception.definition;
-
-import hygge.commons.constant.enums.definition.HyggeCode;
+package hygge.commons.template.definition;
 
 /**
  * Hygge 信息对象

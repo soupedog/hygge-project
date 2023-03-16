@@ -1,8 +1,8 @@
 package hygge.commons.exception;
 
 
-import hygge.commons.constant.enums.GlobalHyggeCode;
-import hygge.commons.constant.enums.definition.HyggeCode;
+import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
+import hygge.commons.template.definition.HyggeCode;
 import hygge.commons.exception.main.HyggeException;
 
 /**
@@ -14,11 +14,11 @@ import hygge.commons.exception.main.HyggeException;
  */
 public class UtilException extends HyggeException {
     public UtilException(String message) {
-        super(message, GlobalHyggeCode.UTIL_EXCEPTION);
+        super(message, GlobalHyggeCodeEnum.UTIL_EXCEPTION);
     }
 
     public UtilException(String message, Throwable cause) {
-        super(message, GlobalHyggeCode.UTIL_EXCEPTION, cause);
+        super(message, GlobalHyggeCodeEnum.UTIL_EXCEPTION, cause);
     }
 
     public UtilException(String message, HyggeCode hyggeCode) {

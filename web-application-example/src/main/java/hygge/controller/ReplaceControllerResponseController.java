@@ -1,6 +1,6 @@
 package hygge.controller;
 
-import hygge.commons.constant.enums.GlobalHyggeCode;
+import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
 import hygge.domain.ControllerResponse;
 import hygge.domain.User;
 import hygge.web.template.definition.HyggeController;
@@ -25,11 +25,11 @@ public class ReplaceControllerResponseController implements HyggeController<Resp
 
     static {
         // 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，为了确保数据类型的统一性，你需要为 HyggeCode 的所有实例重新调整 code/extraInfo 的值，就像下面这样：
-        GlobalHyggeCode.SUCCESS.setCode("200");
-        GlobalHyggeCode.SUCCESS.setExtraInfo(HttpStatus.OK);
+        GlobalHyggeCodeEnum.SUCCESS.setCode("200");
+        GlobalHyggeCodeEnum.SUCCESS.setExtraInfo(HttpStatus.OK);
 
         // 默认情况 GlobalHyggeCode.code 是数字类型，此处二次赋值为回滚操作(为了不影响其他 Controller 演示，因为这是全局会受影响的改动)
-        GlobalHyggeCode.SUCCESS.setCode(200);
+        GlobalHyggeCodeEnum.SUCCESS.setCode(200);
     }
 
     private static final HyggeControllerResponseWrapper<ResponseEntity<?>> customResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
@@ -42,6 +42,6 @@ public class ReplaceControllerResponseController implements HyggeController<Resp
      */
     @GetMapping("/replace/customResponse")
     public ResponseEntity<?> customResponse() {
-        return success(HttpStatus.OK, null, GlobalHyggeCode.SUCCESS, null, new User("customResponse", "customResponse", "customResponse"), customResponseWrapper);
+        return success(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, new User("customResponse", "customResponse", "customResponse"), customResponseWrapper);
     }
 }
