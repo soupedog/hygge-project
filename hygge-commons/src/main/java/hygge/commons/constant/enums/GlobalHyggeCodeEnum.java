@@ -15,13 +15,13 @@ public enum GlobalHyggeCodeEnum implements HyggeCode {
      */
     SUCCESS(false, null, 200, null),
     /**
-     * 默认的工具类引发异常
-     */
-    UTIL_EXCEPTION(true, "Internal Server Error", 500, null),
-    /**
      * 默认的服务端引发异常
      */
     SERVER_END_EXCEPTION(true, "Internal Server Error", 500, null),
+    /**
+     * 默认的工具类引发异常
+     */
+    UTIL_EXCEPTION(true, "Internal Server Error", 500, null),
     /**
      * 默认的依赖的远端系统引发异常
      */
