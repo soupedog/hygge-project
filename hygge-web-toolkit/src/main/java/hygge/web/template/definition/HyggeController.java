@@ -1,5 +1,6 @@
 package hygge.web.template.definition;
 
+import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
 import hygge.commons.exception.ExternalException;
 import hygge.commons.exception.ExternalRuntimeException;
 import hygge.commons.exception.InternalException;
@@ -10,14 +11,13 @@ import hygge.commons.exception.ParameterException;
 import hygge.commons.exception.ParameterRuntimeException;
 import hygge.commons.exception.UtilException;
 import hygge.commons.exception.UtilRuntimeException;
-import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
-import hygge.commons.template.definition.HyggeCode;
-import hygge.commons.template.definition.HyggeInfo;
 import hygge.commons.exception.main.HyggeException;
 import hygge.commons.exception.main.HyggeRuntimeException;
+import hygge.commons.template.definition.HyggeCode;
+import hygge.commons.template.definition.HyggeInfo;
 import hygge.web.template.HyggeControllerResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  */
 @ControllerAdvice
 public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogController {
-    Logger log = LogManager.getLogger(HyggeController.class);
+    Logger log = LoggerFactory.getLogger(HyggeController.class);
 
     /**
      * 非严重异常日志的简易开关(默认为 true ：进行打印)
@@ -55,11 +55,11 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
     })
     default R hyggeExceptionHandler(HyggeException e) {
         if (e.getHyggeCode().isSerious()) {
-            log.error(e::getMessage, e);
+            log.error(e.getMessage(), e);
             return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
         } else {
             if (printNonSeriousExceptionLog(e)) {
-                log.warn(e::getMessage, e);
+                log.warn(e.getMessage(), e);
             }
             return fail(HttpStatus.BAD_REQUEST, e);
         }
@@ -74,18 +74,18 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
     })
     default R hyggeRuntimeExceptionHandler(HyggeRuntimeException e) {
         if (e.getHyggeCode().isSerious()) {
-            log.error(e::getMessage, e);
+            log.error(e.getMessage(), e);
             return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
         if (printNonSeriousExceptionLog(e)) {
-            log.warn(e::getMessage, e);
+            log.warn(e.getMessage(), e);
         }
         return fail(HttpStatus.BAD_REQUEST, e);
     }
 
     @ExceptionHandler(Throwable.class)
     default R serviceErrorHandler(Throwable e) {
-        log.error(e::getMessage, e);
+        log.error(e.getMessage(), e);
         return fail(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 

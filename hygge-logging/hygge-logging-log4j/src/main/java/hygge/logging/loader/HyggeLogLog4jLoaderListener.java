@@ -41,7 +41,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class HyggeLogLog4jLoaderListener implements Ordered, ApplicationListener<ApplicationEnvironmentPreparedEvent> {
     public static final String LOGGER_PREFIX = "Hygge";
-    private static Logger log = LogManager.getLogger(HyggeLogLog4jLoaderListener.class);
+    private static final Logger log = LogManager.getLogger(HyggeLogLog4jLoaderListener.class);
     /**
      * 此对象和 HyggeLogLog4jLoaderListener 其实没关系，只是希望是在日志配置完毕后再输出 HyggeContext 内容，故放在此处
      */

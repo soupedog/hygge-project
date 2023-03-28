@@ -44,7 +44,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<ApplicationEnvironmentPreparedEvent> {
-    private final Logger log = ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger(HyggeLogbackLoaderListener.class);
+    private static final Logger log = ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger(HyggeLogbackLoaderListener.class);
     /**
      * 此对象和 HyggeLogbackLoaderListener 其实没关系，只是希望是在日志配置完毕后再输出 HyggeContext 内容，故放在此处
      */
