@@ -2,6 +2,7 @@ package hygge.controller.hygge;
 
 import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
 import hygge.domain.ControllerResponse;
+import hygge.domain.CustomSystemCode;
 import hygge.domain.User;
 import hygge.web.template.definition.HyggeController;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,15 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "ReplaceControllerResponseController", description = "演示自定义数据结构相关操作，请与 '/logConfig/user/standard' 进行比较")
 public class ReplaceControllerResponseController implements HyggeController<ResponseEntity<?>> {
 
-    static {
-        // 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，为了确保数据类型的统一性，你需要为 HyggeCode 的所有实例重新调整 code/extraInfo 的值，就像下面这样：
-        GlobalHyggeCodeEnum.SUCCESS.setCode("200");
-        GlobalHyggeCodeEnum.SUCCESS.setExtraInfo(HttpStatus.OK);
-
-        // 默认情况 GlobalHyggeCode.code 是数字类型，此处二次赋值为回滚操作(为了不影响其他 Controller 演示，因为这是全局会受影响的改动)
-        GlobalHyggeCodeEnum.SUCCESS.setCode(200);
-    }
-
+    /**
+     * 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，需要对自定义 HyggeCode 进行额外处理，见 {@link CustomSystemCode}
+     */
     private static final HyggeControllerResponseWrapper<ResponseEntity<?>> customResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
         ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus);
         return result.body(entity);
