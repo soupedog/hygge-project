@@ -39,18 +39,7 @@ public class HyggeSpringValidatorRunner implements CommandLineRunner {
             return;
         }
 
-        hyggeSpringValidatorList.sort(new Comparator<HyggeSpringValidator>() {
-            @Override
-            public int compare(HyggeSpringValidator o1, HyggeSpringValidator o2) {
-                if (o1.getOrder() == o2.getOrder()) {
-                    return 0;
-                } else if (o1.getOrder() < o2.getOrder()) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            }
-        });
+        hyggeSpringValidatorList.sort(Comparator.comparingInt(HyggeSpringValidator::getOrder));
 
         for (HyggeSpringValidator validator : hyggeSpringValidatorList) {
             validator.validate();

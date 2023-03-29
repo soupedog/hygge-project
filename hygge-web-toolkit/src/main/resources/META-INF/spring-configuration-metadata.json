@@ -122,7 +122,7 @@
       "sourceType": "hygge.commons.spring.config.configuration.inner.HyggeCodeValidatorConfiguration",
       "name": "hygge.web-toolkit.validator.hyggeCode.uniqueEnable",
       "type": "java.lang.Boolean",
-      "defaultValue": false,
+      "defaultValue": true,
       "description": "HyggeCode 唯一性检测是否开启"
     }
   ]

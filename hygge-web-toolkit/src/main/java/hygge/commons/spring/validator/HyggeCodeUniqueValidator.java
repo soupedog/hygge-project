@@ -27,10 +27,8 @@ import java.util.Set;
  */
 @Component
 @EnableConfigurationProperties(HyggeSpringValidatorConfiguration.class)
-@ConditionalOnExpression("#{environment['hygge.web-toolkit.validator.hyggeCode.basePackages'] != null && true.equals(environment['hygge.web-toolkit.validator.hyggeCode.uniqueEnable'])}")
+@ConditionalOnExpression("#{environment['hygge.web-toolkit.validator.hyggeCode.basePackages'] != null && T(java.lang.Boolean).valueOf(environment['hygge.web-toolkit.validator.hyggeCode.uniqueEnable'])}")
 public class HyggeCodeUniqueValidator implements HyggeSpringValidator {
-    public static final String GLOBAL_HYGGE_CODE_ENUM_BASE_PATH = "hygge.commons.constant.enums";
-
     @Autowired
     private HyggeSpringValidatorConfiguration hyggeSpringValidatorConfiguration;
 
@@ -84,9 +82,6 @@ public class HyggeCodeUniqueValidator implements HyggeSpringValidator {
             Set<BeanDefinition> customComponents = provider.findCandidateComponents(path);
             hyggeCodeBeanDefinitionSet.addAll(customComponents);
         }
-
-        Set<BeanDefinition> globalComponents = provider.findCandidateComponents(GLOBAL_HYGGE_CODE_ENUM_BASE_PATH);
-        hyggeCodeBeanDefinitionSet.addAll(globalComponents);
 
         for (BeanDefinition component : hyggeCodeBeanDefinitionSet) {
             try {
