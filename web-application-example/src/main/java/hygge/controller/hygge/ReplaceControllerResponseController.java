@@ -1,4 +1,4 @@
-package hygge.controller;
+package hygge.controller.hygge;
 
 import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
 import hygge.domain.ControllerResponse;

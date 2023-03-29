@@ -1,4 +1,4 @@
-package hygge.controller;
+package hygge.controller.hygge;
 
 import hygge.commons.exception.InternalRuntimeException;
 import hygge.commons.exception.LightRuntimeException;
@@ -15,6 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author Xavier
  * @date 2023/1/12
+ * @since 1.0
  */
 @Slf4j
 @RestController

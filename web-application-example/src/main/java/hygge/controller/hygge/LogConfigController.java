@@ -1,15 +1,15 @@
-package hygge.controller;
+package hygge.controller.hygge;
 
+import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.commons.constant.enums.StringCategoryEnum;
 import hygge.commons.template.definition.HyggeInfo;
 import hygge.commons.template.definition.HyggeLogInfoObject;
-import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.domain.User;
 import hygge.domain.UserSpecialForLog;
 import hygge.util.UtilCreator;
-import hygge.web.template.definition.HyggeController;
 import hygge.web.template.HyggeControllerResponse;
 import hygge.web.template.HyggeWebUtilContainer;
+import hygge.web.template.definition.HyggeController;
 import hygge.web.util.log.annotation.ControllerLog;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +26,7 @@ import java.util.Map;
 /**
  * @author Xavier
  * @date 2023/1/12
+ * @since 1.0
  */
 @Slf4j
 @RestController
