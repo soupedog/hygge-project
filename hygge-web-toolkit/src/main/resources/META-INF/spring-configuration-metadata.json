@@ -117,13 +117,6 @@
       "name": "hygge.web-toolkit.validator.hyggeCode.basePackages",
       "type": "java.lang.String",
       "description": "自定义 HyggeCode 所在包路径，多个时用 \",\" 分隔"
-    },
-    {
-      "sourceType": "hygge.commons.spring.config.configuration.inner.HyggeCodeValidatorConfiguration",
-      "name": "hygge.web-toolkit.validator.hyggeCode.uniqueEnable",
-      "type": "java.lang.Boolean",
-      "defaultValue": true,
-      "description": "HyggeCode 唯一性检测是否开启"
     }
   ]
 }

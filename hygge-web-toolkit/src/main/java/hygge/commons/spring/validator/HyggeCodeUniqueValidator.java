@@ -27,7 +27,7 @@ import java.util.Set;
  */
 @Component
 @EnableConfigurationProperties(HyggeSpringValidatorConfiguration.class)
-@ConditionalOnExpression("#{environment['hygge.web-toolkit.validator.hyggeCode.basePackages'] != null && T(java.lang.Boolean).valueOf(environment['hygge.web-toolkit.validator.hyggeCode.uniqueEnable'])}")
+@ConditionalOnExpression("#{environment['hygge.web-toolkit.validator.hyggeCode.basePackages'] != null}")
 public class HyggeCodeUniqueValidator implements HyggeSpringValidator {
     @Autowired
     private HyggeSpringValidatorConfiguration hyggeSpringValidatorConfiguration;
@@ -52,6 +52,11 @@ public class HyggeCodeUniqueValidator implements HyggeSpringValidator {
             }
 
             for (HyggeCode hyggeCode : hyggeCodeArray) {
+                // 允许 code 重复的业务码跳过检查
+                if (hyggeCode.isCodeDuplicateEnable()) {
+                    continue;
+                }
+
                 HyggeCode conflictCode = container.put(hyggeCode.getCode(), hyggeCode);
                 if (conflictCode != null) {
                     String firstOneInfo = conflictCode.getClass().getName() + "." + conflictCode;

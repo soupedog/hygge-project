@@ -15,7 +15,6 @@ public class HyggeCodeValidatorConfiguration implements HyggeSpringConfiguration
      * 自定义 HyggeCode 实现类所在包路径。 ({@link GlobalHyggeCodeEnum} 会自动追加，无需手工指定)
      */
     private String basePackages;
-    private Boolean uniqueEnable;
 
     public String getBasePackages() {
         return basePackages;
@@ -23,13 +22,5 @@ public class HyggeCodeValidatorConfiguration implements HyggeSpringConfiguration
 
     public void setBasePackages(String basePackages) {
         this.basePackages = basePackages;
-    }
-
-    public Boolean getUniqueEnable() {
-        return uniqueEnable;
-    }
-
-    public void setUniqueEnable(Boolean uniqueEnable) {
-        this.uniqueEnable = uniqueEnable;
     }
 }

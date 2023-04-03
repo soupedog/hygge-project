@@ -9,6 +9,13 @@ package hygge.commons.template.definition;
  */
 public interface HyggeCode {
     /**
+     * code 值是否允许重复
+     */
+    default boolean isCodeDuplicateEnable() {
+        return false;
+    }
+
+    /**
      * 是否为严重问题。
      * <p/>
      * 返回 false 通常代表是入参引发的问题，有可能通过重试自愈<br/>
