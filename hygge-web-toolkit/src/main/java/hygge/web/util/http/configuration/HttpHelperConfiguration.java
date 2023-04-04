@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @date 2022/7/12
  * @since 1.0
  */
-@ConfigurationProperties(prefix = "hygge.utils.http-helper.default")
+@ConfigurationProperties(prefix = "hygge.util.http-helper.default")
 public class HttpHelperConfiguration implements HyggeSpringConfigurationProperties {
     private boolean autoRegister = true;
     private boolean ignoreSSL = false;
