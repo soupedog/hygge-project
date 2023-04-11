@@ -253,7 +253,7 @@ public abstract class BaseFileHelper implements FileHelper {
 
     protected void searchInCurrentDirectoryByFilter(File directory, List<File> result, FileFilter fileFilter) {
         File[] resultTemp = directory.listFiles(item -> !item.isDirectory());
-        if (resultTemp != null && resultTemp.length > 0) {
+        if (resultTemp != null) {
             for (File item : resultTemp) {
                 if (item != null && fileFilter.accept(item)) {
                     result.add(item);
