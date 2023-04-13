@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(value = ControllerLogConfiguration.class)
-@ConditionalOnProperty(value = "hygge.web-toolkit.controller.log.autoRegister", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "hygge.webToolkit.controller.log.autoRegister", havingValue = "true", matchIfMissing = true)
 public class ControllerLogAutoConfiguration implements HyggeAutoConfiguration, BeanPostProcessor {
     private static final Logger log = LoggerFactory.getLogger(ControllerLogAutoConfiguration.class);
 
