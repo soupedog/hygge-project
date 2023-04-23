@@ -76,11 +76,14 @@ public class HyggeLogbackPatterHelper implements HyggeLogPatterHelper {
             }
         }
 
+        return finalPatter;
+    }
+
+    public String pidConvert(String finalPatter) {
         // 替换成实际进程号
         String name = ManagementFactory.getRuntimeMXBean().getName();
         String pid = name.split("@")[0];
         finalPatter = finalPatter.replace("%pid", pid);
-
         return finalPatter;
     }
 }

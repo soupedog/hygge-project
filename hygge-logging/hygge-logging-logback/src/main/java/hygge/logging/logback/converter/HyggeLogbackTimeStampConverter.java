@@ -30,6 +30,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 public class HyggeLogbackTimeStampConverter extends DateConverter {
     @Override
     public String convert(ILoggingEvent le) {
-        return le.getTimeStamp() + "";
+        return String.valueOf(le.getTimeStamp());
     }
 }

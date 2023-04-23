@@ -225,6 +225,9 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
             }
         }
 
+        // %pid 占位符转化为实际 pid
+        finalPatter = hyggeLogbackPatterHelper.pidConvert(finalPatter);
+
         layout.setPattern(finalPatter);
 
         Map<String, String> defaultConverterMap = layout.getDefaultConverterMap();
