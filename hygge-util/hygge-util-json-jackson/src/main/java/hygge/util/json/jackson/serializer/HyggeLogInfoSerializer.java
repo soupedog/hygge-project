@@ -20,8 +20,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.definition.HyggeLogInfoObject;
 import hygge.util.UtilCreator;
+import hygge.util.definition.JsonHelper;
+import hygge.util.json.jackson.impl.HyggeObjectMapperDefaultConfigurator;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -37,11 +40,14 @@ public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
-        Object defaultMapperTemp = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false).getDependence();
-        if (defaultMapperTemp instanceof ObjectMapper) {
-            mapper.setConfig(((ObjectMapper) defaultMapperTemp).getSerializationConfig());
-            mapper.setConfig(((ObjectMapper) defaultMapperTemp).getDeserializationConfig());
+        JsonHelper<?> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
+        Object defaultMapperTemp = jsonHelper.getDependence();
+        if (!(defaultMapperTemp instanceof ObjectMapper)) {
+            throw new UtilRuntimeException("JsonHelper must be implemented by Jackson, but currently it is " + defaultMapperTemp.getClass().getName() + ".");
         }
+
+        HyggeObjectMapperDefaultConfigurator configurator = (HyggeObjectMapperDefaultConfigurator) jsonHelper.getConfigurator();
+        configurator.configure(mapper, configurator.createDefaultConfig());
         mapper.registerModule(new HyggeLogInfoModule());
     }
 

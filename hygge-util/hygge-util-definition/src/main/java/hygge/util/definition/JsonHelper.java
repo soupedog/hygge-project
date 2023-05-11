@@ -17,8 +17,7 @@
 package hygge.util.definition;
 
 import hygge.commons.exception.UtilRuntimeException;
-
-import java.util.Properties;
+import hygge.commons.template.definition.HyggeConfigurator;
 
 /**
  * json 处理工具类
@@ -42,11 +41,9 @@ public interface JsonHelper<S> extends HyggeUtil {
     }
 
     /**
-     * 创建一份默认配置的
-     *
-     * @return 默认的配置项
+     * 获取默认配置工具
      */
-    Properties createDefaultConfig();
+    HyggeConfigurator<S, ?> getConfigurator();
 
     /**
      * 获取序列化工具实际依赖

@@ -16,26 +16,21 @@
 
 package hygge.util.json.jackson.base;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import hygge.commons.exception.UtilRuntimeException;
+import hygge.commons.template.definition.HyggeConfigurator;
 import hygge.commons.template.definition.InfoMessageSupplier;
 import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.util.definition.ParameterHelper;
+import hygge.util.json.jackson.definition.HyggeObjectMapperConfigurator;
+import hygge.util.json.jackson.impl.HyggeObjectMapperDefaultConfigurator;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -51,29 +46,23 @@ public abstract class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMe
 
     protected BaseJsonHelper(Properties properties) {
         this.parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
-        initConfig(properties, new ObjectMapper());
+        this.objectMapper = new ObjectMapper();
+        HyggeObjectMapperConfigurator configurator = (HyggeObjectMapperConfigurator) getConfigurator();
+        configurator.configure(this.objectMapper, configurator.createDefaultConfig());
     }
 
     protected BaseJsonHelper(Properties properties, ObjectMapper objectMapper) {
         this.parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
-        initConfig(properties, objectMapper);
+        this.objectMapper = new ObjectMapper();
+        HyggeObjectMapperConfigurator configurator = (HyggeObjectMapperConfigurator) getConfigurator();
+        configurator.configure(this.objectMapper, configurator.createDefaultConfig());
     }
 
     protected BaseJsonHelper(Properties properties, ObjectMapper objectMapper, ParameterHelper parameterHelper) {
         this.parameterHelper = parameterHelper;
-        initConfig(properties, objectMapper);
-    }
-
-    @Override
-    public Properties createDefaultConfig() {
-        Properties properties = new Properties();
-        // 反序列化出现多余属性时,选择忽略不抛出异常
-        properties.put(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // 不进行排版缩进
-        properties.put(SerializationFeature.INDENT_OUTPUT, false);
-        // 开启允许数字以 0 开头
-        properties.put(JsonReadFeature.ALLOW_LEADING_ZEROS_FOR_NUMBERS.mappedFeature(), true);
-        return properties;
+        this.objectMapper = new ObjectMapper();
+        HyggeObjectMapperConfigurator configurator = (HyggeObjectMapperConfigurator) getConfigurator();
+        configurator.configure(this.objectMapper, configurator.createDefaultConfig());
     }
 
     @Override
@@ -139,39 +128,8 @@ public abstract class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMe
         return readAsObject(jsonString, (TypeReference<?>) classInfo);
     }
 
-    protected void initConfig(Properties properties, ObjectMapper objectMapper) {
-        parameterHelper.objectNotNull("jsonHelper-objectMapper", objectMapper);
-
-        Properties inputProperties = parameterHelper.parseObjectOfNullable("jsonHelper-properties", properties, new Properties());
-        if (inputProperties.containsKey(ConfigKey.INDENT)) {
-            // 是否进行排版缩进
-            inputProperties.put(SerializationFeature.INDENT_OUTPUT, parameterHelper.booleanFormatNotEmpty(ConfigKey.INDENT.toString(), inputProperties.get(ConfigKey.INDENT)));
-            inputProperties.remove(ConfigKey.INDENT);
-        }
-        Properties finalProperties = createDefaultConfig();
-        finalProperties.putAll(inputProperties);
-        for (Map.Entry<Object, Object> entry : finalProperties.entrySet()) {
-            Object key = entry.getKey();
-            parameterHelper.objectNotNull("jsonHelper-config-key", key);
-            boolean value = parameterHelper.booleanFormatNotEmpty("jsonHelper-config-value", entry.getValue());
-            if (key instanceof SerializationFeature) {
-                objectMapper.configure((SerializationFeature) key, value);
-            } else if (key instanceof DeserializationFeature) {
-                objectMapper.configure((DeserializationFeature) key, value);
-            } else if (key instanceof JsonParser.Feature) {
-                objectMapper.configure((JsonParser.Feature) key, value);
-            } else if (key instanceof JsonGenerator.Feature) {
-                objectMapper.configure((JsonGenerator.Feature) key, value);
-            } else {
-                throw new UtilRuntimeException("Unexpected config of JsonHelper<ObjectMapper>,they should come from MapperFeature,SerializationFeature,DeserializationFeature,JsonParser.Feature,JsonGenerator.Feature.");
-            }
-        }
-        // 为 null 的属性默认不参与序列化
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        // 注册默认的时间对象处理机制
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false);
-        objectMapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, false);
-        this.objectMapper = objectMapper;
+    @Override
+    public HyggeConfigurator<ObjectMapper, Properties> getConfigurator() {
+        return new HyggeObjectMapperDefaultConfigurator();
     }
 }
