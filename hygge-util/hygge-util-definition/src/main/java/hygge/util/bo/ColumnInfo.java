@@ -22,6 +22,9 @@ import hygge.commons.exception.UtilRuntimeException;
 import hygge.util.UtilCreator;
 import hygge.util.definition.ParameterHelper;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * DAO 操作的属性信息
  *
@@ -38,7 +41,7 @@ public class ColumnInfo {
     /**
      * 属性在数据库中的实际名称(为空则直接取 columnName)
      */
-    private String columnDatabaseName;
+    private String columnNameInDatabase;
     /**
      * 属性类型
      */
@@ -58,23 +61,84 @@ public class ColumnInfo {
     /**
      * 最小值(数字类型)/字符长度(字符串)/容器大小
      */
-    private Number minLength;
+    private Number min;
     /**
      * 最大值(数字类型)/字符长度(字符串)/容器大小
      */
-    private Number maxLength;
+    private Number max;
+    /**
+     * 用于约束 BigDecimal，其他类型非必须
+     */
+    private int scale;
+    /**
+     * 用于约束 BigDecimal，其他类型非必须
+     */
+    private RoundingMode roundingMode;
 
-    public ColumnInfo(String columnName, String columnDatabaseName, ColumnTypeEnum columnTypeEnum, boolean keyNullable, boolean valueNullable, Number minLength, Number maxLength) {
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, int minLength, Byte maxLength) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.STRING, keyNullable, valueNullable, minLength, maxLength);
+    }
+
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, Byte min, Byte max) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.BYTE, keyNullable, valueNullable, min, max);
+    }
+
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, Short min, Short max) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.SHORT, keyNullable, valueNullable, min, max);
+    }
+
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, Integer min, Integer max) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.INTEGER, keyNullable, valueNullable, min, max);
+    }
+
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, Long min, Long max) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.LONG, keyNullable, valueNullable, min, max);
+    }
+
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, Float min, Float max) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.FLOAT, keyNullable, valueNullable, min, max);
+    }
+
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, Double min, Double max) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.DOUBLE, keyNullable, valueNullable, min, max);
+    }
+
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.BIG_DECIMAL, keyNullable, valueNullable, min, max);
+        this.scale = scale;
+        this.roundingMode = roundingMode;
+    }
+
+    /**
+     * 适用于复杂对象简单验证非空性
+     */
+    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase) {
+        init(columnName, columnNameInDatabase, ColumnTypeEnum.OTHER_OBJECT, keyNullable, valueNullable, null, null);
+    }
+
+    /**
+     * 将复杂对象简单验证非空性转化成 Boolean 类型验证非空性的语法糖，常按如下方法使用
+     *
+     * <pre>
+     *     new ColumnInfo(false,true,"testKey",null).toBooleanColumn();
+     * </pre>
+     */
+    public ColumnInfo toBooleanColumn() {
+        this.columnTypeEnum = ColumnTypeEnum.BOOLEAN;
+        return this;
+    }
+
+    private void init(String columnName, String columnDatabaseName, ColumnTypeEnum columnTypeEnum, boolean keyNullable, boolean valueNullable, Number min, Number max) {
         this.columnName = parameterHelper.stringNotEmpty("columnName", (Object) columnName);
-        this.columnDatabaseName = parameterHelper.stringOfNullable(columnDatabaseName, columnName);
+        this.columnNameInDatabase = parameterHelper.stringOfNullable(columnDatabaseName, columnName);
         parameterHelper.objectNotNull("columnTypeEnum", columnTypeEnum);
         this.columnTypeEnum = columnTypeEnum;
         this.keyNullable = parameterHelper.booleanFormatNotEmpty("keyNullable", keyNullable);
         this.valueNullable = parameterHelper.booleanFormatNotEmpty("valueNullable", valueNullable);
-        parameterHelper.objectNotNull("minLength", minLength);
-        this.minLength = minLength;
-        parameterHelper.objectNotNull("maxLength", maxLength);
-        this.maxLength = maxLength;
+        parameterHelper.objectNotNull("min", min);
+        this.min = min;
+        parameterHelper.objectNotNull("max", max);
+        this.max = max;
     }
 
     /**
@@ -89,25 +153,28 @@ public class ColumnInfo {
             // 允许为空
             switch (columnTypeEnum) {
                 case STRING:
-                    result = parameterHelper.string(columnName, target, minLength.intValue(), maxLength.intValue());
+                    result = parameterHelper.string(columnName, target, min.intValue(), max.intValue());
                     break;
                 case BYTE:
-                    result = parameterHelper.byteFormat(columnName, target, minLength.byteValue(), maxLength.byteValue());
+                    result = parameterHelper.byteFormat(columnName, target, min.byteValue(), max.byteValue());
                     break;
                 case SHORT:
-                    result = parameterHelper.shortFormat(columnName, target, minLength.shortValue(), maxLength.shortValue());
+                    result = parameterHelper.shortFormat(columnName, target, min.shortValue(), max.shortValue());
                     break;
                 case INTEGER:
-                    result = parameterHelper.integerFormat(columnName, target, minLength.intValue(), maxLength.intValue());
+                    result = parameterHelper.integerFormat(columnName, target, min.intValue(), max.intValue());
                     break;
                 case LONG:
-                    result = parameterHelper.longFormat(columnName, target, minLength.longValue(), maxLength.longValue());
+                    result = parameterHelper.longFormat(columnName, target, min.longValue(), max.longValue());
                     break;
                 case FLOAT:
-                    result = parameterHelper.floatFormat(columnName, target, minLength.floatValue(), maxLength.floatValue());
+                    result = parameterHelper.floatFormat(columnName, target, min.floatValue(), max.floatValue());
                     break;
                 case DOUBLE:
-                    result = parameterHelper.doubleFormat(columnName, target, minLength.doubleValue(), maxLength.doubleValue());
+                    result = parameterHelper.doubleFormat(columnName, target, min.doubleValue(), max.doubleValue());
+                    break;
+                case BIG_DECIMAL:
+                    result = parameterHelper.bigDecimalFormat(columnName, target, scale, roundingMode, (BigDecimal) min, (BigDecimal) max);
                     break;
                 case BOOLEAN:
                     result = parameterHelper.booleanFormat(columnName, target);
@@ -122,28 +189,31 @@ public class ColumnInfo {
             // 不允许为空
             switch (columnTypeEnum) {
                 case STRING:
-                    result = parameterHelper.stringNotEmpty(columnName, target, minLength.intValue(), maxLength.intValue());
+                    result = parameterHelper.stringNotEmpty(columnName, target, min.intValue(), max.intValue());
                     break;
                 case BYTE:
-                    result = parameterHelper.byteFormatNotEmpty(columnName, target, minLength.byteValue(), maxLength.byteValue());
+                    result = parameterHelper.byteFormatNotEmpty(columnName, target, min.byteValue(), max.byteValue());
                     break;
                 case SHORT:
-                    result = parameterHelper.shortFormatNotEmpty(columnName, target, minLength.shortValue(), maxLength.shortValue());
+                    result = parameterHelper.shortFormatNotEmpty(columnName, target, min.shortValue(), max.shortValue());
                     break;
                 case INTEGER:
-                    result = parameterHelper.integerFormatNotEmpty(columnName, target, minLength.intValue(), maxLength.intValue());
+                    result = parameterHelper.integerFormatNotEmpty(columnName, target, min.intValue(), max.intValue());
                     break;
                 case LONG:
-                    result = parameterHelper.longFormatNotEmpty(columnName, target, minLength.longValue(), maxLength.longValue());
+                    result = parameterHelper.longFormatNotEmpty(columnName, target, min.longValue(), max.longValue());
                     break;
                 case FLOAT:
-                    result = parameterHelper.floatFormatNotEmpty(columnName, target, minLength.floatValue(), maxLength.floatValue());
+                    result = parameterHelper.floatFormatNotEmpty(columnName, target, min.floatValue(), max.floatValue());
                     break;
                 case DOUBLE:
-                    result = parameterHelper.doubleFormatNotEmpty(columnName, target, minLength.doubleValue(), maxLength.doubleValue());
+                    result = parameterHelper.doubleFormatNotEmpty(columnName, target, min.doubleValue(), max.doubleValue());
                     break;
                 case BOOLEAN:
                     result = parameterHelper.booleanFormatNotEmpty(columnName, target);
+                    break;
+                case BIG_DECIMAL:
+                    result = parameterHelper.bigDecimalFormatNotEmpty(columnName, target, scale, roundingMode, (BigDecimal) min, (BigDecimal) max);
                     break;
                 case OTHER_OBJECT:
                     parameterHelper.objectNotNull(columnName, target);
@@ -172,12 +242,12 @@ public class ColumnInfo {
         this.columnName = columnName;
     }
 
-    public String getColumnDatabaseName() {
-        return columnDatabaseName;
+    public String getColumnNameInDatabase() {
+        return columnNameInDatabase;
     }
 
-    public void setColumnDatabaseName(String columnDatabaseName) {
-        this.columnDatabaseName = columnDatabaseName;
+    public void setColumnNameInDatabase(String columnNameInDatabase) {
+        this.columnNameInDatabase = columnNameInDatabase;
     }
 
     public ColumnTypeEnum getColumnTypeEnum() {
@@ -212,19 +282,19 @@ public class ColumnInfo {
         this.defaultValue = defaultValue;
     }
 
-    public Number getMinLength() {
-        return minLength;
+    public Number getMin() {
+        return min;
     }
 
-    public void setMinLength(Number minLength) {
-        this.minLength = minLength;
+    public void setMin(Number min) {
+        this.min = min;
     }
 
-    public Number getMaxLength() {
-        return maxLength;
+    public Number getMax() {
+        return max;
     }
 
-    public void setMaxLength(Number maxLength) {
-        this.maxLength = maxLength;
+    public void setMax(Number max) {
+        this.max = max;
     }
 }

@@ -58,7 +58,7 @@ public abstract class BaseDaoHelper implements DaoHelper {
             if (itemExist) {
                 Object valueTemp = columnInfo.checkAndGetColumn(rawData.get(columnInfo.getColumnName()));
                 // 使用属性数据库中名称构造最终键值
-                result.put(columnInfo.getColumnDatabaseName(), valueTemp);
+                result.put(columnInfo.getColumnNameInDatabase(), valueTemp);
             } else if (!columnInfo.isKeyNullable()) {
                 // 属性不存在且该属性不许不存在
                 throw new ParameterRuntimeException("Unexpected " + currentColumnName + ", it can't be null.");
