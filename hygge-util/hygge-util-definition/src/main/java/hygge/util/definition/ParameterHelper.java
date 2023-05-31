@@ -18,6 +18,7 @@ package hygge.util.definition;
 
 import hygge.commons.constant.enums.StringFormatModeEnum;
 import hygge.commons.exception.ParameterRuntimeException;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.definition.InfoMessageSupplier;
 
 import java.math.BigDecimal;
@@ -944,55 +945,55 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * 转化目标为 BigDecimal(允许为空)
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormat(String targetName, String target, int scale, RoundingMode roundingMode);
+    BigDecimal bigDecimalFormat(String targetName, Object target, int scale, RoundingMode roundingMode);
 
     /**
      * 转化目标为 BigDecimal(允许为空)
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param defaultValue 默认值
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormatOfNullable(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal defaultValue);
+    BigDecimal bigDecimalFormatOfNullable(String targetName, Object target, int scale, RoundingMode roundingMode, BigDecimal defaultValue);
 
     /**
      * 转化目标为 BigDecimal(允许为空)
      *
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param defaultValue 默认值
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormatOfNullable(String target, int scale, RoundingMode roundingMode, BigDecimal defaultValue, String errorMessage);
+    BigDecimal bigDecimalFormatOfNullable(Object target, int scale, RoundingMode roundingMode, BigDecimal defaultValue, String errorMessage);
 
 
     /**
      * 转化目标为 BigDecimal(允许为空)
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param min          最小值
      * @param max          最大值
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormat(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max);
+    BigDecimal bigDecimalFormat(String targetName, Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max);
 
     /**
      * 转化目标为 BigDecimal(允许为空)
      *
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param min          最小值
@@ -1000,50 +1001,50 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormat(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage);
+    BigDecimal bigDecimalFormat(Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage);
 
 
     /**
      * 转化目标为 BigDecimal(不许为空)
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormatNotEmpty(String targetName, String target, int scale, RoundingMode roundingMode);
+    BigDecimal bigDecimalFormatNotEmpty(String targetName, Object target, int scale, RoundingMode roundingMode);
 
     /**
      * 转化目标为 BigDecimal(不许为空)
      *
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, String errorMessage);
+    BigDecimal bigDecimalFormatNotEmpty(Object target, int scale, RoundingMode roundingMode, String errorMessage);
 
 
     /**
      * 转化目标为 BigDecimal(不许为空)
      *
      * @param targetName   目标对象名称(用于输出默认异常信息)
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param min          最小值
      * @param max          最大值
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormatNotEmpty(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max);
+    BigDecimal bigDecimalFormatNotEmpty(String targetName, Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max);
 
 
     /**
      * 转化目标为 BigDecimal(不许为空)
      *
-     * @param target       目标对象
+     * @param target       目标对象(为避免精度丢失，该参数写作 Object 但仅允许 BigDecimal、String、Integer、Long 实例，否则抛出异常)
      * @param scale        小数点位数
      * @param roundingMode 精度保留模式
      * @param min          最小值
@@ -1051,7 +1052,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化成 BigDecimal 的结果
      */
-    BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage);
+    BigDecimal bigDecimalFormatNotEmpty(Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage);
 
     /**
      * 默认的 Byte 转化函数<br/>
@@ -1313,7 +1314,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param target     目标对象
      * @return 转化后的数据
      */
-    default BigDecimal parseBigDecimal(String targetName, String target, int scale, RoundingMode roundingMode) {
+    default BigDecimal parseBigDecimal(String targetName, Object target, int scale, RoundingMode roundingMode) {
         return parseBigDecimal(target, scale, roundingMode, unexpectedObject("value", target, targetName, BigDecimal.class.getSimpleName()));
     }
 
@@ -1326,15 +1327,28 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
      * @param errorMessage 不符合预期时的完整异常提示信息
      * @return 转化后的数据
      */
-    default BigDecimal parseBigDecimal(String target, int scale, RoundingMode roundingMode, String errorMessage) {
+    default BigDecimal parseBigDecimal(Object target, int scale, RoundingMode roundingMode, String errorMessage) {
         if (isEmpty(target)) {
             return null;
         }
+
         BigDecimal result = null;
-        try {
-            result = new BigDecimal(target).setScale(scale, roundingMode);
-        } catch (NumberFormatException e) {
-            hookUnexpectedEvent(errorMessage, e);
+        if (target instanceof BigDecimal) {
+            return (BigDecimal) target;
+        }
+
+        if (target instanceof String) {
+            try {
+                result = new BigDecimal((String) target).setScale(scale, roundingMode);
+            } catch (NumberFormatException e) {
+                hookUnexpectedEvent(errorMessage, e);
+            }
+        } else if (target instanceof Integer) {
+            result = new BigDecimal((Integer) target).setScale(scale, roundingMode);
+        } else if (target instanceof Long) {
+            result = new BigDecimal((Long) target).setScale(scale, roundingMode);
+        } else {
+            hookUnexpectedEvent(errorMessage, new UtilRuntimeException("To avoid loss of precision, \"parseBigDecimal()\" only allows BigDecimal/String/Integer/Long instances as input parameters."));
         }
         return result;
     }

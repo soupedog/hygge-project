@@ -676,13 +676,13 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormat(String targetName, String target, int scale, RoundingMode roundingMode) {
+    public BigDecimal bigDecimalFormat(String targetName, Object target, int scale, RoundingMode roundingMode) {
         BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
         return hookBigDecimal(result);
     }
 
     @Override
-    public BigDecimal bigDecimalFormatOfNullable(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal defaultValue) {
+    public BigDecimal bigDecimalFormatOfNullable(String targetName, Object target, int scale, RoundingMode roundingMode, BigDecimal defaultValue) {
         BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
         if (result == null) {
             result = defaultValue;
@@ -691,7 +691,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormatOfNullable(String target, int scale, RoundingMode roundingMode, BigDecimal defaultValue, String errorMessage) {
+    public BigDecimal bigDecimalFormatOfNullable(Object target, int scale, RoundingMode roundingMode, BigDecimal defaultValue, String errorMessage) {
         BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
         if (result == null) {
             result = defaultValue;
@@ -700,7 +700,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormat(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max) {
+    public BigDecimal bigDecimalFormat(String targetName, Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max) {
         BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
 
         boolean notNull = result != null;
@@ -711,7 +711,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormat(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage) {
+    public BigDecimal bigDecimalFormat(Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage) {
         BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
 
         boolean notNull = result != null;
@@ -722,7 +722,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormatNotEmpty(String targetName, String target, int scale, RoundingMode roundingMode) {
+    public BigDecimal bigDecimalFormatNotEmpty(String targetName, Object target, int scale, RoundingMode roundingMode) {
         BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
 
         objectNotNull(targetName, result);
@@ -731,7 +731,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, String errorMessage) {
+    public BigDecimal bigDecimalFormatNotEmpty(Object target, int scale, RoundingMode roundingMode, String errorMessage) {
         BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
 
         objectNotNull(result, errorMessage);
@@ -740,7 +740,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormatNotEmpty(String targetName, String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max) {
+    public BigDecimal bigDecimalFormatNotEmpty(String targetName, Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max) {
         BigDecimal result = parseBigDecimal(targetName, target, scale, roundingMode);
 
         objectNotNull(targetName, result);
@@ -752,7 +752,7 @@ public abstract class BaseParameterHelper implements ParameterHelper {
     }
 
     @Override
-    public BigDecimal bigDecimalFormatNotEmpty(String target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage) {
+    public BigDecimal bigDecimalFormatNotEmpty(Object target, int scale, RoundingMode roundingMode, BigDecimal min, BigDecimal max, String errorMessage) {
         BigDecimal result = parseBigDecimal(target, scale, roundingMode, errorMessage);
 
         objectNotNull(result, errorMessage);
