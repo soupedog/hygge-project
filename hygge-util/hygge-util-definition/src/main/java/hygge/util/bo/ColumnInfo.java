@@ -145,10 +145,17 @@ public class ColumnInfo {
         this.columnTypeEnum = columnTypeEnum;
         this.keyNullable = parameterHelper.booleanFormatNotEmpty("keyNullable", keyNullable);
         this.valueNullable = parameterHelper.booleanFormatNotEmpty("valueNullable", valueNullable);
-        parameterHelper.objectNotNull("min", min);
-        this.min = min;
-        parameterHelper.objectNotNull("max", max);
-        this.max = max;
+
+        switch (this.columnTypeEnum) {
+            case BOOLEAN:
+            case OTHER_OBJECT:
+                break;
+            default:
+                parameterHelper.objectNotNull("min", min);
+                this.min = min;
+                parameterHelper.objectNotNull("max", max);
+                this.max = max;
+        }
     }
 
     /**
