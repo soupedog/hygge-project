@@ -75,10 +75,6 @@ public class ColumnInfo {
      */
     private RoundingMode roundingMode;
 
-    public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, int minLength, Byte maxLength) {
-        init(columnName, columnNameInDatabase, ColumnTypeEnum.STRING, keyNullable, valueNullable, minLength, maxLength);
-    }
-
     public ColumnInfo(boolean keyNullable, boolean valueNullable, String columnName, String columnNameInDatabase, Byte min, Byte max) {
         init(columnName, columnNameInDatabase, ColumnTypeEnum.BYTE, keyNullable, valueNullable, min, max);
     }
@@ -125,6 +121,20 @@ public class ColumnInfo {
      */
     public ColumnInfo toBooleanColumn() {
         this.columnTypeEnum = ColumnTypeEnum.BOOLEAN;
+        return this;
+    }
+
+    /**
+     * 将复杂对象简单验证非空性转化成 String 类型验证非空性/字符串长度的语法糖，常按如下方法使用
+     *
+     * <pre>
+     *     new ColumnInfo(false,true,"testKey",null).toStringColumn(1, 8);
+     * </pre>
+     */
+    public ColumnInfo toStringColumn(int minLength, int maxLength) {
+        this.columnTypeEnum = ColumnTypeEnum.STRING;
+        this.min = minLength;
+        this.max = maxLength;
         return this;
     }
 
