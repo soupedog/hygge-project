@@ -16,9 +16,9 @@
 
 package hygge.web.util.http.configuration;
 
-import hygge.web.util.http.configuration.enums.HttpLogType;
-
 import java.util.StringJoiner;
+
+import static hygge.web.util.http.configuration.HttpHelperConfiguration.HttpLogType;
 
 /**
  * HttpHelper 发起网络请求配置项

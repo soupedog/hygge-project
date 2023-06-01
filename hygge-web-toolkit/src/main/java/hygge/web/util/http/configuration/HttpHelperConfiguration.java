@@ -17,9 +17,11 @@
 package hygge.web.util.http.configuration;
 
 import hygge.commons.spring.config.configuration.definition.HyggeSpringConfigurationProperties;
-import hygge.web.util.http.configuration.inner.ConnectionConfiguration;
-import hygge.web.util.http.configuration.enums.HttpLogType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.convert.DurationUnit;
+
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 网络请求工具配置项
@@ -65,5 +67,94 @@ public class HttpHelperConfiguration implements HyggeSpringConfigurationProperti
 
     public void setConnection(ConnectionConfiguration connection) {
         this.connection = connection;
+    }
+
+    /**
+     * 网络请求工具 日志格式 类型
+     *
+     * @author Xavier
+     * @date 2022/7/12
+     * @since 1.0
+     */
+    public enum HttpLogType {
+        /**
+         * 不输出日志
+         */
+        NONE,
+        /**
+         * 标准
+         */
+        STANDARD,
+        /**
+         * 标准的基础上去除 response 的 Headers
+         */
+        NO_RESPONSE_HEADERS,
+        /**
+         * 标准的基础上去除 request、response 的 Headers
+         */
+        NO_HEADERS,
+        /**
+         * 标准的基础上去除 request、response 的 body
+         */
+        NO_BODY,
+        /**
+         * 标准的基础上去除 request、response 的 Headers 与 body
+         */
+        NO_HEADERS_BODY,
+        ;
+    }
+
+    /**
+     * 网络请求工具配置项 内嵌配置项
+     *
+     * @author Xavier
+     * @date 2022/7/12
+     * @since 1.0
+     */
+    public static class ConnectionConfiguration {
+        @DurationUnit(ChronoUnit.SECONDS)
+        private Duration connectTimeOut = Duration.ofSeconds(30);
+        @DurationUnit(ChronoUnit.SECONDS)
+        private Duration readTimeOut = Duration.ofSeconds(30);
+        /**
+         * 全体域合计最大并发
+         */
+        private int maxTotal = 400;
+        /**
+         * 每个域下最大并发
+         */
+        private int maxPerRoute = 200;
+
+        public Duration getConnectTimeOut() {
+            return connectTimeOut;
+        }
+
+        public void setConnectTimeOut(Duration connectTimeOut) {
+            this.connectTimeOut = connectTimeOut;
+        }
+
+        public Duration getReadTimeOut() {
+            return readTimeOut;
+        }
+
+        public void setReadTimeOut(Duration readTimeOut) {
+            this.readTimeOut = readTimeOut;
+        }
+
+        public int getMaxTotal() {
+            return maxTotal;
+        }
+
+        public void setMaxTotal(int maxTotal) {
+            this.maxTotal = maxTotal;
+        }
+
+        public int getMaxPerRoute() {
+            return maxPerRoute;
+        }
+
+        public void setMaxPerRoute(int maxPerRoute) {
+            this.maxPerRoute = maxPerRoute;
+        }
     }
 }

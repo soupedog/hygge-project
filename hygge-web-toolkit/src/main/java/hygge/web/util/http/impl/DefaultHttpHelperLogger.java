@@ -18,7 +18,6 @@ package hygge.web.util.http.impl;
 
 import hygge.web.util.http.bo.HttpResponse;
 import hygge.web.util.http.configuration.HttpHelperRequestConfiguration;
-import hygge.web.util.http.configuration.enums.HttpLogType;
 import hygge.web.util.http.definition.HttpHelperLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,8 @@ import org.springframework.http.HttpHeaders;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import static hygge.web.util.http.configuration.HttpHelperConfiguration.HttpLogType;
 
 /**
  * HttpHelper 默认日志记录器

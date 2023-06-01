@@ -16,8 +16,8 @@
 
 package hygge.commons.spring.config.configuration;
 
+import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
 import hygge.commons.spring.config.configuration.definition.HyggeSpringConfigurationProperties;
-import hygge.commons.spring.config.configuration.inner.HyggeCodeValidatorConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -37,5 +37,27 @@ public class HyggeSpringValidatorConfiguration implements HyggeSpringConfigurati
 
     public void setHyggeCode(HyggeCodeValidatorConfiguration hyggeCode) {
         this.hyggeCode = hyggeCode;
+    }
+
+    /**
+     * HyggeCode 校验配置项
+     *
+     * @author Xavier
+     * @date 2023/3/28
+     * @since 1.0
+     */
+    public static class HyggeCodeValidatorConfiguration {
+        /**
+         * 自定义 HyggeCode 实现类所在包路径。 ({@link GlobalHyggeCodeEnum} 会自动追加，无需手工指定)
+         */
+        private String basePackages;
+
+        public String getBasePackages() {
+            return basePackages;
+        }
+
+        public void setBasePackages(String basePackages) {
+            this.basePackages = basePackages;
+        }
     }
 }

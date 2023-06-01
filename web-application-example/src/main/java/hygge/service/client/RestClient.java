@@ -4,7 +4,6 @@ import hygge.domain.RestApiRequest;
 import hygge.domain.RestApiResponse;
 import hygge.web.util.http.bo.HttpResponse;
 import hygge.web.util.http.configuration.HttpHelperRequestConfiguration;
-import hygge.web.util.http.configuration.enums.HttpLogType;
 import hygge.web.util.http.impl.DefaultHttpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -13,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import static hygge.web.util.http.configuration.HttpHelperConfiguration.HttpLogType;
 
 /**
  * @author Xavier
