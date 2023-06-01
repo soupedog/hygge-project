@@ -159,7 +159,6 @@ public abstract class HyggeLogConfiguration {
      */
     protected void sharedCheckAndInit() {
         this.projectName = parameterHelper.stringOfNullable(this.projectName, "hygge");
-        this.appName = HyggeSpringContext.getAppName();
         this.version = parameterHelper.stringOfNullable(this.version, "1.0.0");
 
         this.enable = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE.getKey(), this.enable, true);
