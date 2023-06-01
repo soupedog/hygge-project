@@ -43,7 +43,7 @@ import java.util.Set;
  */
 @Component
 @EnableConfigurationProperties(HyggeSpringValidatorConfiguration.class)
-@ConditionalOnExpression("#{environment['hygge.web-toolkit.validator.hyggeCode.basePackages'] != null}")
+@ConditionalOnExpression("#{environment['hygge.web-toolkit.validator.hygge-code.base-packages'] != null}")
 public class HyggeCodeUniqueValidator implements HyggeSpringValidator {
     @Autowired
     private HyggeSpringValidatorConfiguration hyggeSpringValidatorConfiguration;
