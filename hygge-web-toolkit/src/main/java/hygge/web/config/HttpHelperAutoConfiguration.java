@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(value = HttpHelperConfiguration.class)
-@ConditionalOnProperty(value = "hygge.util.httpHelper.default.autoRegister", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "hygge.util.http-helper.default.auto-register", havingValue = "true", matchIfMissing = true)
 public class HttpHelperAutoConfiguration implements HyggeAutoConfiguration {
     private static final Logger log = LoggerFactory.getLogger(HttpHelperAutoConfiguration.class);
 
