@@ -1,0 +1,131 @@
+{
+  "hints": [
+    {
+      "name": "hygge.web-toolkit.controller.log.auto-register",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "hygge.util.http-helper.default.auto-register",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "hygge.util.http-helper.default.ignore-s-s-l",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "hygge.util.http-helper.default.log-type",
+      "values": [
+        {
+          "value": "NONE"
+        },
+        {
+          "value": "STANDARD"
+        },
+        {
+          "value": "NO_RESPONSE_HEADERS"
+        },
+        {
+          "value": "NO_HEADERS"
+        },
+        {
+          "value": "NO_BODY"
+        },
+        {
+          "value": "NO_HEADERS_BODY"
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "hygge.web-toolkit.controller.log.auto-register",
+      "type": "java.lang.Boolean",
+      "description": "Controller 层是否为 REST 请求开启基于 AOP 实现的出入参日志功能.",
+      "sourceType": "hygge.web.util.log.configuration.ControllerLogConfiguration",
+      "defaultValue": true
+    },
+    {
+      "name": "hygge.web-toolkit.controller.log.aspect-order",
+      "type": "java.lang.Integer",
+      "description": "Controller 层请求日志 AOP 切面优先级.",
+      "sourceType": "hygge.web.util.log.configuration.ControllerLogConfiguration",
+      "defaultValue": 2147483645
+    },
+    {
+      "name": "hygge.web-toolkit.validator.hygge-code.base-packages",
+      "type": "java.lang.String",
+      "description": "自定义 HyggeCode 所在的包路径，多个时用 \",\" 分隔.",
+      "sourceType": "hygge.commons.spring.config.configuration.HyggeSpringValidatorConfiguration"
+    },
+    {
+      "name": "hygge.util.http-helper.default.auto-register",
+      "type": "java.lang.Boolean",
+      "description": "是否自动在 Spring 上下文中注册默认的 HttpHelper 实例.",
+      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
+      "defaultValue": true
+    },
+    {
+      "name": "hygge.util.http-helper.default.ignore-s-s-l",
+      "type": "java.lang.Boolean",
+      "description": "自动在 Spring 上下文中注册的默认 HttpHelper 实例是否忽略 https 证书校验.",
+      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
+      "defaultValue": false
+    },
+    {
+      "name": "hygge.util.http-helper.default.log-type",
+      "type": "hygge.web.util.http.configuration.HttpHelperConfiguration$HttpLogType",
+      "description": "自动在 Spring 上下文中注册的默认 HttpHelper 实例的网络请求自动日志类型.",
+      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration",
+      "defaultValue": "NO_RESPONSE_HEADERS"
+    },
+    {
+      "name": "hygge.util.http-helper.default.connection.connect-time-out",
+      "type": "java.time.Duration",
+      "description": "自动在 Spring 上下文中注册的默认 HttpHelper 实例的网络请求连接超时时间.",
+      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration$ConnectionConfiguration",
+      "defaultValue": "30S"
+    },
+    {
+      "name": "hygge.util.http-helper.default.connection.read-time-out",
+      "type": "java.time.Duration",
+      "description": "自动在 Spring 上下文中注册的默认 HttpHelper 实例的网络请求读取超时时间.",
+      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration$ConnectionConfiguration",
+      "defaultValue": "30S"
+    },
+    {
+      "name": "hygge.util.http-helper.default.connection.max-total",
+      "type": "java.lang.Integer",
+      "description": "自动在 Spring 上下文中注册的默认 HttpHelper 实例进行网络请求的全域合计最大并发数.",
+      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration$ConnectionConfiguration",
+      "defaultValue": 400
+    },
+    {
+      "name": "hygge.util.http-helper.default.connection.max-per-route",
+      "type": "java.lang.Integer",
+      "description": "自动在 Spring 上下文中注册的默认 HttpHelper 实例进行网络请求的单独域下最大并发.",
+      "sourceType": "hygge.web.util.http.configuration.HttpHelperConfiguration$ConnectionConfiguration",
+      "defaultValue": 400
+    }
+  ]
+}
