@@ -78,7 +78,7 @@ public abstract class HyggeLogConfiguration {
      * 每条日志整体作为 json 字符串<br/>
      * 显式指定 {@link HyggeLogConfiguration#rootPattern} / {@link HyggeLogConfiguration#hyggePattern} 时，该参数无意义
      */
-    protected Boolean enableJsonType;
+    protected Boolean enableJsonMode;
     /**
      * 控制台日志模板是否启用彩色
      */
@@ -140,7 +140,7 @@ public abstract class HyggeLogConfiguration {
         this.hyggeScopePaths = binder.bind(HYGGE_SCOPE_PATH_PREFIX, HYGGE_SCOPE_PATH_MAPPING).orElseGet(Collections::emptyMap);
 
         this.enableRootOverride = parameterHelper.booleanFormat(ConfigKey.ROOT_OVERRIDE.getKey(), configurableEnvironment.getProperty(ConfigKey.ROOT_OVERRIDE.getKey()));
-        this.enableJsonType = parameterHelper.booleanFormat(ConfigKey.ENABLE_JSON_TYPE.getKey(), configurableEnvironment.getProperty(ConfigKey.ENABLE_JSON_TYPE.getKey()));
+        this.enableJsonMode = parameterHelper.booleanFormat(ConfigKey.ENABLE_JSON_MODE.getKey(), configurableEnvironment.getProperty(ConfigKey.ENABLE_JSON_MODE.getKey()));
         this.enableColorfulConsole = parameterHelper.booleanFormat(ConfigKey.ENABLE_COLORFUL_CONSOLE.getKey(), configurableEnvironment.getProperty(ConfigKey.ENABLE_COLORFUL_CONSOLE.getKey()));
         this.rootPattern = configurableEnvironment.getProperty(ConfigKey.ROOT_PATTERN.getKey());
         this.hyggePattern = configurableEnvironment.getProperty(ConfigKey.HYGGE_PATTERN.getKey());
@@ -165,7 +165,7 @@ public abstract class HyggeLogConfiguration {
         this.enable = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE.getKey(), this.enable, true);
 
         this.enableRootOverride = parameterHelper.booleanFormatOfNullable(ConfigKey.ROOT_OVERRIDE.getKey(), this.enableRootOverride, true);
-        this.enableJsonType = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_JSON_TYPE.getKey(), this.enableJsonType, false);
+        this.enableJsonMode = parameterHelper.booleanFormatOfNullable(ConfigKey.ENABLE_JSON_MODE.getKey(), this.enableJsonMode, false);
 
         // 非 DEV 环境默认值
         if (HyggeSpringContext.getDeploymentEnvironment().getPrivilegeLevel() > DeploymentEnvironmentEnum.DEV.getPrivilegeLevel()) {
@@ -193,11 +193,11 @@ public abstract class HyggeLogConfiguration {
         /**
          * 项目名称
          */
-        PROJECT_NAME("hygge.logging.projectName"),
+        PROJECT_NAME("hygge.logging.project-name"),
         /**
          * 应用名称(默认会使用 spring.application.name)
          */
-        APP_NAME("hygge.logging.appName"),
+        APP_NAME("hygge.logging.app-name"),
         /**
          * 应用版本号
          */
@@ -205,11 +205,11 @@ public abstract class HyggeLogConfiguration {
         /**
          * 是否覆写 {@link org.slf4j.Logger.ROOT_LOGGER_NAME} 对应的 Logger
          */
-        ROOT_OVERRIDE("hygge.logging.rootOverride.enable"),
+        ROOT_OVERRIDE("hygge.logging.root-override.enable"),
         /**
          * hygge 包路径范围
          */
-        HYGGE_SCOPE_PATHS("hygge.logging.scope.paths"),
+        HYGGE_SCOPE_PATHS("hygge.logging.scope-paths"),
         /**
          * 日志模板是否启用彩色
          */
@@ -230,7 +230,7 @@ public abstract class HyggeLogConfiguration {
          * 每条日志整体作为 json 字符串<br/>
          * 显式指定 {@link HyggeLogConfiguration#rootPattern} / {@link HyggeLogConfiguration#hyggePattern} 时，该参数无意义
          */
-        ENABLE_JSON_TYPE("hygge.logging.pattern.jsonType.enable"),
+        ENABLE_JSON_MODE("hygge.logging.pattern.json-mode.enable"),
         /**
          * 日志内容编码模式
          */
@@ -243,37 +243,37 @@ public abstract class HyggeLogConfiguration {
          * log4j 专有配置项<br/>
          * 日志文件存储路径
          */
-        LOG4J_FILE_PATH("hygge.logging.log4j.pattern.file.path"),
+        LOG4J_FILE_PATH("hygge.logging.log4j.pattern.file-path"),
         /**
          * log4j 专有配置项<br/>
          * 单个日志文件最大文件大小
          */
-        LOG4J_FILE_MAX_SIZE("hygge.logging.log4j.pattern.file.maxSize"),
+        LOG4J_FILE_MAX_SIZE("hygge.logging.log4j.pattern.file-max-size"),
         /**
          * log4j 专有配置项<br/>
          * 日志文件截断触发时间 cron 表达式
          */
-        LOG4J_CRON_TRIGGER("hygge.logging.log4j.pattern.file.cron"),
+        LOG4J_CRON_TRIGGER("hygge.logging.log4j.pattern.file-rollover-cron"),
         /**
          * logback 专有配置项<br/>
          * root 日志文件存储路径
          */
-        LOGBACK_FILE_NAME_PATTERN_ROOT("hygge.logging.logback.pattern.fileNamePattern.root"),
+        LOGBACK_FILE_NAME_PATTERN_ROOT("hygge.logging.logback.pattern.root.file-name-pattern"),
         /**
          * logback 专有配置项<br/>
          * hygge 日志文件存储路径
          */
-        LOGBACK_FILE_NAME_PATTERN_HYGGE("hygge.logging.logback.pattern.fileNamePattern.hygge"),
+        LOGBACK_FILE_NAME_PATTERN_HYGGE("hygge.logging.logback.pattern.hygge.file-name-pattern"),
         /**
          * logback 专有配置项<br/>
          * 单个日志文件最大文件大小
          */
-        LOGBACK_FILE_MAX_SIZE("hygge.logging.logback.pattern.file.maxSize"),
+        LOGBACK_FILE_MAX_SIZE("hygge.logging.logback.pattern.file-max-size"),
         /**
          * logback 专有配置项<br/>
          * 日志文件保留的最长时间
          */
-        LOGBACK_FILE_MAX_HISTORY("hygge.logging.logback.pattern.file.maxHistory"),
+        LOGBACK_FILE_MAX_HISTORY("hygge.logging.logback.pattern.file-max-history"),
         ;
 
         ConfigKey(String key) {
@@ -338,12 +338,12 @@ public abstract class HyggeLogConfiguration {
         this.enableRootOverride = enableRootOverride;
     }
 
-    public boolean isEnableJsonType() {
-        return enableJsonType;
+    public boolean getEnableJsonMode() {
+        return enableJsonMode;
     }
 
-    public void setEnableJsonType(boolean enableJsonType) {
-        this.enableJsonType = enableJsonType;
+    public void setEnableJsonMode(boolean enableJsonMode) {
+        this.enableJsonMode = enableJsonMode;
     }
 
     public boolean getEnableColorfulConsole() {

@@ -57,7 +57,7 @@ public class HyggeLogbackPatterHelper implements HyggeLogPatterHelper {
 
         String finalPatter;
 
-        if (configuration.isEnableJsonType()) {
+        if (configuration.getEnableJsonMode()) {
             String type = actualHyggeScope ? "hygge" : "root";
 
             HyggeLogbackJsonPatterHelper hyggeLogbackJsonPatterHelper = new HyggeLogbackJsonPatterHelper(

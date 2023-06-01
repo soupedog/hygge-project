@@ -12,7 +12,7 @@
       ]
     },
     {
-      "name": "hygge.logging.rootOverride.enable",
+      "name": "hygge.logging.root-override.enable",
       "values": [
         {
           "value": true
@@ -23,21 +23,7 @@
       ]
     },
     {
-      "name": "hygge.logging.scope.paths.keys",
-      "values": [
-        {
-          "value": "root",
-          "description": "Root logger used to assign the default logging level."
-        },
-        {
-          "value": "sql",
-          "description": "SQL logging group including Hibernate SQL logger."
-        },
-        {
-          "value": "web",
-          "description": "Web logging group including codecs."
-        }
-      ],
+      "name": "hygge.logging.scope-paths.keys",
       "providers": [
         {
           "name": "logger-name"
@@ -45,7 +31,7 @@
       ]
     },
     {
-      "name": "hygge.logging.scope.paths.values",
+      "name": "hygge.logging.scope-paths.values",
       "values": [
         {
           "value": true
@@ -82,119 +68,171 @@
           "value": "CONSOLE_AND_FILE"
         }
       ]
+    },
+    {
+      "name": "hygge.logging.pattern.colorful.console.enable",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "hygge.logging.pattern.colorful.file.enable",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
+    },
+    {
+      "name": "hygge.logging.pattern.json-mode.enable",
+      "values": [
+        {
+          "value": true
+        },
+        {
+          "value": false
+        }
+      ]
     }
   ],
   "properties": [
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.enable",
       "type": "java.lang.Boolean",
+      "description": "是否开启 hygge-logging 自动装配.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": true
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.projectName",
+      "name": "hygge.logging.project-name",
       "type": "java.lang.String",
+      "description": "作为固定值的项目名称.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": "hygge"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.appName",
-      "type": "java.lang.String"
+      "name": "hygge.logging.app-name",
+      "type": "java.lang.String",
+      "description": "作为固定值的应用名称.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.version",
       "type": "java.lang.String",
+      "description": "作为固定值的应用版本名称.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": "1.0.0"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.rootOverride.enable",
+      "name": "hygge.logging.root-override.enable",
       "type": "java.lang.Boolean",
+      "description": "是否用 hygge-logging 的配置项覆写 Root Logger.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": true
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.scope.paths",
+      "name": "hygge.logging.scope-paths",
       "type": "java.util.Map<java.lang.String,java.lang.Boolean>",
-      "description": "激活 Hygge 日志的包目录"
+      "description": "Hygge 范围所容纳的包路径.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.colorful.console.enable",
       "type": "java.lang.Boolean",
+      "description": "控制台日志输出是否开启彩色显示.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": true
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.colorful.file.enable",
       "type": "java.lang.Boolean",
+      "description": "文件日志输出是否开启彩色显示.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": false
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.root",
-      "type": "java.lang.String"
+      "type": "java.lang.String",
+      "description": "自定义的 root 模块日志模板.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.hygge",
-      "type": "java.lang.String"
+      "type": "java.lang.String",
+      "description": "自定义的 hygge 模块日志模板.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.pattern.jsonType.enable",
-      "type": "java.lang.Boolean"
+      "name": "hygge.logging.pattern.json-mode.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否开启单条日志作为 json 字符串输出.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.pattern.converter.mode",
       "type": "hygge.logging.enums.ConverterModeEnum",
+      "description": "日志的文本编码模式.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": "DEFAULT"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "name": "hygge.logging.output.mode",
-      "type": "hygge.logging.enums.OutputModeEnum"
+      "type": "hygge.logging.enums.OutputModeEnum",
+      "description": "日志内容输出模式.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.log4j.pattern.file.path",
-      "type": "java.lang.String"
+      "name": "hygge.logging.log4j.pattern.file-path",
+      "type": "java.lang.String",
+      "description": "日志内容输出为文件时的存储目录.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.log4j.pattern.file.maxSize",
+      "name": "hygge.logging.log4j.pattern.file-max-size",
       "type": "org.springframework.util.unit.DataSize",
+      "description": "日志内容输出为文件时的单个文件最大容量.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": "2MB"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.log4j.pattern.file.cron",
+      "name": "hygge.logging.log4j.pattern.file-rollover-cron",
       "type": "java.lang.String",
+      "description": "日志内容输出为文件时的滚动策略的 cron 表达式.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": "0 0 0 * * ?"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.logback.pattern.fileNamePattern.root",
-      "type": "java.lang.String"
+      "name": "hygge.logging.logback.pattern.root.file-name-pattern",
+      "type": "java.lang.String",
+      "description": "日志内容输出为文件时 root 模块的存储全路径.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.logback.pattern.fileNamePattern.hygge",
-      "type": "java.lang.String"
+      "name": "hygge.logging.logback.pattern.hygge.file-name-pattern",
+      "type": "java.lang.String",
+      "description": "日志内容输出为文件时 hygge 模块的存储全路径.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.logback.pattern.file.maxSize",
+      "name": "hygge.logging.logback.pattern.file-max-size",
       "type": "org.springframework.util.unit.DataSize",
+      "description": "日志内容输出为文件时的单个文件最大容量.",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": "2MB"
     },
     {
-      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
-      "name": "hygge.logging.logback.pattern.file.maxHistory",
+      "name": "hygge.logging.logback.pattern.file-max-history",
       "type": "java.lang.Integer",
+      "description": "日志内容输出为文件时历史保留时长的单位时间倍数(0 代表永久保存).",
+      "sourceType": "hygge.logging.config.configuration.base.HyggeLogConfiguration",
       "defaultValue": 0
     }
   ]
