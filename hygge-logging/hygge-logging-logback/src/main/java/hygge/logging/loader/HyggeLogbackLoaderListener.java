@@ -136,13 +136,13 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
         OutputModeEnum outputMode = configuration.getOutputMode();
 
         // 包含控制台输出模式时，往结果集里添加控制台 Appender
-        if (outputMode.equals(OutputModeEnum.CONSOLE) || outputMode.equals(OutputModeEnum.CONSOLE_AND_FILE)) {
+        if (OutputModeEnum.CONSOLE.equals(outputMode) || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
             LayoutWrappingEncoder<ILoggingEvent> consoleEncoder = createEncoder(configuration, isHyggeScope, configuration.getEnableColorfulConsole(), OutputModeEnum.CONSOLE, loggerContext);
             result.add(createConsoleAppender(isHyggeScope, loggerContext, consoleEncoder));
         }
 
         // 包含控制台输出模式时，往结果集里添加文件输出 Appender
-        if (outputMode.equals(OutputModeEnum.FILE) || outputMode.equals(OutputModeEnum.CONSOLE_AND_FILE)) {
+        if (OutputModeEnum.FILE.equals(outputMode) || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
             LayoutWrappingEncoder<ILoggingEvent> fileEncoder = createEncoder(configuration, isHyggeScope, configuration.getEnableColorfulFile(), OutputModeEnum.FILE, loggerContext);
             result.add(createFileAppender(isHyggeScope, loggerContext, configuration, fileEncoder));
         }
@@ -232,7 +232,7 @@ public class HyggeLogbackLoaderListener implements Ordered, ApplicationListener<
 
         Map<String, String> defaultConverterMap = layout.getDefaultConverterMap();
 
-        if (OutputModeEnum.FILE.equals(configuration.getOutputMode())) {
+        if (OutputModeEnum.FILE.equals(configuration.getOutputMode()) || OutputModeEnum.CONSOLE_AND_FILE.equals(configuration.getOutputMode())) {
             defaultConverterMap.put("d", HyggeLogbackTimeStampConverter.class.getName());
             defaultConverterMap.put("date", HyggeLogbackTimeStampConverter.class.getName());
         }

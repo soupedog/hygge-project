@@ -146,8 +146,7 @@ public class HyggeLogLog4jLoaderListener implements Ordered, ApplicationListener
 
         OutputModeEnum outputMode = hyggeLg4jConfiguration.getOutputMode();
 
-        if (OutputModeEnum.CONSOLE.equals(outputMode)
-                || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
+        if (OutputModeEnum.CONSOLE.equals(outputMode) || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
             Layout<?> consoleLayout = createLayout(configuration, hyggeLg4jConfiguration, actualHyggeScope, hyggeLg4jConfiguration.getEnableColorfulConsole(), OutputModeEnum.CONSOLE);
 
             ConsoleAppender consoleAppender = ConsoleAppender.newBuilder()
@@ -158,8 +157,7 @@ public class HyggeLogLog4jLoaderListener implements Ordered, ApplicationListener
             result.add(consoleAppender);
         }
 
-        if (OutputModeEnum.FILE.equals(outputMode)
-                || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
+        if (OutputModeEnum.FILE.equals(outputMode) || OutputModeEnum.CONSOLE_AND_FILE.equals(outputMode)) {
 
             Layout<?> fileLayout = createLayout(configuration, hyggeLg4jConfiguration, actualHyggeScope, hyggeLg4jConfiguration.getEnableColorfulFile(), OutputModeEnum.FILE);
 
