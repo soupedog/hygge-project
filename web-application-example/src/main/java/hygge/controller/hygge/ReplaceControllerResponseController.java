@@ -28,7 +28,8 @@ public class ReplaceControllerResponseController implements HyggeController<Resp
      * 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，需要对自定义 HyggeCode 进行额外处理，见 {@link CustomSystemCode}
      */
     private static final HyggeControllerResponseWrapper<ResponseEntity<?>> customResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
-        ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus);
+        // "status(HttpStatus status)" 方法在 Spring Boot 3.x 环境中不存在了，此处用 int 型重载进行兼容性优化
+        ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus.value());
         return result.body(entity);
     };
 

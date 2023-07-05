@@ -164,7 +164,8 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
     }
 
     default ResponseEntity.BodyBuilder getBuilder(HttpStatus httpStatus) {
-        ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus);
+        // "status(HttpStatus status)" 方法在 Spring Boot 3.x 环境中不存在了，此处用 int 型重载进行兼容性优化
+        ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus.value());
         result.contentType(MediaType.APPLICATION_JSON);
         return result;
     }
