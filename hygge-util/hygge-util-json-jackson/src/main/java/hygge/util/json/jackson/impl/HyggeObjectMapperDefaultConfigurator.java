@@ -32,6 +32,7 @@ import hygge.util.json.jackson.definition.HyggeObjectMapperConfigurator;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 /**
  * 对 {@link ObjectMapper} 进行配置的工具的默认实现
@@ -83,11 +84,13 @@ public class HyggeObjectMapperDefaultConfigurator implements HyggeObjectMapperCo
                 throw new UtilRuntimeException("Unexpected config of JsonHelper<ObjectMapper>,they should come from MapperFeature,SerializationFeature,DeserializationFeature,JsonParser.Feature,JsonGenerator.Feature.");
             }
         }
+        // 时间戳处理时区默认为系统时区
+        objectMapper.setTimeZone(TimeZone.getDefault());
         // 为 null 的属性默认不参与序列化
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         // 注册默认的时间对象处理机制
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false);
-        objectMapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, false);
+        // 不使用数字类型时间戳
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 }
