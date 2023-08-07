@@ -17,9 +17,9 @@
 package hygge.util.base;
 
 
-import hygge.commons.template.definition.DateTimeFormatMode;
 import hygge.commons.constant.enums.DateTimeFormatModeEnum;
 import hygge.commons.exception.ParameterRuntimeException;
+import hygge.commons.template.definition.DateTimeFormatMode;
 import hygge.util.UtilCreator;
 import hygge.util.definition.ParameterHelper;
 import hygge.util.definition.TimeHelper;
@@ -59,65 +59,58 @@ public abstract class BaseTimeHelper implements TimeHelper {
     public abstract void initZoneOffset();
 
     @Override
-    public long parse(String target, DateTimeFormatMode dateTimeFormatMode) {
-        return parse(target, dateTimeFormatMode, defaultZoneOffset);
+    public long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode) {
+        return parse(stringTimestamp, dateTimeFormatMode, defaultZoneOffset);
     }
 
     @Override
-    public long parse(String target, DateTimeFormatMode dateTimeFormatMode, ZoneOffset targetZoneOffset) {
-        parameterHelper.objectNotNull("target", (Object) target);
+    public long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode, ZoneOffset stringTimestampZoneOffset) {
+        parameterHelper.objectNotNull("stringTimestamp", (Object) stringTimestamp);
         parameterHelper.objectNotNull("dateTimeFormatMode", dateTimeFormatMode);
-        parameterHelper.objectNotNull("targetZoneOffset", targetZoneOffset);
+        parameterHelper.objectNotNull("stringTimestampZoneOffset", stringTimestampZoneOffset);
 
         long result;
         try {
             if (dateTimeFormatMode.withTimeZone()) {
-                ZonedDateTime targetZonedDateTime = ZonedDateTime.parse(target, dateTimeFormatMode.getDateTimeFormatter());
+                ZonedDateTime targetZonedDateTime = ZonedDateTime.parse(stringTimestamp, dateTimeFormatMode.getDateTimeFormatter());
                 result = targetZonedDateTime.toInstant().toEpochMilli();
             } else {
+                // 不带时区的时间对象
                 LocalDateTime targetLocalTime;
-                if (DateTimeFormatModeEnum.FULL_TRIM.equals(dateTimeFormatMode)) {
-                    // Warning  parse(target, DateTimeFormatMode.FULL_TRIM, targetZoneOffset)
-                    // @see "https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8031085"
-                    // jdk 8 存在 bug，jdk 9 以后才能正确运行携带毫秒信息的时间模板
-                    // 下为兼容 java 8 的补救方式
-                    String theFirstPart = target.substring(0, 14);
-                    long millisecondVal = Long.parseLong(target.substring(14, 17)) * 1000000;
-                    targetLocalTime = LocalDateTime.parse(theFirstPart, dateTimeFormatMode.getDateTimeFormatter());
-                    targetLocalTime = targetLocalTime.plusNanos(millisecondVal);
-                } else if (DateTimeFormatModeEnum.DATE.equals(dateTimeFormatMode)) {
-                    targetLocalTime = LocalDateTime.parse(target + " 00:00:00", dateTimeFormatMode.getDateTimeFormatter());
-                } else {
-                    targetLocalTime = LocalDateTime.parse(target, dateTimeFormatMode.getDateTimeFormatter());
-                }
-                result = targetLocalTime.toInstant(targetZoneOffset).toEpochMilli();
-            }
 
+                if (DateTimeFormatModeEnum.DATE.equals(dateTimeFormatMode)) {
+                    targetLocalTime = LocalDateTime.parse(stringTimestamp + " 00:00:00", dateTimeFormatMode.getDateTimeFormatter());
+                } else {
+                    targetLocalTime = LocalDateTime.parse(stringTimestamp, dateTimeFormatMode.getDateTimeFormatter());
+                }
+                // 指定基于 UTC 时区的偏移量，并转化为 UTC long 型时间戳
+                result = targetLocalTime.toInstant(stringTimestampZoneOffset).toEpochMilli();
+            }
             return result;
         } catch (DateTimeParseException exception) {
             throw new ParameterRuntimeException(
-                    "Fail to parse " + target + " to " + dateTimeFormatMode.getPattern() + ".",
+                    "Fail to parse " + stringTimestamp + " to " + dateTimeFormatMode.getPattern() + ".",
                     exception);
         }
     }
 
     @Override
-    public String format(Long target, DateTimeFormatMode dateTimeFormatMode) {
-        return format(target, dateTimeFormatMode, defaultZoneOffset);
+    public String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode) {
+        return format(utcMillisecond, dateTimeFormatMode, defaultZoneOffset);
     }
 
     @Override
-    public String format(Long target, DateTimeFormatMode dateTimeFormatMode, ZoneOffset resultZoneOffset) {
-        parameterHelper.objectNotNull("target", target);
+    public String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode, ZoneOffset stringTimestampZoneOffset) {
+        parameterHelper.objectNotNull("utcMillisecond", utcMillisecond);
         parameterHelper.objectNotNull("dateTimeFormatModeEnum", dateTimeFormatMode);
-        parameterHelper.objectNotNull("targetZoneOffset", resultZoneOffset);
+        parameterHelper.objectNotNull("stringTimestampZoneOffset", stringTimestampZoneOffset);
 
         try {
-            ZonedDateTime targetTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(target), resultZoneOffset);
+            ZonedDateTime targetTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(utcMillisecond), stringTimestampZoneOffset);
             return targetTime.format(dateTimeFormatMode.getDateTimeFormatter());
         } catch (DateTimeException exception) {
             throw new ParameterRuntimeException(
-                    "Fail to format " + target + " to " + dateTimeFormatMode.getPattern() + ".",
+                    "Fail to format " + utcMillisecond + " to " + dateTimeFormatMode.getPattern() + ".",
                     exception);
         }
     }

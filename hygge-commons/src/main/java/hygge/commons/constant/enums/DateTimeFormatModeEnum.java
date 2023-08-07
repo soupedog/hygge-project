@@ -19,6 +19,8 @@ package hygge.commons.constant.enums;
 import hygge.commons.template.definition.DateTimeFormatMode;
 
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 
 /**
  * 日期格式化模式枚举
@@ -46,8 +48,16 @@ public enum DateTimeFormatModeEnum implements DateTimeFormatMode {
     DEFAULT_TRIM("yyyyMMddHHmmss", DateTimeFormatter.ofPattern("yyyyMMddHHmmss"), false),
     /**
      * 样例： 2020123041828000
+     *
+     * <p>
+     * 为什么此处 DateTimeFormatter 创建与其他的不一样？这里是兼容 Java 8 的 workaround<br/>
+     * <p>
+     * 事实上 java 9 及以上是允许 "DateTimeFormatter.ofPattern()" 传入 "yyyyMMddHHmmssSSS" 的
+     *
+     * @see <a href="https://bugs.openjdk.org/browse/JDK-8031085">(Open JDK) DateTimeFormatter won't parse dates with custom format "yyyyMMddHHmmssSSS"</a>
+     * @see <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8031085">(Oracle JDK) DateTimeFormatter won't parse dates with custom format "yyyyMMddHHmmssSSS"</a>
      */
-    FULL_TRIM("yyyyMMddHHmmssSSS", DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"), false),
+    FULL_TRIM("yyyyMMddHHmmssSSS", new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter(), false),
     /**
      * 样例： 2021-08-22T22:22:05.000+0800
      */

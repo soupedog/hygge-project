@@ -20,6 +20,7 @@ package hygge.util.impl;
 import hygge.util.base.BaseTimeHelper;
 
 import java.time.ZoneOffset;
+import java.util.TimeZone;
 
 /**
  * 默认的 TimeHelper 实现类<br/>
@@ -32,7 +33,10 @@ import java.time.ZoneOffset;
 public class DefaultTimeHelper extends BaseTimeHelper {
     @Override
     public void initZoneOffset() {
-        // 默认 Asia/Shanghai 东八区
-        defaultZoneOffset = ZoneOffset.of("+8");
+        // 默认为应用部署时区
+        TimeZone timeZone = TimeZone.getDefault();
+        // 毫秒转秒，精度下降到秒级别
+        int offsetSecond = timeZone.getRawOffset() / 1000;
+        defaultZoneOffset = ZoneOffset.ofTotalSeconds(offsetSecond);
     }
 }
