@@ -46,6 +46,11 @@ public class HyggeSpringValidatorRunnerListener implements Ordered, ApplicationL
 
         Map<String, HyggeSpringValidator> validatorMap = context.getBeansOfType(HyggeSpringValidator.class);
 
+        // 未检测到 "HyggeSpringValidator" 实例时提前结束
+        if (validatorMap.isEmpty()) {
+            return;
+        }
+
         List<HyggeSpringValidator> hyggeSpringValidatorList = new ArrayList<>(validatorMap.values());
 
         // 从小到大排序
