@@ -1,2 +1,3 @@
 hygge.web.config.HttpHelperAutoConfiguration
 hygge.web.config.ControllerLogAutoConfiguration
+hygge.commons.spring.validator.config.HyggeSpringValidatorAutoConfiguration

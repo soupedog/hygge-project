@@ -76,7 +76,7 @@
       "name": "hygge.web-toolkit.validator.hygge-code.base-packages",
       "type": "java.lang.String",
       "description": "自定义 HyggeCode 所在的包路径，多个时用 \",\" 分隔.",
-      "sourceType": "hygge.commons.spring.config.configuration.HyggeSpringValidatorConfiguration"
+      "sourceType": "hygge.commons.spring.validator.configuration.HyggeSpringValidatorConfiguration"
     },
     {
       "name": "hygge.util.http-helper.default.auto-register",

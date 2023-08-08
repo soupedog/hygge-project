@@ -16,6 +16,7 @@
 
 package example.hygge;
 
+import example.hygge.config.SpringEventPrintListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -34,6 +35,7 @@ public class Application {
          * 等价于 "SpringApplication.run(Application.class)"
          * */
         SpringApplication springApplication = new SpringApplication(Application.class);
+        springApplication.addListeners(new SpringEventPrintListener());
         springApplication.run(args);
     }
 }

@@ -28,7 +28,7 @@ import org.springframework.core.Ordered;
 public interface HyggeSpringValidator extends HyggeValidator, Ordered {
 
     /**
-     * 不用于与其他 Spring bean 先后顺序调整，仅用于调整 HyggeSpringValidator 实例间的排序
+     * 不用于与其他 Spring bean 先后顺序调整，仅用于调整 HyggeSpringValidator 实例间的相对排序
      */
     @Override
     default int getOrder() {

@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=hygge.web.config.HttpHelperAutoConfiguration,hygge.web.config.ControllerLogAutoConfiguration
+org.springframework.context.ApplicationListener=hygge.commons.spring.listener.HyggeSpringValidatorRunnerListener
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=hygge.web.config.HttpHelperAutoConfiguration,hygge.web.config.ControllerLogAutoConfiguration,hygge.commons.spring.validator.config.HyggeSpringValidatorAutoConfiguration

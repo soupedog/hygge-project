@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hygge.commons.spring.config.configuration;
+package hygge.commons.spring.validator.configuration;
 
 import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
 import hygge.commons.spring.config.configuration.definition.HyggeSpringConfigurationProperties;

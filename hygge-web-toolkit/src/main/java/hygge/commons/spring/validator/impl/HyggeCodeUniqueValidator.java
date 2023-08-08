@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package hygge.commons.spring.validator;
+package hygge.commons.spring.validator.impl;
 
 import hygge.commons.exception.InternalRuntimeException;
-import hygge.commons.spring.config.configuration.HyggeSpringValidatorConfiguration;
+import hygge.commons.spring.validator.configuration.HyggeSpringValidatorConfiguration;
 import hygge.commons.spring.validator.definition.HyggeSpringValidator;
 import hygge.commons.template.definition.HyggeCode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AssignableTypeFilter;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,12 +37,12 @@ import java.util.Set;
  * @date 2023/3/28
  * @since 1.0
  */
-@Component
-@EnableConfigurationProperties(HyggeSpringValidatorConfiguration.class)
-@ConditionalOnExpression("#{environment['hygge.web-toolkit.validator.hygge-code.base-packages'] != null}")
 public class HyggeCodeUniqueValidator implements HyggeSpringValidator {
-    @Autowired
     private HyggeSpringValidatorConfiguration hyggeSpringValidatorConfiguration;
+
+    public HyggeCodeUniqueValidator(HyggeSpringValidatorConfiguration hyggeSpringValidatorConfiguration) {
+        this.hyggeSpringValidatorConfiguration = hyggeSpringValidatorConfiguration;
+    }
 
     @Override
     public void validate() {
@@ -113,5 +109,13 @@ public class HyggeCodeUniqueValidator implements HyggeSpringValidator {
             }
         }
         return result;
+    }
+
+    public HyggeSpringValidatorConfiguration getHyggeSpringValidatorConfiguration() {
+        return hyggeSpringValidatorConfiguration;
+    }
+
+    public void setHyggeSpringValidatorConfiguration(HyggeSpringValidatorConfiguration hyggeSpringValidatorConfiguration) {
+        this.hyggeSpringValidatorConfiguration = hyggeSpringValidatorConfiguration;
     }
 }
