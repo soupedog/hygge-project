@@ -19,10 +19,10 @@ package hygge.commons.spring.validator.config;
 import hygge.commons.spring.config.configuration.definition.HyggeAutoConfiguration;
 import hygge.commons.spring.validator.configuration.HyggeSpringValidatorConfiguration;
 import hygge.commons.spring.validator.impl.HyggeCodeUniqueValidator;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * 默认的 HyggeSpringValidator 自动注册器
@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2023/8/8
  * @since 1.0
  */
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(value = HyggeSpringValidatorConfiguration.class)
 public class HyggeSpringValidatorAutoConfiguration implements HyggeAutoConfiguration {
     @Bean

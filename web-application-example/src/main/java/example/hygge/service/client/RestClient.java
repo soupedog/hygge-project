@@ -58,7 +58,7 @@ public class RestClient {
                 new RestApiRequest(),
                 RestApiResponse.class);
 
-        if (responseTemp.expected(HttpStatus.OK, HttpStatus.ACCEPTED)) {
+        if (responseTemp.expected(HttpStatus.OK.value(), HttpStatus.ACCEPTED.value())) {
             // 如果 HTTP Status Code 是 200/202 的任意一种
             RestApiResponse response = responseTemp.getData();
         } else {

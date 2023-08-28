@@ -17,7 +17,6 @@
 package hygge.web.util.http.impl;
 
 import hygge.commons.exception.UtilRuntimeException;
-import hygge.commons.template.container.base.AbstractHyggeKeeper;
 import hygge.util.UtilCreator;
 import hygge.util.definition.ParameterHelper;
 import hygge.web.util.http.configuration.HttpHelperConfiguration;
@@ -25,12 +24,12 @@ import hygge.web.util.http.configuration.HttpHelperRequestConfiguration;
 import hygge.web.util.http.definition.HttpHelperRestTemplateFactory;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
@@ -53,13 +52,12 @@ import java.util.List;
  * @date 2022/7/12
  * @since 1.0
  */
-public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<HttpHelperRequestConfiguration, RestTemplate> implements HttpHelperRestTemplateFactory {
+public class DefaultHttpHelperRestTemplateFactory implements HttpHelperRestTemplateFactory {
     protected static ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     protected HttpHelperConfiguration httpHelperConfiguration;
     protected HttpHelperRequestConfiguration defaultRequestConfiguration;
-    private final HttpClientBuilder httpClientBuilder;
-    private final HttpClientBuilder ignoreSSLHttpClientBuilder;
+    protected RestTemplateKeeper restTemplateKeeper;
     protected static final StringHttpMessageConverter STRING_HTTP_MESSAGE_CONVERTER_UTF8 = new StringHttpMessageConverter(StandardCharsets.UTF_8);
     protected static final ResponseErrorHandler DEFAULT_RESPONSE_ERROR_HANDLER = new ResponseErrorHandler() {
         @Override
@@ -74,19 +72,23 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
     };
 
     public DefaultHttpHelperRestTemplateFactory(HttpHelperConfiguration httpHelperConfiguration) {
-        this.httpHelperConfiguration = httpHelperConfiguration;
+        initConfiguration(httpHelperConfiguration);
+        this.restTemplateKeeper = new RestTemplateKeeper();
+    }
 
+    public DefaultHttpHelperRestTemplateFactory(HttpHelperConfiguration httpHelperConfiguration, RestTemplateKeeper restTemplateKeeper) {
+        initConfiguration(httpHelperConfiguration);
+        this.restTemplateKeeper = restTemplateKeeper;
+    }
+
+    protected void initConfiguration(HttpHelperConfiguration httpHelperConfiguration) {
+        this.httpHelperConfiguration = httpHelperConfiguration;
         this.defaultRequestConfiguration = new HttpHelperRequestConfiguration(
                 httpHelperConfiguration.getLogType(),
                 httpHelperConfiguration.isIgnoreSSL(),
                 httpHelperConfiguration.getConnection().getConnectTimeOut().toMillis(),
                 httpHelperConfiguration.getConnection().getReadTimeOut().toMillis()
         );
-
-        this.httpClientBuilder = HttpClientBuilder.create();
-        this.httpClientBuilder.setConnectionManager(getHttpClientConnectionManager(false));
-        this.ignoreSSLHttpClientBuilder = HttpClientBuilder.create();
-        this.ignoreSSLHttpClientBuilder.setConnectionManager(getHttpClientConnectionManager(true));
     }
 
     @Override
@@ -95,7 +97,7 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
             config = defaultRequestConfiguration;
         }
 
-        RestTemplate result = getValue(config);
+        RestTemplate result = restTemplateKeeper.getValue(config);
         if (result == null) {
             result = newInstance(config);
         }
@@ -108,25 +110,59 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
     }
 
     private synchronized RestTemplate newInstance(HttpHelperRequestConfiguration config) {
-        RestTemplate result = getValue(config);
+        RestTemplate result = restTemplateKeeper.getValue(config);
         if (result != null) {
             return result;
         }
 
-        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        CloseableHttpClient closeableHttpClient = config.ignoreSSL() ? ignoreSSLHttpClientBuilder.build()
-                : httpClientBuilder.build();
-        httpRequestFactory.setHttpClient(closeableHttpClient);
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder
+                .create()
+                .setConnectionManager(getHttpClientConnectionManager(config));
 
+        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        httpRequestFactory.setHttpClient(httpClientBuilder.build());
         httpRequestFactory.setConnectTimeout(parameterHelper.integerFormat("connectTimeOutMilliseconds", config.connectTimeOutMilliseconds()));
-        httpRequestFactory.setReadTimeout(parameterHelper.integerFormat("readTimeOutMilliseconds", config.readTimeOutMilliseconds()));
 
         result = new RestTemplate(httpRequestFactory);
-        toSupportUTF8(result);
-        result.setErrorHandler(getResponseErrorHandler());
 
-        saveValue(config, result);
+        toSupportUTF8(result);
+        result.setErrorHandler(DEFAULT_RESPONSE_ERROR_HANDLER);
+
+        restTemplateKeeper.saveValue(config, result);
         return result;
+    }
+
+    private HttpClientConnectionManager getHttpClientConnectionManager(HttpHelperRequestConfiguration config) {
+        PoolingHttpClientConnectionManager poolingConnectionManager;
+
+        if (config.ignoreSSL()) {
+            TrustStrategy acceptingTrustStrategy = (x509Certificates, authType) -> true;
+            SSLContext sslContext;
+            try {
+                sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
+            } catch (Exception e) {
+                throw new UtilRuntimeException("Fail to init DefaultHttpHelperRestTemplateFactory.", e);
+            }
+            SSLConnectionSocketFactory connectionSocketFactory = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                    .register("https", connectionSocketFactory)
+                    .build();
+            poolingConnectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        } else {
+            poolingConnectionManager = new PoolingHttpClientConnectionManager();
+        }
+
+        SocketConfig.Builder builder = SocketConfig.custom();
+
+        SocketConfig socketConfig = builder.setSoTimeout(parameterHelper.integerFormat("readTimeOutMilliseconds", config.readTimeOutMilliseconds()))
+                .build();
+
+        poolingConnectionManager.setDefaultSocketConfig(socketConfig);
+
+        poolingConnectionManager.setMaxTotal(httpHelperConfiguration.getConnection().getMaxTotal());
+        poolingConnectionManager.setDefaultMaxPerRoute(httpHelperConfiguration.getConnection().getMaxPerRoute());
+        return poolingConnectionManager;
     }
 
     protected void toSupportUTF8(RestTemplate result) {
@@ -146,33 +182,15 @@ public class DefaultHttpHelperRestTemplateFactory extends AbstractHyggeKeeper<Ht
         }
     }
 
-    private ResponseErrorHandler getResponseErrorHandler() {
-        return DEFAULT_RESPONSE_ERROR_HANDLER;
+    public RestTemplateKeeper getRestTemplateKeeper() {
+        return restTemplateKeeper;
     }
 
-    private HttpClientConnectionManager getHttpClientConnectionManager(boolean ignoreSSL) {
-        PoolingHttpClientConnectionManager poolingConnectionManager;
+    public void setRestTemplateKeeper(RestTemplateKeeper restTemplateKeeper) {
+        this.restTemplateKeeper = restTemplateKeeper;
+    }
 
-        if (ignoreSSL) {
-            TrustStrategy acceptingTrustStrategy = (x509Certificates, authType) -> true;
-            SSLContext sslContext;
-            try {
-                sslContext = SSLContexts.custom().loadTrustMaterial(null, acceptingTrustStrategy).build();
-            } catch (Exception e) {
-                throw new UtilRuntimeException("Fail to init DefaultHttpHelperRestTemplateFactory.", e);
-            }
-            SSLConnectionSocketFactory connectionSocketFactory = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                    .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                    .register("https", connectionSocketFactory)
-                    .build();
-            poolingConnectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-        } else {
-            poolingConnectionManager = new PoolingHttpClientConnectionManager();
-        }
-
-        poolingConnectionManager.setMaxTotal(httpHelperConfiguration.getConnection().getMaxTotal());
-        poolingConnectionManager.setDefaultMaxPerRoute(httpHelperConfiguration.getConnection().getMaxPerRoute());
-        return poolingConnectionManager;
+    public void reloadHttpHelperConfiguration(HttpHelperConfiguration httpHelperConfiguration) {
+        initConfiguration(httpHelperConfiguration);
     }
 }

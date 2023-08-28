@@ -28,11 +28,11 @@ import hygge.web.util.http.impl.DefaultHttpHelperResponseEntityReader;
 import hygge.web.util.http.impl.DefaultHttpHelperRestTemplateFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * HttpHelper 自动注册器
@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2022/7/13
  * @since 1.0
  */
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(value = HttpHelperConfiguration.class)
 @ConditionalOnProperty(value = "hygge.util.http-helper.default.auto-register", havingValue = "true", matchIfMissing = true)
 public class HttpHelperAutoConfiguration implements HyggeAutoConfiguration {

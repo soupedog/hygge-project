@@ -19,20 +19,20 @@ package hygge.web.config;
 import hygge.commons.spring.HyggeSpringContext;
 import hygge.commons.spring.config.configuration.definition.HyggeAutoConfiguration;
 import hygge.web.util.log.ControllerLogAdvisor;
-import hygge.web.util.log.inner.ControllerLogHandlerCache;
 import hygge.web.util.log.ControllerLogInterceptor;
 import hygge.web.util.log.ControllerLogPointCut;
 import hygge.web.util.log.configuration.ControllerLogConfiguration;
 import hygge.web.util.log.definition.ControllerLogHandlerFactory;
 import hygge.web.util.log.impl.DefaultControllerLogHandlerFactory;
+import hygge.web.util.log.inner.ControllerLogHandlerCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Controller 层日志自动注册器
@@ -41,7 +41,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2022/7/15
  * @since 1.0
  */
-@Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(value = ControllerLogConfiguration.class)
 @ConditionalOnProperty(value = "hygge.web-toolkit.controller.log.auto-register", havingValue = "true", matchIfMissing = true)
 public class ControllerLogAutoConfiguration implements HyggeAutoConfiguration, BeanPostProcessor {

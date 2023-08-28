@@ -23,8 +23,6 @@ import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.util.json.jackson.serializer.HyggeLogInfoSerializer;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 
 /**
  * 网络请求工具 返回值
@@ -35,29 +33,41 @@ import org.springframework.http.HttpStatus;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HttpResponse<R, T> {
+    public static final Integer HTTP_STATUS_OK = 200;
     protected static final JsonHelper<?> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
 
     protected Long startTs;
     protected Long cost;
-    protected HttpMethod httpMethod;
+    /**
+     * 因为 spring 6.x 不向前兼容的改动，为了 spring boot 3.x 的兼容性，此处降级为字符串类型
+     * <p>
+     * {@link org.springframework.http.HttpMethod} 在 spring 6.x 中不再是枚举类
+     */
+    protected String httpMethod;
     protected String url;
     protected HttpHeaders requestHeaders;
     @JsonSerialize(using = HyggeLogInfoSerializer.class)
     protected R requestData;
     protected Boolean exceptionOccurred;
-    protected HttpStatus httpStatus;
+    /**
+     * 因为 spring 6.x 不向前兼容的改动，为了 spring boot 3.x 的兼容性，此处降级为数字类型
+     *
+     * @see org.springframework.http.HttpStatus
+     * @see org.springframework.http.HttpStatusCode
+     */
+    protected Integer httpStatus;
     protected HttpHeaders responseHeaders;
     @JsonSerialize(using = HyggeLogInfoSerializer.class)
     protected T data;
     protected String originalResponse;
 
-    public HttpResponse(Long startTs, String url, HttpMethod httpMethod) {
+    public HttpResponse(Long startTs, String url, String httpMethod) {
         this.startTs = startTs;
         this.url = url;
         this.httpMethod = httpMethod;
     }
 
-    public void initResponse(HttpStatus httpStatus, HttpHeaders responseHeaders) {
+    public void initResponse(Integer httpStatus, HttpHeaders responseHeaders) {
         this.httpStatus = httpStatus;
         this.responseHeaders = responseHeaders;
     }
@@ -67,7 +77,7 @@ public class HttpResponse<R, T> {
         // No exceptions triggered
         return (exceptionOccurred == null || Boolean.FALSE.equals(exceptionOccurred))
                 // HttpStatus is 200
-                && HttpStatus.OK.equals(httpStatus);
+                && HTTP_STATUS_OK.equals(httpStatus);
     }
 
     @JsonIgnore
@@ -75,12 +85,18 @@ public class HttpResponse<R, T> {
         return !isSuccess();
     }
 
+    /**
+     * 为了 Spring 6.x 的兼容性，此处收到波及，入参不够明确。推荐入参写法：
+     * <pre>
+     *     expected(HttpStatus.OK.value(), HttpStatus.ACCEPTED.value())
+     * </pre>
+     */
     @JsonIgnore
-    public boolean expected(HttpStatus... expected) {
+    public boolean expected(Integer... expected) {
         if (httpStatus == null) {
             return false;
         }
-        for (HttpStatus item : expected) {
+        for (Integer item : expected) {
             if (item.equals(httpStatus)) {
                 return true;
             }
@@ -122,11 +138,11 @@ public class HttpResponse<R, T> {
         this.cost = cost;
     }
 
-    public HttpMethod getHttpMethod() {
+    public String getHttpMethod() {
         return httpMethod;
     }
 
-    public void setHttpMethod(HttpMethod httpMethod) {
+    public void setHttpMethod(String httpMethod) {
         this.httpMethod = httpMethod;
     }
 
@@ -162,11 +178,11 @@ public class HttpResponse<R, T> {
         this.exceptionOccurred = exceptionOccurred;
     }
 
-    public HttpStatus getHttpStatus() {
+    public Integer getHttpStatus() {
         return httpStatus;
     }
 
-    public void setHttpStatus(HttpStatus httpStatus) {
+    public void setHttpStatus(Integer httpStatus) {
         this.httpStatus = httpStatus;
     }
 

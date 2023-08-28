@@ -39,9 +39,9 @@ import org.springframework.web.client.RestTemplate;
  * @since 1.0
  */
 public class DefaultHttpHelper implements HttpHelper {
-    private HttpHelperRestTemplateFactory httpHelperRestTemplateFactory;
-    private HttpHelperLogger httpHelperLogger;
-    private HttpHelperResponseEntityReader httpHelperResponseEntityReader;
+    protected HttpHelperRestTemplateFactory httpHelperRestTemplateFactory;
+    protected HttpHelperLogger httpHelperLogger;
+    protected HttpHelperResponseEntityReader httpHelperResponseEntityReader;
 
     public DefaultHttpHelper(HttpHelperRestTemplateFactory httpHelperRestTemplateFactory, HttpHelperLogger httpHelperLogger, HttpHelperResponseEntityReader httpHelperResponseEntityReader) {
         this.httpHelperRestTemplateFactory = httpHelperRestTemplateFactory;
@@ -191,7 +191,7 @@ public class DefaultHttpHelper implements HttpHelper {
         }
 
         Long startTs = System.currentTimeMillis();
-        HttpResponse<R, T> result = new HttpResponse<>(startTs, url, httpMethod);
+        HttpResponse<R, T> result = new HttpResponse<>(startTs, url, httpMethod.name());
         RestTemplate restTemplate = httpHelperRestTemplateFactory.getInstance(configuration);
         E originalResponse = null;
 
@@ -200,7 +200,7 @@ public class DefaultHttpHelper implements HttpHelper {
             result.setRequestHeaders(requestHeaders);
             result.setRequestData(requestObject);
             ResponseEntity<E> responseEntity = restTemplate.exchange(url, httpMethod, requestEntity, responseClassInfo);
-            result.initResponse(responseEntity.getStatusCode(), responseEntity.getHeaders());
+            result.initResponse(responseEntity.getStatusCode().value(), responseEntity.getHeaders());
             originalResponse = responseEntity.getBody();
             @SuppressWarnings("unchecked")
             T data = (T) httpHelperResponseEntityReader.readAsObjectSmart(originalResponse, dataClassInfo);
