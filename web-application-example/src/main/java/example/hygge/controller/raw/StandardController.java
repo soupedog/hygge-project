@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "RawStandardController", description = "Raw 默认标准模板")
 public class StandardController extends HyggeWebUtilContainer implements HyggeController<ResponseEntity<?>> {
     /**
-     * 仅用于 AOP 性能评估，见 {@link hygge.controller.hygge.RawControllerTest}
+     * 仅用于 AOP 性能评估，见 {@link example.hygge.controller.raw.RawControllerTest}
      * <p>
      * 在近似完成相同工作量的情况下，一个 aop 一个非 aop
      */

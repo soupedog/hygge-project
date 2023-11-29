@@ -41,7 +41,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Tag(name = "StandardHyggeController", description = "默认标准模板")
 public class StandardHyggeController implements HyggeController<ResponseEntity<?>> {
     /**
-     * 这是示例：swagger 不友好型，除非你手动特殊标记描述性注解，不然swagger 几乎提供不了信息
+     * 这是示例：swagger 不友好型，除非你手动特殊标记描述性注解，不然 swagger 几乎提供不了参考信息
      */
     @GetMapping("/standard/swaggerUnfriendly")
     @ApiResponse(description = "swagger 不友好形式，仅能通过 swagger 相关注解、配置方式描述出参数据结构，否则出参数据结构无法展示", responseCode = "200")

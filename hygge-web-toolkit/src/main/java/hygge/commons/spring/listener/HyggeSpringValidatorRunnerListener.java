@@ -69,7 +69,7 @@ public class HyggeSpringValidatorRunnerListener implements Ordered, ApplicationL
             validatorNames.add(validator.getClass().getSimpleName());
         }
 
-        log.info("HyggeSpringValidators execution successful:{}", validatorNames);
+        log.info("HyggeSpringValidators were successfully implemented:{}", validatorNames);
     }
 
     @Override

@@ -23,6 +23,7 @@ import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.util.json.jackson.serializer.HyggeLogInfoSerializer;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 /**
  * 网络请求工具 返回值
@@ -33,7 +34,6 @@ import org.springframework.http.HttpHeaders;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HttpResponse<R, T> {
-    public static final Integer HTTP_STATUS_OK = 200;
     protected static final JsonHelper<?> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
 
     protected Long startTs;
@@ -76,8 +76,10 @@ public class HttpResponse<R, T> {
     public boolean isSuccess() {
         // No exceptions triggered
         return (exceptionOccurred == null || Boolean.FALSE.equals(exceptionOccurred))
+                // HttpStatus is not null
+                && httpStatus != null
                 // HttpStatus is 200
-                && HTTP_STATUS_OK.equals(httpStatus);
+                && HttpStatus.OK.value() == httpStatus;
     }
 
     @JsonIgnore
@@ -86,7 +88,7 @@ public class HttpResponse<R, T> {
     }
 
     /**
-     * 为了 Spring 6.x 的兼容性，此处收到波及，入参不够明确。推荐入参写法：
+     * 为了 Spring 6.x 的兼容性，此处受到波及，入参不够明确。推荐入参写法：
      * <pre>
      *     expected(HttpStatus.OK.value(), HttpStatus.ACCEPTED.value())
      * </pre>
