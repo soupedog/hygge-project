@@ -16,6 +16,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <hygge.version>0.0.12</hygge.version>
         <spring.boot.version>2.7.18</spring.boot.version>
+        <lombok.version>1.18.30</lombok.version>
     </properties>
 
     <dependencies>
@@ -59,6 +60,28 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <!-- to learn more, see ControllerLogPointCut & StandardReflectionParameterNameDiscoverer -->
+                    <!-- it's equivalent to "<parameters>true</parameters>"-->
+                    <compilerArgument>-parameters</compilerArgument>
+                    <compilerArgument>-Xlint:unchecked</compilerArgument>
+                    <!-- depending on your project -->
+                    <source>${maven.compiler.source}</source>
+                    <!-- depending on your project -->
+                    <target>${maven.compiler.target}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
@@ -70,6 +93,13 @@
                         </exclude>
                     </excludes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

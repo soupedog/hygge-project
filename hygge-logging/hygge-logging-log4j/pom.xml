@@ -32,11 +32,6 @@
             <artifactId>spring-boot-starter-log4j2</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>io.github.soupedog</groupId>
-            <artifactId>hygge-logging-definition</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
     </dependencies>
 
 </project>
