@@ -87,7 +87,7 @@ spring.application.name=xxx
   </a>
 </p>
 
-**Warning:** Due to the use of some classes that will be removed in Spring 6.x, hygge-project is not compatible with Spring boot 3.2.x.When we have enough free time, we may create a new standalone branch for hygge-project to support Spring boot 3.x.x.
+**Warning:** Due to the use of some classes that will be removed in ``spring 6.x``, ``hygge-project`` is not compatible with ``spring-boot 3.2.x`` or higher.When we have enough free time, we may create a new standalone branch for hygge-project to support ``spring-boot 3.x.x``.
 
 If you are using Maven just add the following dependency to your pom.xml:
 

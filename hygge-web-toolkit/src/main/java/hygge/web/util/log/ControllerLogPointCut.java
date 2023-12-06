@@ -19,14 +19,15 @@ package hygge.web.util.log;
 import hygge.commons.annotation.HyggeExpressionInfo;
 import hygge.web.template.definition.AutoLogController;
 import hygge.web.util.log.annotation.ControllerLog;
-import hygge.web.util.log.inner.ControllerLogHandlerCache;
-import hygge.web.util.log.enums.ControllerLogType;
 import hygge.web.util.log.base.BaseControllerLogHandler;
 import hygge.web.util.log.definition.ControllerLogHandlerFactory;
+import hygge.web.util.log.enums.ControllerLogType;
+import hygge.web.util.log.inner.ControllerLogHandlerCache;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +51,10 @@ import java.util.Set;
  * @since 1.0
  */
 public class ControllerLogPointCut extends StaticMethodMatcherPointcut implements BeanPostProcessor {
+    /**
+     * Spring 6.x 未来会移除 {@link LocalVariableTableParameterNameDiscoverer}，我们未来计划使用 {@link StandardReflectionParameterNameDiscoverer} 进行替换，尽管它存在前置要求<br/>
+     * 未替换前，将无法与 Spring boot 3.2.x 保持兼容
+     */
     protected static final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     protected ControllerLogHandlerCache controllerLogHandlerCache;
     protected ControllerLogHandlerFactory controllerLogHandlerFactory;
@@ -70,6 +75,11 @@ public class ControllerLogPointCut extends StaticMethodMatcherPointcut implement
         if (configuration != null && !configuration.enable()) {
             // 如果使用配置项注解主动关闭当前方法的自动日志，直接跳过
             return false;
+        }
+
+        if (controllerLogHandlerCache.getValue(method) != null) {
+            // 已初始化完毕的方法无需再次初始化 BaseControllerLogHandler 对象
+            return true;
         }
 
         ControllerLogType type;
