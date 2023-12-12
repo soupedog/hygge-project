@@ -51,17 +51,24 @@ import java.util.Set;
  * @since 1.0
  */
 public class ControllerLogPointCut extends StaticMethodMatcherPointcut implements BeanPostProcessor {
-    /**
-     * Spring 6.x 未来会移除 {@link LocalVariableTableParameterNameDiscoverer}，我们未来计划使用 {@link StandardReflectionParameterNameDiscoverer} 进行替换，尽管它存在前置要求<br/>
-     * 未替换前，将无法与 Spring boot 3.2.x 保持兼容
-     */
-    protected static final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    protected ParameterNameDiscoverer parameterNameDiscoverer;
     protected ControllerLogHandlerCache controllerLogHandlerCache;
     protected ControllerLogHandlerFactory controllerLogHandlerFactory;
 
     public ControllerLogPointCut(ControllerLogHandlerCache controllerLogHandlerCache, ControllerLogHandlerFactory controllerLogHandlerFactory) {
         this.controllerLogHandlerCache = controllerLogHandlerCache;
         this.controllerLogHandlerFactory = controllerLogHandlerFactory;
+        init();
+    }
+
+    /**
+     * Spring 6.x 未来会移除 {@link LocalVariableTableParameterNameDiscoverer}
+     * <p>
+     * 可以尝试使用 {@link StandardReflectionParameterNameDiscoverer} 进行替换，尽管它存在前置要求<br/>
+     * 未替换前，将无法与 Spring boot 3.2.x 保持兼容
+     */
+    protected void init() {
+        this.parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
     }
 
     @Override
