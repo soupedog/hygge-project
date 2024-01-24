@@ -14,7 +14,7 @@
 
 # Links
 
-- [中文文档](https://github.com/soupedog/hygge-project/wiki/Document_ch)
+- [中文文档](https://github.com/soupedog/hygge-project/wiki/Document_zh_CN)
 
 # Introduction
 
