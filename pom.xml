@@ -37,10 +37,15 @@
 
     <modules>
         <module>hygge-commons</module>
-        <module>hygge-commons-spring-boot</module>
-        <module>hygge-logging</module>
-        <module>hygge-util</module>
-        <module>hygge-web-toolkit</module>
+        <module>hygge-util/hygge-util-definition</module>
+        <module>hygge-util/hygge-util-core</module>
+        <module>hygge-util/hygge-util-json-jackson</module>
+        <module>hygge-logging/hygge-logging-definition</module>
+        <module>hygge-logging/hygge-logging-log4j</module>
+        <module>hygge-logging/hygge-logging-logback</module>
+        <module>spring-boot/hygge-commons-spring-boot</module>
+        <module>spring-boot/hygge-web-toolkit</module>
+        <module>web-application-example</module>
     </modules>
 
     <properties>
