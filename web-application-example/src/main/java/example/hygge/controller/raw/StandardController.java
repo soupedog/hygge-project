@@ -18,7 +18,7 @@ package example.hygge.controller.raw;
 
 import example.hygge.domain.ControllerResponse;
 import example.hygge.domain.User;
-import hygge.web.template.HyggeWebUtilContainer;
+import hygge.util.template.HyggeJsonUtilContainer;
 import hygge.web.template.definition.HyggeController;
 import hygge.web.util.log.bo.ControllerLogInfo;
 import hygge.web.util.log.enums.ControllerLogType;
@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Hidden
 @RestController
 @Tag(name = "RawStandardController", description = "Raw 默认标准模板")
-public class StandardController extends HyggeWebUtilContainer implements HyggeController<ResponseEntity<?>> {
+public class StandardController extends HyggeJsonUtilContainer implements HyggeController<ResponseEntity<?>> {
     /**
      * 仅用于 AOP 性能评估，见 {@link example.hygge.controller.raw.RawControllerTest}
      * <p>

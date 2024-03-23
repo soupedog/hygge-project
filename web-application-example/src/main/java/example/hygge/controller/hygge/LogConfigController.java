@@ -24,7 +24,7 @@ import example.hygge.domain.User;
 import example.hygge.domain.UserSpecialForLog;
 import hygge.util.UtilCreator;
 import hygge.web.template.HyggeControllerResponse;
-import hygge.web.template.HyggeWebUtilContainer;
+import hygge.util.template.HyggeJsonUtilContainer;
 import hygge.web.template.definition.HyggeController;
 import hygge.web.util.log.annotation.ControllerLog;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +47,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @Tag(name = "LogConfigController", description = "演示日志配置相关操作，配置结果请从控制台日志观察")
-public class LogConfigController extends HyggeWebUtilContainer implements HyggeController<ResponseEntity<?>> {
+public class LogConfigController extends HyggeJsonUtilContainer implements HyggeController<ResponseEntity<?>> {
     @Override
     public boolean printNonSeriousExceptionLog(HyggeInfo exception) {
         // 修改这个方法会影响 “非严重异常” 的日志是否需要打印，用于快捷过虑掉非重要日志

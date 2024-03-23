@@ -17,7 +17,7 @@
 package hygge.web.util.log.base;
 
 import hygge.commons.annotation.HyggeExpressionInfo;
-import hygge.web.template.HyggeWebUtilContainer;
+import hygge.util.template.HyggeJsonUtilContainer;
 import hygge.web.util.log.ControllerLogContext;
 import hygge.web.util.log.inner.ExpressionCache;
 import hygge.web.util.log.bo.ControllerLogInfo;
@@ -44,7 +44,7 @@ import java.util.Map;
  * @date 2022/7/14
  * @since 1.0
  */
-public abstract class BaseControllerLogHandler extends HyggeWebUtilContainer {
+public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
     protected static final Logger log = LoggerFactory.getLogger(BaseControllerLogHandler.class);
     protected static final SpelExpressionParser spelExpressionParser = new SpelExpressionParser(new SpelParserConfiguration(SpelCompilerMode.IMMEDIATE, BaseControllerLogHandler.class.getClassLoader()));
 
