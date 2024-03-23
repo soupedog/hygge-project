@@ -5,7 +5,8 @@
     <parent>
         <artifactId>hygge-project</artifactId>
         <groupId>io.github.soupedog</groupId>
-        <version>0.0.13</version>
+        <version>0.0.14-SNAPSHOT-1</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
