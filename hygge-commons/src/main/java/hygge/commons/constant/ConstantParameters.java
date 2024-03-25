@@ -38,4 +38,8 @@ public class ConstantParameters {
      * 与宿主系统相适配的目录分隔符
      */
     public static final String FILE_SEPARATOR = File.separator;
+    /**
+     * 四个空格符
+     */
+    public static final String BLANK_4 = "    ";
 }

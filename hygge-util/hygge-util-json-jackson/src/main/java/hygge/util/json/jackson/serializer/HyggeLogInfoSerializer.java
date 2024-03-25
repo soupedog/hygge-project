@@ -24,8 +24,8 @@ import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.definition.HyggeLogInfoObject;
 import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
+import hygge.util.definition.ParameterHelper;
 import hygge.util.json.jackson.impl.HyggeObjectMapperDefaultConfigurator;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -38,6 +38,7 @@ import java.io.IOException;
  */
 public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     static {
         JsonHelper<?> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
@@ -55,7 +56,7 @@ public class HyggeLogInfoSerializer extends JsonSerializer<Object> {
     public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (value instanceof HyggeLogInfoObject) {
             String jsonInfo = ((HyggeLogInfoObject) value).toJsonLogInfo();
-            if (StringUtils.hasText(jsonInfo)) {
+            if (parameterHelper.isNotEmpty(jsonInfo)) {
                 gen.writeRawValue(jsonInfo);
             } else {
                 // "JsonInclude.Include.NON_NULL" 之类的配置项，影响到的是此处 value 不为 null 的才会进入这个 JsonSerializer
