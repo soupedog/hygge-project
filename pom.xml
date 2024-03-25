@@ -40,6 +40,7 @@
         <module>hygge-util/hygge-util-definition</module>
         <module>hygge-util/hygge-util-core</module>
         <module>hygge-util/hygge-util-json-jackson</module>
+        <module>hygge-util/hygge-util-java-generator</module>
         <module>hygge-logging/hygge-logging-definition</module>
         <module>hygge-logging/hygge-logging-log4j</module>
         <module>hygge-logging/hygge-logging-logback</module>

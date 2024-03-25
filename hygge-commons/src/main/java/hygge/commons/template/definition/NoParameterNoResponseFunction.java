@@ -14,28 +14,12 @@
  * limitations under the License.
  */
 
-package hygge.commons.constant;
-
-import java.io.File;
+package hygge.commons.template.definition;
 
 /**
- * 一些业务开发需要的常量
- *
- * @author Xavier
- * @date 2023/3/13
- * @since 1.0
+ * 无入参、无返回值的函数
  */
-public class ConstantParameters {
-    /**
-     * 与宿主系统相适配的换行符
-     */
-    public static final String LINE_SEPARATOR = System.lineSeparator();
-    /**
-     * 与宿主系统相适配的目录分隔符
-     */
-    public static final String FILE_SEPARATOR = File.separator;
-    /**
-     * 四个空格符
-     */
-    public static final String BLANK_4 = "    ";
+@FunctionalInterface
+public interface NoParameterNoResponseFunction {
+    void execute();
 }
