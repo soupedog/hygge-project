@@ -56,8 +56,10 @@ public class JavaGenerator extends FileContentGenerator {
 
     protected static void addClassDocInfo(int indentationLevel, StringBuilder content, JavaGeneratorConfiguration configuration, ClassInfo classInfo) {
         addOneLine(indentationLevel, content, "/**");
-        addOneLine(indentationLevel, content, " * " + classInfo.getDescription());
-        addOneLine(indentationLevel, content, " * ");
+        if (parameterHelper.isNotEmpty(classInfo.getDescription())) {
+            addOneLine(indentationLevel, content, " * " + classInfo.getDescription());
+            addOneLine(indentationLevel, content, " * ");
+        }
         addOneLine(indentationLevel, content, " * @author " + configuration.getAuthor());
         addOneLine(indentationLevel, content, " * @date " + configuration.getDate());
         addOneLine(indentationLevel, content, " */");
@@ -353,10 +355,12 @@ public class JavaGenerator extends FileContentGenerator {
 
     protected static void addEnumElement(int indentationLevel, StringBuilder content, ClassInfo classInfo) {
         classInfo.getEnumElements().forEach(item -> {
-            // java doc
-            addOneLine(indentationLevel + 1, content, "/**");
-            addOneLine(indentationLevel + 1, content, " * " + item.getDescription());
-            addOneLine(indentationLevel + 1, content, " */");
+            if (parameterHelper.isNotEmpty(item.getDescription())) {
+                // java doc
+                addOneLine(indentationLevel + 1, content, "/**");
+                addOneLine(indentationLevel + 1, content, " * " + item.getDescription());
+                addOneLine(indentationLevel + 1, content, " */");
+            }
 
             // 枚举值
             addOneLine(indentationLevel + 1, content, () -> {
