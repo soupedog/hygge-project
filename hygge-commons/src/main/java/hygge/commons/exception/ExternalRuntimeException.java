@@ -18,8 +18,8 @@ package hygge.commons.exception;
 
 
 import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
-import hygge.commons.template.definition.HyggeCode;
 import hygge.commons.exception.main.HyggeRuntimeException;
+import hygge.commons.template.definition.HyggeCode;
 
 /**
  * 服务端外部运行时异常
@@ -30,7 +30,7 @@ import hygge.commons.exception.main.HyggeRuntimeException;
  */
 public class ExternalRuntimeException extends HyggeRuntimeException {
     public ExternalRuntimeException(String message) {
-        super(message, GlobalHyggeCodeEnum.SERVER_END_EXCEPTION);
+        super(message, GlobalHyggeCodeEnum.EXTERNAL_SYSTEM_EXCEPTION);
     }
 
     public ExternalRuntimeException(String message, Throwable cause) {
