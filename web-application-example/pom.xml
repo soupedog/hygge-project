@@ -5,13 +5,13 @@
     <parent>
         <artifactId>hygge-project</artifactId>
         <groupId>io.github.soupedog</groupId>
-        <version>0.0.14</version>
+        <version>0.0.15-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>web-application-example</artifactId>
-    <version>0.0.14</version>
+    <version>0.0.15-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
