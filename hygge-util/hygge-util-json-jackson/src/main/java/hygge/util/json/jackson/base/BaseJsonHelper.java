@@ -25,7 +25,6 @@ import hygge.commons.template.definition.InfoMessageSupplier;
 import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.util.definition.ParameterHelper;
-import hygge.util.json.jackson.definition.HyggeObjectMapperConfigurator;
 import hygge.util.json.jackson.impl.HyggeObjectMapperDefaultConfigurator;
 
 import java.io.IOException;
@@ -40,14 +39,15 @@ import java.util.Properties;
  * @date 2022/6/28
  * @since 1.0
  */
-public abstract class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMessageSupplier {
+public class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMessageSupplier {
+    protected HyggeObjectMapperDefaultConfigurator configurator;
     protected ParameterHelper parameterHelper;
     protected ObjectMapper objectMapper;
 
     protected BaseJsonHelper(Properties properties) {
         this.parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
         this.objectMapper = new ObjectMapper();
-        HyggeObjectMapperConfigurator configurator = (HyggeObjectMapperConfigurator) getConfigurator();
+        initConfiguration();
         Properties actualConfiguration = configurator.createDefaultConfig();
         actualConfiguration.putAll(properties);
         configurator.configure(this.objectMapper, actualConfiguration);
@@ -56,7 +56,7 @@ public abstract class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMe
     protected BaseJsonHelper(Properties properties, ObjectMapper objectMapper) {
         this.parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
         this.objectMapper = objectMapper;
-        HyggeObjectMapperConfigurator configurator = (HyggeObjectMapperConfigurator) getConfigurator();
+        initConfiguration();
         Properties actualConfiguration = configurator.createDefaultConfig();
         actualConfiguration.putAll(properties);
         configurator.configure(this.objectMapper, actualConfiguration);
@@ -65,10 +65,17 @@ public abstract class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMe
     protected BaseJsonHelper(Properties properties, ObjectMapper objectMapper, ParameterHelper parameterHelper) {
         this.parameterHelper = parameterHelper;
         this.objectMapper = objectMapper;
-        HyggeObjectMapperConfigurator configurator = (HyggeObjectMapperConfigurator) getConfigurator();
+        initConfiguration();
         Properties actualConfiguration = configurator.createDefaultConfig();
         actualConfiguration.putAll(properties);
         configurator.configure(this.objectMapper, actualConfiguration);
+    }
+
+    /**
+     * 初始化默认配置项工具
+     */
+    protected void initConfiguration() {
+        this.configurator = new HyggeObjectMapperDefaultConfigurator();
     }
 
     @Override
@@ -136,6 +143,6 @@ public abstract class BaseJsonHelper implements JsonHelper<ObjectMapper>, InfoMe
 
     @Override
     public HyggeConfigurator<ObjectMapper, Properties> getConfigurator() {
-        return new HyggeObjectMapperDefaultConfigurator();
+        return configurator;
     }
 }

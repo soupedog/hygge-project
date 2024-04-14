@@ -19,14 +19,17 @@ package hygge.util;
 import hygge.commons.exception.UtilRuntimeException;
 import hygge.commons.template.definition.Alterego;
 import hygge.commons.template.definition.InfoMessageSupplier;
-import hygge.util.inner.UtilCreatorConfigurationKeeper;
-import hygge.util.inner.UtilCreatorHyggeUtilKeeper;
 import hygge.util.definition.HyggeUtil;
 import hygge.util.definition.JsonHelper;
+import hygge.util.definition.ParameterHelper;
 import hygge.util.definition.RandomUniqueGenerator;
 import hygge.util.definition.UtilCreatorAbility;
+import hygge.util.inner.UtilCreatorHyggeUtilKeeper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
 /**
@@ -44,10 +47,6 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
      * UtilsCreator 单例
      */
     INSTANCE;
-    /**
-     * UtilsCreator 配置项容器
-     */
-    public static final UtilCreatorConfigurationKeeper CONFIG_KEEPER = new UtilCreatorConfigurationKeeper();
     /**
      * 用于保存单例工具类的容器，key 是 {@link HyggeUtil#getHyggeName()}
      */
@@ -98,11 +97,8 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
             String className = null;
 
             if (JsonHelper.class.isAssignableFrom(target)) {
-                // 构造 JsonHelper 默认实现需要先检查依赖
-                if (tryToGetClass("com.fasterxml.jackson.databind.ObjectMapper") == null) {
-                    throw new UtilRuntimeException("Default \"JsonHelper\" implementation class lacks jackson dependencies:com.fasterxml.jackson.databind.ObjectMapper.");
-                }
-                className = getDefaultJacksonJsonHelperPath();
+                // 默认返回一个不缩进的 JsonHelper
+                return (T) getDefaultJsonHelperInstance(false);
             } else if (RandomUniqueGenerator.class.isAssignableFrom(target)) {
                 className = String.format("hygge.util.impl.%s", "SnowFlakeGenerator");
             }
@@ -118,27 +114,31 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
     public <T> JsonHelper<T> getDefaultJsonHelperInstance(boolean indent) {
         String hyggeName = indent ? JsonHelper.class.getSimpleName() + "_INDENT" : JsonHelper.class.getSimpleName();
         return getAndCacheInstance(hyggeName, () -> {
-            Class<?> jsonHelperClass = tryToGetClass(getDefaultJacksonJsonHelperPath());
-            if (jsonHelperClass == null) {
-                throw new UtilRuntimeException("Default \"JsonHelper\" implementation class(" + getDefaultJacksonJsonHelperPath() + ") was not found.");
+            ServiceLoader<JsonHelper> serviceLoader = ServiceLoader.load(JsonHelper.class);
+
+            List<JsonHelper<?>> list = new ArrayList<>();
+
+            serviceLoader.forEach(list::add);
+
+            if (list.size() > 1) {
+                // 实现类如果超过一个
+                StringBuilder info = new StringBuilder();
+                for (JsonHelper<?> jsonHelper : list) {
+                    info.append(jsonHelper.getClass().getName());
+                    info.append(",");
+                }
+
+                info = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class).removeStringFormTail(info, ",", 1);
+
+                throw new UtilRuntimeException(String.format("There should only be one implementation of JsonHelper(%s), so please remove the redundant implementations.", info.toString()));
+            } else if (list.isEmpty()) {
+                // 如果实现类不存在
+                throw new UtilRuntimeException("No JsonHelper implementations have been discovered, please make sure that at least one JsonHelper implementation has been introduced in the project via SPI.");
             }
-            if (!JsonHelper.class.isAssignableFrom(jsonHelperClass)) {
-                throw new UtilRuntimeException(unexpectedClass("defaultJsonHelper", jsonHelperClass, JsonHelper.class));
-            }
-            //基于 jackson 默认实现需要先检查依赖
-            if (UtilCreatorConfigurationKeeper.DEFAULT_JACKSON_JSON_HELPER_CLASS_NAME.equals(jsonHelperClass.getName()) && tryToGetClass("com.fasterxml.jackson.databind.ObjectMapper") == null) {
-                throw new UtilRuntimeException("Default \"JsonHelper\" implementation class lacks jackson dependencies:com.fasterxml.jackson.databind.ObjectMapper.");
-            }
+
             Properties properties = new Properties();
             properties.put(JsonHelper.ConfigKey.INDENT, indent);
-            return (JsonHelper<T>) createInstanceByClass(properties, jsonHelperClass);
+            return (JsonHelper<T>) createInstanceByClass(properties, list.get(0).getClass());
         });
-    }
-
-    /**
-     * 用的返回当前实际的 JsonHelper 默认实现类名称
-     */
-    private String getDefaultJacksonJsonHelperPath() {
-        return CONFIG_KEEPER.getValue(UtilCreatorConfigurationKeeper.KEY_ACTUAL_DEFAULT_JSON_HELPER).toString();
     }
 }

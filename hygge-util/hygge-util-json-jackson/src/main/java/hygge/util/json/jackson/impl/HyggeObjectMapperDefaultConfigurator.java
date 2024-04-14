@@ -25,10 +25,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import hygge.commons.exception.UtilRuntimeException;
+import hygge.commons.template.definition.HyggeConfigurator;
 import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import hygge.util.definition.ParameterHelper;
-import hygge.util.json.jackson.definition.HyggeObjectMapperConfigurator;
 
 import java.util.Map;
 import java.util.Properties;
@@ -41,7 +41,7 @@ import java.util.TimeZone;
  * @date 2023/5/11
  * @since 1.0
  */
-public class HyggeObjectMapperDefaultConfigurator implements HyggeObjectMapperConfigurator {
+public class HyggeObjectMapperDefaultConfigurator implements HyggeConfigurator<ObjectMapper, Properties> {
     protected ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     @Override

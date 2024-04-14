@@ -30,6 +30,12 @@ import java.util.Properties;
  * @since 1.0
  */
 public class DefaultJsonHelper extends BaseJsonHelper {
+
+    public DefaultJsonHelper() {
+        // 空配置项代表使用默认配置
+        super(new Properties());
+    }
+
     public DefaultJsonHelper(Properties properties) {
         super(properties);
     }

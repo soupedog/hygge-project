@@ -24,6 +24,12 @@ package hygge.commons.template.definition;
  * @since 1.0
  */
 public interface HyggeConfigurator<T, C> {
+    /**
+     * 创建一份默认配置的
+     *
+     * @return 默认的配置项
+     */
+    C createDefaultConfig();
 
     /**
      * 对目标对象进行实际配置
