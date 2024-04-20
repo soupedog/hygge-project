@@ -19,6 +19,13 @@ package hygge.util.constant;
 import hygge.util.generator.java.bo.ClassInfo;
 import hygge.util.generator.java.bo.ClassType;
 
+/**
+ * 常用类信息容器
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 @SuppressWarnings({"java:S1192"})
 public class ConstantClassInfoContainer {
     public static final ClassInfo STRING = ClassInfo.builder().packageInfo("java.lang").name("String").build();

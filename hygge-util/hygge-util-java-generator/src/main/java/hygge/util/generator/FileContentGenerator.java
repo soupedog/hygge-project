@@ -22,6 +22,13 @@ import hygge.util.UtilCreator;
 import hygge.util.definition.CollectionHelper;
 import hygge.util.definition.ParameterHelper;
 
+/**
+ * 文件内容生成器基类
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 public abstract class FileContentGenerator extends ConstantParameters {
     protected static final CollectionHelper collectionHelper = UtilCreator.INSTANCE.getDefaultInstance(CollectionHelper.class);
     protected static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);

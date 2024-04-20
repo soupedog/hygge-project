@@ -21,6 +21,13 @@ import hygge.util.definition.CollectionHelper;
 
 import java.util.List;
 
+/**
+ * 类信息修饰符
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 public enum Modifier {
 
     DEFAULT("", 0),

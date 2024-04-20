@@ -16,7 +16,13 @@
 
 package hygge.util.generator.java.bo;
 
-
+/**
+ * 类信息类型
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 public enum ClassType {
     ENUM("enum"),
     DEFAULT_CLASS("class"),

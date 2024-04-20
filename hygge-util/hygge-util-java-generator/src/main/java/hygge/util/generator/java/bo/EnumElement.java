@@ -23,6 +23,13 @@ import java.util.List;
 
 import static hygge.commons.constant.enums.ColumnTypeEnum.analyseColumnType;
 
+/**
+ * 类信息枚举元素
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 public class EnumElement {
     /**
      * 枚举值名称

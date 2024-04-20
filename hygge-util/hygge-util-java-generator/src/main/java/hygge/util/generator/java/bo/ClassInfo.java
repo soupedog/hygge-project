@@ -43,10 +43,10 @@ import static hygge.util.constant.ConstantClassInfoContainer.SHORT;
 import static hygge.util.constant.ConstantClassInfoContainer.STRING;
 
 /**
- * 通用型全局业务码
+ * 类描述信息
  *
  * @author Xavier
- * @date 2022/6/25
+ * @date 2024/3/25
  * @since 1.0
  */
 public class ClassInfo {

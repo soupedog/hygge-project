@@ -24,6 +24,13 @@ import hygge.util.definition.ParameterHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 类信息属性
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 public class Property {
     protected static final CollectionHelper collectionHelper = UtilCreator.INSTANCE.getDefaultInstance(CollectionHelper.class);
     protected static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);

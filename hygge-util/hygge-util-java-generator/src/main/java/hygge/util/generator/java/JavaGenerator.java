@@ -28,6 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Java 类生成器
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 @SuppressWarnings({"java:S1192"})
 public class JavaGenerator extends FileContentGenerator {
     protected static void addPackage(StringBuilder content, ClassInfo classInfo) {

@@ -20,6 +20,13 @@ import hygge.commons.constant.enums.DateTimeFormatModeEnum;
 import hygge.util.UtilCreator;
 import hygge.util.definition.TimeHelper;
 
+/**
+ * Java 类生成器配置项
+ *
+ * @author Xavier
+ * @date 2024/3/25
+ * @since 1.0
+ */
 public class JavaGeneratorConfiguration {
     protected boolean lombokEnable = false;
     protected String author = "Hygge Generator";
