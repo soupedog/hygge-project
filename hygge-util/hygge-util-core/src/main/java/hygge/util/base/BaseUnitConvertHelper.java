@@ -116,15 +116,15 @@ public abstract class BaseUnitConvertHelper implements UnitConvertHelper {
                 String unit = matcher.group(3);
 
                 if (unit == null || unit.isEmpty()) {
-                    return new BigDecimal(quantityString).setScale(0, RoundingMode.HALF_UP).longValue();
+                    return new BigDecimal(quantityString).longValue();
                 } else if (unit.equalsIgnoreCase("K")) {
-                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE).setScale(0, RoundingMode.HALF_UP).longValue();
+                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE).longValue();
                 } else if (unit.equalsIgnoreCase("M")) {
-                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_SQUARE).setScale(0, RoundingMode.HALF_UP).longValue();
+                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_SQUARE).longValue();
                 } else if (unit.equalsIgnoreCase("G")) {
-                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_CUBE).setScale(0, RoundingMode.HALF_UP).longValue();
+                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_CUBE).longValue();
                 } else if (unit.equalsIgnoreCase("T")) {
-                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_CUBE).multiply(UNIT_RATE_OF_STORAGE).setScale(0, RoundingMode.HALF_UP).longValue();
+                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_CUBE).multiply(UNIT_RATE_OF_STORAGE).longValue();
                 } else {
                     throw new UtilRuntimeException("Storage units not recognized:" + target);
                 }
