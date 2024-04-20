@@ -18,6 +18,8 @@ package hygge.commons.spring;
 
 import hygge.commons.spring.enums.DeploymentEnvironmentEnum;
 import hygge.commons.spring.listener.HyggeSpringContextInitListener;
+import hygge.util.UtilCreator;
+import hygge.util.definition.UnitConvertHelper;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.core.env.ConfigurableEnvironment;
 
@@ -76,12 +78,17 @@ public class HyggeSpringContext {
     }
 
     public static String toJsonVale() {
-        return String.format("{\"spring-boot-version\":\"%s\",\"environmentModeEnum\":\"%s\",\"appName\":\"%s\",\"language\":\"%s\",\"timeZone\":\"%s\"}",
+        UnitConvertHelper unitConvertHelper = UtilCreator.INSTANCE.getDefaultInstance(UnitConvertHelper.class);
+        Runtime runtime = Runtime.getRuntime();
+
+        return String.format("{\"spring-boot-version\":\"%s\",\"environmentModeEnum\":\"%s\",\"appName\":\"%s\",\"language\":\"%s\",\"timeZone\":\"%s\",\"totalMemory\":\"%s\",\"usedMemory\":\"%s\"}",
                 SpringBootVersion.getVersion(),
                 deploymentEnvironment,
                 appName,
                 Locale.getDefault().getLanguage(),
-                TimeZone.getDefault().getID());
+                TimeZone.getDefault().getID(),
+                unitConvertHelper.storageSmartFormatAsString(runtime.totalMemory()),
+                unitConvertHelper.storageSmartFormatAsString(runtime.totalMemory() - runtime.freeMemory()));
     }
 
     @Override
