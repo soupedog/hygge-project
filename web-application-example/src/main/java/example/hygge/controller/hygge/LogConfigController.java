@@ -16,15 +16,16 @@
 
 package example.hygge.controller.hygge;
 
-import hygge.commons.annotation.HyggeExpressionInfo;
+import example.hygge.domain.User;
+import example.hygge.domain.UserSpecialForLog;
+import hygge.commons.annotation.HyggeExpressionForInputFunction;
+import hygge.commons.annotation.HyggeExpressionForOutputFunction;
 import hygge.commons.constant.enums.StringCategoryEnum;
 import hygge.commons.template.definition.HyggeInfo;
 import hygge.commons.template.definition.HyggeLogInfoObject;
-import example.hygge.domain.User;
-import example.hygge.domain.UserSpecialForLog;
 import hygge.util.UtilCreator;
-import hygge.web.template.HyggeControllerResponse;
 import hygge.util.template.HyggeJsonUtilContainer;
+import hygge.web.template.HyggeControllerResponse;
 import hygge.web.template.definition.HyggeController;
 import hygge.web.util.log.annotation.ControllerLog;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -76,12 +77,12 @@ public class LogConfigController extends HyggeJsonUtilContainer implements Hygge
     @ControllerLog(
             ignoreParamNames = {"prefix"},
             inputParamGetExpressions = {
-                    @HyggeExpressionInfo(rootObjectName = "user", name = "change-uid", value = "uid"),
-                    @HyggeExpressionInfo(rootObjectName = "user", name = "change-userName", value = "userName")
+                    @HyggeExpressionForInputFunction(rootObjectName = "user", name = "change-uid", value = "uid"),
+                    @HyggeExpressionForInputFunction(rootObjectName = "user", name = "change-userName", value = "userName")
             },
             outputParamExpressions = {
-                    @HyggeExpressionInfo(rootObjectName = "#root", name = "change-uid-response", value = "main == null ? null : main.uid"),
-                    @HyggeExpressionInfo(rootObjectName = "#root", name = "change-userName-response", value = "main == null ? null : main.userName")
+                    @HyggeExpressionForOutputFunction(name = "change-uid-response", value = "main == null ? null : main.uid"),
+                    @HyggeExpressionForOutputFunction(name = "change-userName-response", value = "main == null ? null : main.userName")
             }
     )
     @PostMapping("/logConfig/user/annotation")

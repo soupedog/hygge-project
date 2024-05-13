@@ -16,7 +16,8 @@
 
 package hygge.web.util.log;
 
-import hygge.commons.annotation.HyggeExpressionInfo;
+import hygge.commons.annotation.HyggeExpressionForInputFunction;
+import hygge.commons.annotation.HyggeExpressionForOutputFunction;
 import hygge.web.template.definition.AutoLogController;
 import hygge.web.util.log.annotation.ControllerLog;
 import hygge.web.util.log.base.BaseControllerLogHandler;
@@ -93,8 +94,8 @@ public class ControllerLogPointCut extends StaticMethodMatcherPointcut implement
         String path;
         String[] inputParamNames = parameterNameDiscoverer.getParameterNames(method);
         Collection<String> ignoreParamNames;
-        Collection<HyggeExpressionInfo> inputParamGetExpressions;
-        Collection<HyggeExpressionInfo> outputParamExpressions;
+        Collection<HyggeExpressionForInputFunction> inputParamGetExpressions;
+        Collection<HyggeExpressionForOutputFunction> outputParamExpressions;
 
         if (method.isAnnotationPresent(GetMapping.class)) {
             GetMapping getMapping = AnnotationUtils.getAnnotation(method, GetMapping.class);

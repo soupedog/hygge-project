@@ -16,7 +16,8 @@
 
 package hygge.web.util.log.definition;
 
-import hygge.commons.annotation.HyggeExpressionInfo;
+import hygge.commons.annotation.HyggeExpressionForInputFunction;
+import hygge.commons.annotation.HyggeExpressionForOutputFunction;
 import hygge.web.util.log.base.BaseControllerLogHandler;
 import hygge.web.util.log.enums.ControllerLogType;
 
@@ -40,5 +41,5 @@ public interface ControllerLogHandlerFactory {
      * @param inputParamGetExpressions 用于记录日志的入参获取表达式集合
      * @param outputParamExpressions   用于记录日志的出参获取表达式集合
      */
-    BaseControllerLogHandler createHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionInfo> inputParamGetExpressions, Collection<HyggeExpressionInfo> outputParamExpressions);
+    BaseControllerLogHandler createHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionForInputFunction> inputParamGetExpressions, Collection<HyggeExpressionForOutputFunction> outputParamExpressions);
 }

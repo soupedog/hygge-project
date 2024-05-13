@@ -16,11 +16,12 @@
 
 package hygge.web.util.log.impl;
 
-import hygge.commons.annotation.HyggeExpressionInfo;
-import hygge.web.util.log.enums.ControllerLogType;
+import hygge.commons.annotation.HyggeExpressionForInputFunction;
+import hygge.commons.annotation.HyggeExpressionForOutputFunction;
 import hygge.web.util.log.ControllerLogContext;
 import hygge.web.util.log.base.BaseControllerLogHandler;
 import hygge.web.util.log.definition.ControllerLogHandlerFactory;
+import hygge.web.util.log.enums.ControllerLogType;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -35,7 +36,7 @@ import java.util.Collection;
  */
 public class DefaultControllerLogHandlerFactory implements ControllerLogHandlerFactory, BeanPostProcessor {
     @Override
-    public BaseControllerLogHandler createHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionInfo> inputParamGetExpressions, Collection<HyggeExpressionInfo> outputParamExpressions) {
+    public BaseControllerLogHandler createHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionForInputFunction> inputParamGetExpressions, Collection<HyggeExpressionForOutputFunction> outputParamExpressions) {
         return new BaseControllerLogHandler(type, path, inputParamNames, ignoreParamNames, inputParamGetExpressions, outputParamExpressions) {
             @Override
             protected void hook(ControllerLogContext context, MethodInvocation methodInvocation) {

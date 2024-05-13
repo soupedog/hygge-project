@@ -16,12 +16,13 @@
 
 package hygge.web.util.log.base;
 
-import hygge.commons.annotation.HyggeExpressionInfo;
+import hygge.commons.annotation.HyggeExpressionForInputFunction;
+import hygge.commons.annotation.HyggeExpressionForOutputFunction;
 import hygge.util.template.HyggeJsonUtilContainer;
 import hygge.web.util.log.ControllerLogContext;
-import hygge.web.util.log.inner.ExpressionCache;
 import hygge.web.util.log.bo.ControllerLogInfo;
 import hygge.web.util.log.enums.ControllerLogType;
+import hygge.web.util.log.inner.ExpressionCache;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
     protected String[] inputParamNames;
     protected Collection<String> ignoreParamNames;
     /**
-     * key:{@link HyggeExpressionInfo#rootObjectName()}
+     * key:{@link HyggeExpressionForInputFunction#rootObjectName()}
      * 入参不像出参至多只有一个，所以 ExpressionCache 之外还多一层 map
      */
     protected final HashMap<String, ExpressionCache> inputExpressionCacheMap;
@@ -64,7 +65,7 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
      */
     protected abstract void hook(ControllerLogContext context, MethodInvocation methodInvocation);
 
-    protected BaseControllerLogHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionInfo> inputParamGetExpressions, Collection<HyggeExpressionInfo> outputParamExpressions) {
+    protected BaseControllerLogHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionForInputFunction> inputParamGetExpressions, Collection<HyggeExpressionForOutputFunction> outputParamExpressions) {
         this.type = type;
         this.path = path;
         this.inputParamNames = inputParamNames == null ? new String[0] : inputParamNames;
@@ -73,7 +74,7 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
         this.outputExpressionCache = new ExpressionCache();
 
         // 初始化 inputExpressionCacheMap
-        for (HyggeExpressionInfo item : inputParamGetExpressions) {
+        for (HyggeExpressionForInputFunction item : inputParamGetExpressions) {
             if (!item.enable()) {
                 continue;
             }
@@ -88,8 +89,9 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
             Expression expression = spelExpressionParser.parseExpression(item.value());
             currentExpressionCache.saveValue(item.name(), expression);
         }
+
         // 初始化 outputExpressionCache
-        for (HyggeExpressionInfo item : outputParamExpressions) {
+        for (HyggeExpressionForOutputFunction item : outputParamExpressions) {
             if (!item.enable()) {
                 continue;
             }
@@ -151,22 +153,22 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         for (int i = 0; i < inputParameterValues.length; i++) {
-            String rootObjectName = inputParamNames[i];
-            if (ignoreParamNames.contains(rootObjectName)) {
+            String inputParameterName = inputParamNames[i];
+            if (ignoreParamNames.contains(inputParameterName)) {
                 // 如果该属性指定了忽略
                 continue;
             }
 
-            Object rootObject = inputParameterValues[i];
+            Object inputParameter = inputParameterValues[i];
 
             if (inputExpressionCacheMap.isEmpty()) {
-                if (rootObject != null) {
-                    result.put(rootObjectName, rootObject);
+                if (inputParameter != null) {
+                    result.put(inputParameterName, inputParameter);
                 }
             } else {
-                ExpressionCache expressionCache = inputExpressionCacheMap.get(rootObjectName);
+                ExpressionCache expressionCache = inputExpressionCacheMap.get(inputParameterName);
                 if (expressionCache != null) {
-                    initResultByExpressionCache(rootObject, result, expressionCache);
+                    initResultByExpressionCache(inputParameter, result, expressionCache);
                 }
             }
         }

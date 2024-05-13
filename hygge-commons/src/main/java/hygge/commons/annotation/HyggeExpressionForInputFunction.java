@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用于收集表达式信息的注解
+ * 用于为函数入参收集表达式信息的注解
  *
  * @author Xavier
  * @date 2022/7/14
@@ -30,24 +30,24 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HyggeExpressionInfo {
+public @interface HyggeExpressionForInputFunction {
     /**
      * 当前表达式是否启用。
      */
     boolean enable() default true;
 
     /**
-     * 需要执行表达式的目标对象名称
+     * 函数入参名称，用于指定若干个入参中具体哪个对象是表达式的执行者
      */
     String rootObjectName();
 
     /**
-     * {@link HyggeExpressionInfo#value()} 执行表达式获取到的结果的名称
+     * {@link HyggeExpressionForInputFunction#value()} 执行表达式获取到的结果的名称
      */
     String name();
 
     /**
-     * 表达式具体内容
+     * 表达式具体内容，语法为 "SpEL"
      */
     String value();
 }
