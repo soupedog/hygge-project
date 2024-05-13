@@ -17,6 +17,7 @@ public interface UnitConvertHelper extends HyggeUtil {
     BigDecimal UNIT_RATE_OF_STORAGE = new BigDecimal(1024);
     BigDecimal UNIT_RATE_OF_STORAGE_SQUARE = new BigDecimal(1048576);
     BigDecimal UNIT_RATE_OF_STORAGE_CUBE = new BigDecimal(1073741824);
+    BigDecimal UNIT_RATE_OF_STORAGE_4TH_POWER = new BigDecimal(1099511627776L);
 
     /**
      * 获取目标数的数量级

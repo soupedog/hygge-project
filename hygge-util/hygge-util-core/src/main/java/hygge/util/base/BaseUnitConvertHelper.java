@@ -56,7 +56,7 @@ public abstract class BaseUnitConvertHelper implements UnitConvertHelper {
                 if (orderOfMagnitude < -2) {
                     scale = Math.abs(orderOfMagnitude);
                 }
-                return BigDecimal.valueOf(byteSize).divide(UNIT_RATE_OF_STORAGE_CUBE.multiply(UNIT_RATE_OF_STORAGE), scale, RoundingMode.HALF_UP);
+                return BigDecimal.valueOf(byteSize).divide(UNIT_RATE_OF_STORAGE_4TH_POWER, scale, RoundingMode.HALF_UP);
             default:
                 return BigDecimal.valueOf(byteSize);
         }
@@ -76,7 +76,7 @@ public abstract class BaseUnitConvertHelper implements UnitConvertHelper {
             case GIGABYTE:
                 return BigDecimal.valueOf(byteSize).divide(UNIT_RATE_OF_STORAGE_CUBE, scale, RoundingMode.HALF_UP);
             case TERABYTE:
-                return BigDecimal.valueOf(byteSize).divide(UNIT_RATE_OF_STORAGE_CUBE.multiply(UNIT_RATE_OF_STORAGE), scale, RoundingMode.HALF_UP);
+                return BigDecimal.valueOf(byteSize).divide(UNIT_RATE_OF_STORAGE_4TH_POWER, scale, RoundingMode.HALF_UP);
             default:
                 return BigDecimal.valueOf(byteSize);
         }
@@ -124,7 +124,7 @@ public abstract class BaseUnitConvertHelper implements UnitConvertHelper {
                 } else if (unit.equalsIgnoreCase("G")) {
                     return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_CUBE).longValue();
                 } else if (unit.equalsIgnoreCase("T")) {
-                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_CUBE).multiply(UNIT_RATE_OF_STORAGE).longValue();
+                    return new BigDecimal(quantityString).multiply(UNIT_RATE_OF_STORAGE_4TH_POWER).longValue();
                 } else {
                     throw new UtilRuntimeException("Storage units not recognized:" + target);
                 }
