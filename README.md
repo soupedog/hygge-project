@@ -24,12 +24,12 @@
 - Do you struggle with the configuration of a trivial and cumbersome logging system?
 - Do you struggle with the interconversion between basic data types and the assignment of default values to parameters?
 
-If you answered yes, then I would strongly recommend you to use the ``hygge-project``.
+If you answered yes, then I would strongly recommend you to use the `hygge-project`.
 
 | Building Block            | Description                                                                                                        |
 |---------------------------|--------------------------------------------------------------------------------------------------------------------|
 | hygge-commons             | hygge core entity(includes Exception、POJO)                                                                         |
-| hygge-commons-spring-boot | For initializing ``HyggeSpringContext`` to provide support to other modules                                        |
+| hygge-commons-spring-boot | For initializing `HyggeSpringContext` to provide support to other modules                                        |
 | hygge-logging             | Simplify the logging framework configuration and make the logs have good support for exporting json format records |
 | hygge-util                | Tools for data transformation, validation, iteration, etc.                                                         |
 | hygge-web-toolkit         | Provide web application development template tools and network request tools                                       |
@@ -38,11 +38,11 @@ If you answered yes, then I would strongly recommend you to use the ``hygge-proj
 
 Java SDK v1.8 or higher
 
-***Warning:** this project relies on spring-boot, and if ``spring-boot`` drops support for lower versions of java in the future, this project will also drop support for lower versions of java.*
+***Warning:** this project relies on spring-boot, and if `spring-boot` drops support for lower versions of java in the future, this project will also drop support for lower versions of java.*
 
 ## Features
 
-``hygge-web-toolkit`` is designed as a ``starter`` for ``spring-boot``. It also depends on other libraries, and the
+`hygge-web-toolkit` is designed as a `starter` for `spring-boot`. It also depends on other libraries, and the
 following dependencies, which you no longer need to add manually, will be added to the project automatically:
 
 - Hygge-Project
@@ -55,15 +55,15 @@ following dependencies, which you no longer need to add manually, will be added 
     - spring-boot-starter-aop
     - httpclient
 
-After you import the ``hygge-web-toolkit`` into your project, you will obtain the following features
-of ``hygge-project``:
+After you import the `hygge-web-toolkit` into your project, you will obtain the following features
+of `hygge-project`:
 
 - Global unified semantic exceptions.
-- Automatically configure the logging framework so that the application has good support for outputting ``json`` format
+- Automatically configure the logging framework so that the application has good support for outputting `json` format
   logs. The following logging frameworks are supported:
     - logback
     - log4j
-- Network request tool based on ``RestTemplate`` , each API call can be individually configured with parameters such as
+- Network request tool based on `RestTemplate` , each API call can be individually configured with parameters such as
   timeout time, automatic request logging, providing convenient and practical syntax sugar.
 - Some data validation, fetching, iterating and other tools that are often needed in your development.
 - Standardized exposed endpoint template tool.
@@ -71,13 +71,28 @@ of ``hygge-project``:
 
 # Quick Start
 
-Make sure you provide the name for the application, otherwise it will not be allowed to start.
-
-For example: You have to add ``spring.application.name`` to your ``application.properties``
-
-```properties
-spring.application.name=xxx
-```
+- Make sure you provide the name for the application. 
+  - For example: You have to add `spring.application.name` to your `application.properties`
+  ```properties
+  spring.application.name=xxx
+  ```
+- Make sure you provide the "-parameters" compiler flag.(If you are using a version of `hygge-project` greater than or equal to 0.15 )
+  - For example: You can configure your org.apache.maven.plugins as follows
+    ```xml
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+            <compilerArgument>-parameters</compilerArgument>
+            <!-- depending on your project -->
+            <source>8</source>
+            <!-- depending on your project -->
+            <target>8</target>
+        </configuration>
+    </plugin>
+    ``` 
+  
 
 ## Maven Dependencies
 
@@ -98,10 +113,10 @@ If you are using Maven just add the following dependency to your pom.xml:
 </dependency>
 ```
 
-``hygge-web-toolkit`` relies on ``spring-boot`` related components, but no forced dependency about the ``spring-boot``
+`hygge-web-toolkit` relies on `spring-boot` related components, but no forced dependency about the `spring-boot`
 version, you can specify special versions in any of the following ways
 
-- ``<parent/>``
+- `<parent/>`
 
   ```xml
   <parent>
@@ -111,7 +126,7 @@ version, you can specify special versions in any of the following ways
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   ```
-- ``<dependencyManagement/>``
+- `<dependencyManagement/>`
 
   ```xml
   <dependencyManagement>

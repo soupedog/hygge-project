@@ -63,13 +63,12 @@ public class ControllerLogPointCut extends StaticMethodMatcherPointcut implement
     }
 
     /**
-     * Spring 6.x 未来会移除 {@link LocalVariableTableParameterNameDiscoverer}
-     * <p>
-     * 可以尝试使用 {@link StandardReflectionParameterNameDiscoverer} 进行替换，尽管它存在前置要求<br/>
-     * 未替换前，将无法与 Spring boot 3.2.x 保持兼容
+     * 因 Spring 6.x 已移除 {@link LocalVariableTableParameterNameDiscoverer} 而切换为 {@link StandardReflectionParameterNameDiscoverer}
+     * <br/>
+     * 注意：应用必须携带编译参数 <code>-parameters</code> 才可正常工作
      */
     protected void init() {
-        this.parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+        this.parameterNameDiscoverer = new StandardReflectionParameterNameDiscoverer();
     }
 
     @Override
