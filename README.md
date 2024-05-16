@@ -77,7 +77,7 @@ of `hygge-project`:
   spring.application.name=xxx
   ```
 - Make sure you provide the "-parameters" compiler flag.(If you are using a version of `hygge-project` greater than or equal to 0.15 )
-  - For example: You can configure your org.apache.maven.plugins as follows
+  - For example: You can configure your `org.apache.maven.plugins` in `pom.xml` as follows
     ```xml
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
