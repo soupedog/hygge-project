@@ -114,7 +114,8 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
     public <T> JsonHelper<T> getDefaultJsonHelperInstance(boolean indent) {
         String hyggeName = indent ? JsonHelper.class.getSimpleName() + "_INDENT" : JsonHelper.class.getSimpleName();
         return getAndCacheInstance(hyggeName, () -> {
-            ServiceLoader<JsonHelper> serviceLoader = ServiceLoader.load(JsonHelper.class);
+            // 使用 UtilCreator 的 ClassLoader 尝试修复复杂环境 SPI 无法正常工作的问题
+            ServiceLoader<JsonHelper> serviceLoader = ServiceLoader.load(JsonHelper.class, UtilCreator.class.getClassLoader());
 
             List<JsonHelper<?>> list = new ArrayList<>();
 
