@@ -75,10 +75,12 @@ public class LogConfigController extends HyggeJsonUtilContainer implements Hygge
      * outputParamExpressions 中出现 "main" 是因为： {@link HyggeController#success(Object)} 默认返回的是 {@link HyggeControllerResponse} 类型，所以表达式是在访问 {@link HyggeControllerResponse} 实例
      */
     @ControllerLog(
+            // ignoreParamNames 优先级高于 @HyggeExpressionForXXX 注解
             ignoreParamNames = {"prefix"},
             inputParamGetExpressions = {
                     @HyggeExpressionForInputFunction(rootObjectName = "user", name = "change-uid", value = "uid"),
-                    @HyggeExpressionForInputFunction(rootObjectName = "user", name = "change-userName", value = "userName")
+                    @HyggeExpressionForInputFunction(rootObjectName = "user", name = "change-userName", value = "userName"),
+                    // @HyggeExpressionForInputFunction(rootObjectName = "prefix", name = "change-prefix", value = "#this")
             },
             outputParamExpressions = {
                     @HyggeExpressionForOutputFunction(name = "change-uid-response", value = "main == null ? null : main.uid"),
