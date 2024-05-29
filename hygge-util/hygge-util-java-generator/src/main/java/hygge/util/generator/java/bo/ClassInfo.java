@@ -96,22 +96,30 @@ public class ClassInfo {
 
     public ClassInfo init(JavaGeneratorConfiguration configuration) {
         if (configuration.isLombokEnable()) {
-            if (getType().equals(ClassType.ENUM)) {
-                this.getAnnotations().add(GETTER);
+            if (type.equals(ClassType.ENUM)) {
                 // lombok 的 @Setter 是不支持枚举类的，这也是为什么枚举类开启 lombok 时，生成器仍然需要检查是否添加 setter
-            } else {
-                this.getAnnotations().add(GETTER);
-                this.getAnnotations().add(SETTER);
-                this.getAnnotations().add(BUILDER);
-                this.getAnnotations().add(GENERATED);
-                this.getAnnotations().add(NO_ARGS_CONSTRUCTOR);
-                this.getAnnotations().add(ALL_ARGS_CONSTRUCTOR);
-            }
-        }
+                annotations.add(GETTER);
 
-        // 枚举属性如果不可修改，要用 final 修饰
-        if (getType().equals(ClassType.ENUM) && !configuration.isEnumPropertyModifiable()) {
-            this.getProperties().forEach(item -> item.getModifiers().add(Modifier.FINAL));
+                // 枚举属性如果不可修改，属性要用 final 修饰
+                if (!configuration.isEnumPropertyModifiable()) {
+                    properties.forEach(item -> item.getModifiers().add(Modifier.FINAL));
+                }
+            } else if (type.equals(ClassType.DEFAULT_CLASS)) {
+                if (modifiers.contains(Modifier.ABSTRACT)) {
+                    // 抽象类不需要 Builder 和全参构造方法
+                    annotations.add(GETTER);
+                    annotations.add(SETTER);
+                    annotations.add(GENERATED);
+                    annotations.add(NO_ARGS_CONSTRUCTOR);
+                } else {
+                    annotations.add(GETTER);
+                    annotations.add(SETTER);
+                    annotations.add(BUILDER);
+                    annotations.add(GENERATED);
+                    annotations.add(NO_ARGS_CONSTRUCTOR);
+                    annotations.add(ALL_ARGS_CONSTRUCTOR);
+                }
+            }
         }
         return this;
     }
