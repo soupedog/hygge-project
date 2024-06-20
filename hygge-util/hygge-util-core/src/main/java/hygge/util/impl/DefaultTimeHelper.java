@@ -19,12 +19,11 @@ package hygge.util.impl;
 
 import hygge.util.base.BaseTimeHelper;
 
-import java.time.ZoneOffset;
 import java.util.TimeZone;
 
 /**
  * 默认的 TimeHelper 实现类<br/>
- * 指定默认时区为 Asia/Shanghai 东八区
+ * 指定默认时区为应用部署时区
  *
  * @author Xavier
  * @date 2022/6/26
@@ -32,11 +31,9 @@ import java.util.TimeZone;
  */
 public class DefaultTimeHelper extends BaseTimeHelper {
     @Override
-    public void initZoneOffset() {
+    public void initZone() {
         // 默认为应用部署时区
         TimeZone timeZone = TimeZone.getDefault();
-        // 毫秒转秒，精度下降到秒级别
-        int offsetSecond = timeZone.getRawOffset() / 1000;
-        defaultZoneOffset = ZoneOffset.ofTotalSeconds(offsetSecond);
+        defaultZone = timeZone.toZoneId();
     }
 }

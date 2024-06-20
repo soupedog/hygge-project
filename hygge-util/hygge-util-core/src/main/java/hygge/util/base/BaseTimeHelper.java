@@ -27,7 +27,7 @@ import hygge.util.definition.TimeHelper;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
@@ -40,37 +40,37 @@ import java.time.format.DateTimeParseException;
  */
 public abstract class BaseTimeHelper implements TimeHelper {
     /**
-     * 默认被转化时间戳的偏移量<br/>
-     * 如果调用方法时未指定时区，将会默认用该时区信息标记字符串时间戳
+     * 默认时区<br/>
+     * 该工具在遇到未指明时间戳时区时所用的默认值
      */
-    protected ZoneOffset defaultZoneOffset;
+    protected ZoneId defaultZone;
     /**
      * 参数处理工具
      */
     protected ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
 
     protected BaseTimeHelper() {
-        initZoneOffset();
+        initZone();
     }
 
     /**
-     * 初始化默认时间戳偏移量
+     * 初始化默认时区
      */
-    public abstract void initZoneOffset();
+    public abstract void initZone();
 
     @Override
     public long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode) {
-        return parse(stringTimestamp, dateTimeFormatMode, defaultZoneOffset);
+        return parse(stringTimestamp, dateTimeFormatMode, defaultZone);
     }
 
     @Override
-    public long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode, ZoneOffset stringTimestampZoneOffset) {
+    public long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode, ZoneId zone) {
         parameterHelper.objectNotNull("stringTimestamp", (Object) stringTimestamp);
         parameterHelper.objectNotNull("dateTimeFormatMode", dateTimeFormatMode);
-        parameterHelper.objectNotNull("stringTimestampZoneOffset", stringTimestampZoneOffset);
+        parameterHelper.objectNotNull("zone", zone);
 
-        long result;
         try {
+            long result;
             if (dateTimeFormatMode.withTimeZone()) {
                 ZonedDateTime targetZonedDateTime = ZonedDateTime.parse(stringTimestamp, dateTimeFormatMode.getDateTimeFormatter());
                 result = targetZonedDateTime.toInstant().toEpochMilli();
@@ -84,34 +84,30 @@ public abstract class BaseTimeHelper implements TimeHelper {
                     targetLocalTime = LocalDateTime.parse(stringTimestamp, dateTimeFormatMode.getDateTimeFormatter());
                 }
                 // 指定基于 UTC 时区的偏移量，并转化为 UTC long 型时间戳
-                result = targetLocalTime.toInstant(stringTimestampZoneOffset).toEpochMilli();
+                result = ZonedDateTime.of(targetLocalTime, zone).toEpochSecond();
             }
             return result;
         } catch (DateTimeParseException exception) {
-            throw new ParameterRuntimeException(
-                    "Fail to parse " + stringTimestamp + " to " + dateTimeFormatMode.getPattern() + ".",
-                    exception);
+            throw new ParameterRuntimeException("Fail to parse " + stringTimestamp + " to " + dateTimeFormatMode.getPattern() + ".", exception);
         }
     }
 
     @Override
     public String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode) {
-        return format(utcMillisecond, dateTimeFormatMode, defaultZoneOffset);
+        return format(utcMillisecond, dateTimeFormatMode, defaultZone);
     }
 
     @Override
-    public String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode, ZoneOffset stringTimestampZoneOffset) {
+    public String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode, ZoneId zone) {
         parameterHelper.objectNotNull("utcMillisecond", utcMillisecond);
         parameterHelper.objectNotNull("dateTimeFormatModeEnum", dateTimeFormatMode);
-        parameterHelper.objectNotNull("stringTimestampZoneOffset", stringTimestampZoneOffset);
+        parameterHelper.objectNotNull("zone", zone);
 
         try {
-            ZonedDateTime targetTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(utcMillisecond), stringTimestampZoneOffset);
+            ZonedDateTime targetTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(utcMillisecond), zone);
             return targetTime.format(dateTimeFormatMode.getDateTimeFormatter());
         } catch (DateTimeException exception) {
-            throw new ParameterRuntimeException(
-                    "Fail to format " + utcMillisecond + " to " + dateTimeFormatMode.getPattern() + ".",
-                    exception);
+            throw new ParameterRuntimeException("Fail to format " + utcMillisecond + " to " + dateTimeFormatMode.getPattern() + ".", exception);
         }
     }
 }

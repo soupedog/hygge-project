@@ -17,9 +17,11 @@
 package hygge.util.definition;
 
 
+import hygge.commons.exception.ParameterRuntimeException;
 import hygge.commons.template.definition.DateTimeFormatMode;
 
-import java.time.ZoneOffset;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 
 
 /**
@@ -31,40 +33,44 @@ import java.time.ZoneOffset;
  */
 public interface TimeHelper extends HyggeUtil {
     /**
-     * 默认时区字符串转化为 long 型 UTC 毫秒级时间戳
+     * 将字符串时间戳转化为 long 型 UTC 毫秒级时间戳
      *
-     * @param stringTimestamp    被转化的默认时区字符串时间戳
-     * @param dateTimeFormatMode 格式化目标格式
+     * @param stringTimestamp    将被转化为 long 型 UTC 毫秒级时间戳的字符串时间戳
+     * @param dateTimeFormatMode 字符串时间戳的格式信息。如果 {@link DateTimeFormatMode#withTimeZone()} 返回 {@link Boolean#FALSE}，传入的字符串时间戳会被认定为来自默认时区
      * @return UTC 毫秒级时间戳
+     * @throws ParameterRuntimeException 如果时间转换过程中遇到 {@link DateTimeParseException}，会将其二次封装为 {@link ParameterRuntimeException} 重新抛出
      */
     long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode);
 
     /**
-     * 特定时区字符串转化为 long 型 UTC 毫秒级时间戳
+     * 将字符串时间戳转化为 long 型 UTC 毫秒级时间戳
      *
-     * @param stringTimestamp           被转化的特定时区字符串时间戳
-     * @param dateTimeFormatMode        格式化目标格式
-     * @param stringTimestampZoneOffset 被转化的字符串时间戳所在时区
+     * @param stringTimestamp    将被转化为 long 型 UTC 毫秒级时间戳的字符串时间戳
+     * @param dateTimeFormatMode 字符串时间戳的格式信息。如果 {@link DateTimeFormatMode#withTimeZone()} 返回 {@link Boolean#FALSE}，传入的字符串时间戳会被认定为来自指定的 zone
+     * @param zone               用于描述无时区字符串时间戳的时区。{@link DateTimeFormatMode#withTimeZone()} 返回 {@link Boolean#TRUE} 时，该参数无任何作用
      * @return UTC 毫秒级时间戳
+     * @throws ParameterRuntimeException 如果时间转换过程中遇到 {@link DateTimeParseException}，会将其二次封装为 {@link ParameterRuntimeException} 重新抛出
      */
-    long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode, ZoneOffset stringTimestampZoneOffset);
+    long parse(String stringTimestamp, DateTimeFormatMode dateTimeFormatMode, ZoneId zone);
 
     /**
-     * long 型 UTC 毫秒级时间戳 转化为默认时区字符串形式
+     * 将 long 型 UTC 毫秒级时间戳转化为指定格式的字符串时间戳
      *
-     * @param utcMillisecond     需要被格式化的 UTC 毫秒级时间戳
-     * @param dateTimeFormatMode 格式化目标格式
-     * @return 格式化后的字符串
+     * @param utcMillisecond     将被转化为字符串时间戳的 long 型 UTC 毫秒级时间戳
+     * @param dateTimeFormatMode 字符串时间戳的格式信息。如果 {@link DateTimeFormatMode#withTimeZone()} 返回 {@link Boolean#FALSE}，返回结果的字符串时间戳会调整为默认时区
+     * @return 所指定格式的字符串时间戳
+     * @throws ParameterRuntimeException 如果时间转换过程中遇到 {@link DateTimeParseException}，会将其二次封装为 {@link ParameterRuntimeException} 重新抛出
      */
     String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode);
 
     /**
-     * long 型 UTC 毫秒级时间戳 转化为特定时区字符串形式
+     * 将 long 型 UTC 毫秒级时间戳转化为指定格式的字符串时间戳
      *
-     * @param utcMillisecond            需要被格式化的 UTC 毫秒级时间戳
-     * @param dateTimeFormatMode        格式化目标格式
-     * @param stringTimestampZoneOffset 结果字符串对应时区
-     * @return 格式化后的字符串
+     * @param utcMillisecond     将被转化为字符串时间戳的 long 型 UTC 毫秒级时间戳
+     * @param dateTimeFormatMode 字符串时间戳的格式信息。如果 {@link DateTimeFormatMode#withTimeZone()} 返回 {@link Boolean#FALSE}，返回结果的字符串时间戳会调整为指定的 zone
+     * @param zone               用于描述无时区字符串时间戳的时区。{@link DateTimeFormatMode#withTimeZone()} 返回 {@link Boolean#TRUE} 时，该参数无任何作用
+     * @return 所指定格式的字符串时间戳
+     * @throws ParameterRuntimeException 如果时间转换过程中遇到 {@link DateTimeParseException}，会将其二次封装为 {@link ParameterRuntimeException} 重新抛出
      */
-    String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode, ZoneOffset stringTimestampZoneOffset);
+    String format(Long utcMillisecond, DateTimeFormatMode dateTimeFormatMode, ZoneId zone);
 }
