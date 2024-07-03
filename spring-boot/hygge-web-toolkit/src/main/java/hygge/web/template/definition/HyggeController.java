@@ -130,18 +130,18 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
             hyggeCode = ((HyggeException) e).getHyggeCode();
         }
 
-        HyggeControllerResponse<?, ?> HyggeControllerResponse = new HyggeControllerResponse<>();
+        HyggeControllerResponse<?, ?> hyggeControllerResponse = new HyggeControllerResponse<>();
 
         ResponseEntity.BodyBuilder builder = getBuilder(httpStatus);
 
         if (hyggeCode != null) {
-            HyggeControllerResponse.setCode(hyggeCode.getCode());
-            HyggeControllerResponse.setMsg(hyggeCode.getPublicMessage() == null ? e.getMessage() : hyggeCode.getPublicMessage());
+            hyggeControllerResponse.setCode(hyggeCode.getCode());
+            hyggeControllerResponse.setMsg(hyggeCode.getPublicMessage() == null ? e.getMessage() : hyggeCode.getPublicMessage());
         } else {
-            HyggeControllerResponse.setCode(GlobalHyggeCodeEnum.SERVER_END_EXCEPTION.getCode());
-            HyggeControllerResponse.setMsg(GlobalHyggeCodeEnum.SERVER_END_EXCEPTION.getPublicMessage());
+            hyggeControllerResponse.setCode(GlobalHyggeCodeEnum.SERVER_END_EXCEPTION.getCode());
+            hyggeControllerResponse.setMsg(GlobalHyggeCodeEnum.SERVER_END_EXCEPTION.getPublicMessage());
         }
-        return (R) builder.body(HyggeControllerResponse);
+        return (R) builder.body(hyggeControllerResponse);
     }
 
     default <T> R failWithWrapper(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity, Throwable e, HyggeControllerResponseWrapper<R> responseWrapper) {
@@ -174,16 +174,16 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
 
     default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity) {
         ResponseEntity.BodyBuilder builder = getBuilder(httpStatus);
-        HyggeControllerResponse<?, T> HyggeControllerResponse = new HyggeControllerResponse<>();
-        HyggeControllerResponse.setCode(hyggeCode.getCode());
-        HyggeControllerResponse.setMsg(msg != null ? msg : hyggeCode.getPublicMessage());
-        HyggeControllerResponse.setMain(entity);
+        HyggeControllerResponse<?, T> hyggeControllerResponse = new HyggeControllerResponse<>();
+        hyggeControllerResponse.setCode(hyggeCode.getCode());
+        hyggeControllerResponse.setMsg(msg != null ? msg : hyggeCode.getPublicMessage());
+        hyggeControllerResponse.setMain(entity);
 
         R response;
         if (headers != null) {
-            response = (R) builder.headers(headers).body(HyggeControllerResponse);
+            response = (R) builder.headers(headers).body(hyggeControllerResponse);
         } else {
-            response = (R) builder.body(HyggeControllerResponse);
+            response = (R) builder.body(hyggeControllerResponse);
         }
         return response;
     }
