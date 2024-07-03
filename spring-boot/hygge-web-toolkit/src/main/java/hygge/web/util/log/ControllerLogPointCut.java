@@ -95,6 +95,11 @@ public class ControllerLogPointCut extends StaticMethodMatcherPointcut implement
             path = null;
         }
 
+        // 不支持的方法无需作为切入点
+        if(ControllerLogType.UNKNOWN.equals(type)){
+            return false;
+        }
+
         BaseControllerLogHandler handler = controllerLogHandlerFactory.createHandler(method, type, path, configuration);
         controllerLogHandlerCache.saveValue(method, handler);
         return true;
