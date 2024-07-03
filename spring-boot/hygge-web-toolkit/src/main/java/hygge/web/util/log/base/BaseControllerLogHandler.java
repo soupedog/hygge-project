@@ -20,19 +20,24 @@ import hygge.commons.annotation.HyggeExpressionForInputFunction;
 import hygge.commons.annotation.HyggeExpressionForOutputFunction;
 import hygge.util.template.HyggeJsonUtilContainer;
 import hygge.web.util.log.ControllerLogContext;
+import hygge.web.util.log.annotation.ControllerLog;
 import hygge.web.util.log.bo.ControllerLogInfo;
 import hygge.web.util.log.enums.ControllerLogType;
 import hygge.web.util.log.inner.ExpressionCache;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.SpelCompilerMode;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.http.ResponseEntity;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -47,10 +52,28 @@ import java.util.Map;
  */
 public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
     protected static final Logger log = LoggerFactory.getLogger(BaseControllerLogHandler.class);
+    /**
+     * 因 Spring 6.x 已移除 {@link LocalVariableTableParameterNameDiscoverer} 而切换为 {@link StandardReflectionParameterNameDiscoverer}
+     * <br/>
+     * 注意：应用必须携带编译参数 <code>-parameters</code> 才可正常工作
+     */
+    protected static final ParameterNameDiscoverer parameterNameDiscoverer = new StandardReflectionParameterNameDiscoverer();
     protected static final SpelExpressionParser spelExpressionParser = new SpelExpressionParser(new SpelParserConfiguration(SpelCompilerMode.IMMEDIATE, BaseControllerLogHandler.class.getClassLoader()));
 
     protected ControllerLogType type;
     protected String path;
+    /**
+     * 日志是否进行记录，该值为 {@link Boolean#FALSE} 也仍会执行  {@link BaseControllerLogHandler#hook(ControllerLogContext, MethodInvocation)}
+     */
+    protected boolean logRecordEnable = true;
+    /**
+     * 是否需要记录入参(方便切换到仅做统计，不关心出入参的场景)
+     */
+    protected boolean inputParamEnable = true;
+    /**
+     * 是否需要记录入参(方便切换到仅做统计，不关心出入参的场景)
+     */
+    protected boolean outputParamEnable = true;
     protected String[] inputParamNames;
     protected Collection<String> ignoreParamNames;
     /**
@@ -60,16 +83,28 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
     protected final HashMap<String, ExpressionCache> inputExpressionCacheMap;
     protected final ExpressionCache outputExpressionCache;
 
-    /**
-     * 在打印日志前的最后一刻执行的钩子函数
-     */
-    protected abstract void hook(ControllerLogContext context, MethodInvocation methodInvocation);
+    protected BaseControllerLogHandler(Method method, ControllerLogType type, String path, ControllerLog configuration) {
+        String[] inputParamNamesTemp = parameterNameDiscoverer.getParameterNames(method);
+        Collection<String> ignoreParamNamesTemp;
+        Collection<HyggeExpressionForInputFunction> inputParamGetExpressions;
+        Collection<HyggeExpressionForOutputFunction> outputParamExpressions;
+        if (configuration != null) {
+            ignoreParamNamesTemp = new ArrayList<>(Arrays.asList(configuration.ignoreParamNames()));
+            inputParamGetExpressions = new ArrayList<>(Arrays.asList(configuration.inputParamGetExpressions()));
+            outputParamExpressions = new ArrayList<>(Arrays.asList(configuration.outputParamExpressions()));
+            this.inputParamEnable = configuration.inputParamEnable();
+            this.outputParamEnable = configuration.outputParamEnable();
+            this.logRecordEnable = configuration.logRecordEnable();
+        } else {
+            ignoreParamNamesTemp = new ArrayList<>(0);
+            inputParamGetExpressions = new ArrayList<>(0);
+            outputParamExpressions = new ArrayList<>(0);
+        }
 
-    protected BaseControllerLogHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionForInputFunction> inputParamGetExpressions, Collection<HyggeExpressionForOutputFunction> outputParamExpressions) {
         this.type = type;
         this.path = path;
-        this.inputParamNames = inputParamNames == null ? new String[0] : inputParamNames;
-        this.ignoreParamNames = ignoreParamNames == null ? new ArrayList<>(0) : ignoreParamNames;
+        this.inputParamNames = inputParamNamesTemp == null ? new String[0] : inputParamNamesTemp;
+        this.ignoreParamNames = ignoreParamNamesTemp;
         this.inputExpressionCacheMap = new HashMap<>(inputParamGetExpressions.size(), 1F);
         this.outputExpressionCache = new ExpressionCache();
 
@@ -101,6 +136,23 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
     }
 
     /**
+     * {@link BaseControllerLogHandler#defaultProcess(ControllerLogContext, MethodInvocation)} 、{@link BaseControllerLogHandler#processForNoneType(ControllerLogContext, MethodInvocation)} 执行完毕后执行的钩子函数
+     * <p>
+     * 这是是个统计监控需求很好的扩展点
+     */
+    protected abstract void hook(ControllerLogContext context, MethodInvocation methodInvocation);
+
+    /**
+     * logRecordEnable 为 {@link Boolean#TRUE} 时需要执行的自动日志生成流程
+     */
+    protected abstract Object defaultProcess(ControllerLogContext context, MethodInvocation methodInvocation) throws Throwable;
+
+    /**
+     * logRecordEnable 为 {@link Boolean#FALSE} 时需要执行的流程
+     */
+    protected abstract Object processForNoneType(ControllerLogContext context, MethodInvocation methodInvocation) throws Throwable;
+
+    /**
      * 为被拦截的方法执行自动日志逻辑
      *
      * @param methodInvocation 被拦截的方法
@@ -109,42 +161,32 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
     public Object executeHandler(MethodInvocation methodInvocation) throws Throwable {
         long startTs = System.currentTimeMillis();
         ControllerLogContext context = new ControllerLogContext(startTs);
-        try {
-            ControllerLogInfo controllerLogInfo = context.getLogInfo();
-            controllerLogInfo.setType(type);
-            controllerLogInfo.setPath(path);
 
-            Object[] inputParameterValues = methodInvocation.getArguments();
-            controllerLogInfo.setInput(getInputParam(inputParameterValues));
+        if (logRecordEnable) {
+            try {
+                return defaultProcess(context, methodInvocation);
+            } catch (Exception e) {
+                ControllerLogInfo logInfo = context.getLogInfo();
+                logInfo.setErrorMessage(e.getMessage());
+                throw e;
+            } finally {
+                ControllerLogInfo logInfo = context.getLogInfo();
+                logInfo.setCost(System.currentTimeMillis() - startTs);
 
-            Object responseEntity = methodInvocation.proceed();
-            context.saveObject(ControllerLogContext.Key.RAW_RESPONSE, responseEntity);
+                hook(context, methodInvocation);
 
-            Object responseEntityForLog;
-
-            if (responseEntity instanceof ResponseEntity) {
-                responseEntityForLog = ((ResponseEntity<?>) responseEntity).getBody();
-            } else {
-                responseEntityForLog = responseEntity;
+                String logInfoStringValue = getLogString(context);
+                if (logInfo.getErrorMessage() != null) {
+                    log.warn(logInfoStringValue);
+                } else {
+                    log.info(logInfoStringValue);
+                }
             }
-
-            controllerLogInfo.setOutput(getOutputParam(responseEntityForLog));
-
-            hook(context, methodInvocation);
-
-            return responseEntity;
-        } catch (Exception e) {
-            ControllerLogInfo logInfo = context.getLogInfo();
-            logInfo.setErrorMessage(e.getMessage());
-            throw e;
-        } finally {
-            ControllerLogInfo logInfo = context.getLogInfo();
-            logInfo.setCost(System.currentTimeMillis() - startTs);
-            String logInfoStringValue = getLogString(context);
-            if (logInfo.getErrorMessage() != null) {
-                log.warn(logInfoStringValue);
-            } else {
-                log.info(logInfoStringValue);
+        } else {
+            try {
+                return processForNoneType(context, methodInvocation);
+            } finally {
+                hook(context, methodInvocation);
             }
         }
     }

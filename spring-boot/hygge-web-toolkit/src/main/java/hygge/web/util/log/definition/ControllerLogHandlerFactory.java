@@ -16,12 +16,11 @@
 
 package hygge.web.util.log.definition;
 
-import hygge.commons.annotation.HyggeExpressionForInputFunction;
-import hygge.commons.annotation.HyggeExpressionForOutputFunction;
+import hygge.web.util.log.annotation.ControllerLog;
 import hygge.web.util.log.base.BaseControllerLogHandler;
 import hygge.web.util.log.enums.ControllerLogType;
 
-import java.util.Collection;
+import java.lang.reflect.Method;
 
 /**
  * ControllerLogHandler 工厂
@@ -32,14 +31,12 @@ import java.util.Collection;
  */
 public interface ControllerLogHandlerFactory {
     /**
-     * 创建一个 BaseControllerLogHandler 实例
+     * 创建一个 {@link BaseControllerLogHandler} 实例
      *
-     * @param type                     拦截请求的类型
-     * @param path                     拦截请求的 path
-     * @param inputParamNames          入参名称列表
-     * @param ignoreParamNames         需忽略的入参名称列表
-     * @param inputParamGetExpressions 用于记录日志的入参获取表达式集合
-     * @param outputParamExpressions   用于记录日志的出参获取表达式集合
+     * @param method        自动日志的切入方法
+     * @param type          拦截请求的类型
+     * @param path          拦截请求的 path
+     * @param configuration 自动日志的相关配置项
      */
-    BaseControllerLogHandler createHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionForInputFunction> inputParamGetExpressions, Collection<HyggeExpressionForOutputFunction> outputParamExpressions);
+    BaseControllerLogHandler createHandler(Method method, ControllerLogType type, String path, ControllerLog configuration);
 }

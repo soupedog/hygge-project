@@ -52,7 +52,7 @@ public class HttpResponse<R, T> {
     /**
      * 因为 spring 6.x 不向前兼容的改动，为了 spring boot 3.x 的兼容性，此处降级为数字类型
      *
-     * @see org.springframework.http.HttpStatus
+     * @see HttpStatus
      * @see org.springframework.http.HttpStatusCode
      */
     protected Integer httpStatus;

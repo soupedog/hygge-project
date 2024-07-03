@@ -16,16 +16,13 @@
 
 package hygge.web.util.log.impl;
 
-import hygge.commons.annotation.HyggeExpressionForInputFunction;
-import hygge.commons.annotation.HyggeExpressionForOutputFunction;
-import hygge.web.util.log.ControllerLogContext;
+import hygge.web.util.log.annotation.ControllerLog;
 import hygge.web.util.log.base.BaseControllerLogHandler;
 import hygge.web.util.log.definition.ControllerLogHandlerFactory;
 import hygge.web.util.log.enums.ControllerLogType;
-import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-import java.util.Collection;
+import java.lang.reflect.Method;
 
 /**
  * 默认的 ControllerLogHandler 工厂实现
@@ -36,12 +33,7 @@ import java.util.Collection;
  */
 public class DefaultControllerLogHandlerFactory implements ControllerLogHandlerFactory, BeanPostProcessor {
     @Override
-    public BaseControllerLogHandler createHandler(ControllerLogType type, String path, String[] inputParamNames, Collection<String> ignoreParamNames, Collection<HyggeExpressionForInputFunction> inputParamGetExpressions, Collection<HyggeExpressionForOutputFunction> outputParamExpressions) {
-        return new BaseControllerLogHandler(type, path, inputParamNames, ignoreParamNames, inputParamGetExpressions, outputParamExpressions) {
-            @Override
-            protected void hook(ControllerLogContext context, MethodInvocation methodInvocation) {
-                // 默认什么也不做
-            }
-        };
+    public BaseControllerLogHandler createHandler(Method method, ControllerLogType type, String path, ControllerLog configuration) {
+        return new DefaultControllerLogHandler(method, type, path, configuration);
     }
 }

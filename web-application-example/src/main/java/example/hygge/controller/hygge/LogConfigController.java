@@ -119,7 +119,7 @@ public class LogConfigController extends HyggeJsonUtilContainer implements Hygge
     }
 
     // 禁用该方法的自动 Controller 层日志
-    @ControllerLog(enable = false)
+    @ControllerLog(logRecordEnable = false)
     @GetMapping("/logConfig/disableAutoControllerLog")
     public ResponseEntity<?> disableAutoControllerLog() {
         log.info("info 模拟的日志信息");

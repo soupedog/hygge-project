@@ -18,6 +18,9 @@ package hygge.web.util.log.annotation;
 
 import hygge.commons.annotation.HyggeExpressionForInputFunction;
 import hygge.commons.annotation.HyggeExpressionForOutputFunction;
+import hygge.web.util.log.ControllerLogContext;
+import hygge.web.util.log.base.BaseControllerLogHandler;
+import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,20 +38,36 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ControllerLog {
     /**
-     * 被当前注解标记的方法是否激活 Controller 层日志。
+     * 指定日志是否进行记录。
+     * <p>
+     * 该值为 {@link Boolean#FALSE} 时也仍会执行  {@link BaseControllerLogHandler#hook(ControllerLogContext, MethodInvocation)}
      */
-    boolean enable() default true;
+    boolean logRecordEnable() default true;
 
     /**
-     * 忽略的入参的形参名称，名单里的参数不参与序列化</br>
+     * 忽略的入参的形参名称，名单里的参数不参与日志记录</br>
      * 优先级高于表达式，意味着如果入参被忽略，与其相关的表达式也将直接失效
      */
     String[] ignoreParamNames() default {};
 
     /**
+     * 是否需要记录入参(方便切换到仅做统计，不关心出入参的场景)
+     * <p>
+     * 该值为 {@link Boolean#FALSE} 时，取值表达式将失效，日志将忽略入参的记录
+     */
+    boolean inputParamEnable() default true;
+
+    /**
      * 指明入参的取值表达式，你可以自由地序列化部分入参，语法为 "SpEL"
      */
     HyggeExpressionForInputFunction[] inputParamGetExpressions() default {};
+
+    /**
+     * 是否需要记录出参(方便切换到仅做统计，不关心出入参的场景)
+     * <p>
+     * 该值为 {@link Boolean#FALSE} 时，取值表达式将失效，日志将忽略出参的记录
+     */
+    boolean outputParamEnable() default true;
 
     /**
      * 指明出参的取值表达式，你可以自由地序列化部分出参，语法为 "SpEL"

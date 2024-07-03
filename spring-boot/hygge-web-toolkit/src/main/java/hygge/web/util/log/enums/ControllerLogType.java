@@ -25,9 +25,9 @@ package hygge.web.util.log.enums;
  */
 public enum ControllerLogType {
     /**
-     * 不需要自动日志
+     * 未被支持的类型
      */
-    NONE,
+    UNKNOWN,
     GET,
     POST,
     PATCH,
