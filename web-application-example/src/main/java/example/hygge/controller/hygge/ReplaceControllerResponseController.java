@@ -16,14 +16,12 @@
 
 package example.hygge.controller.hygge;
 
-import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
 import example.hygge.domain.ControllerResponse;
 import example.hygge.domain.CustomSystemCode;
 import example.hygge.domain.User;
 import hygge.web.template.definition.HyggeController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +52,6 @@ public class ReplaceControllerResponseController implements HyggeController<Resp
      */
     @GetMapping("/replace/customResponse")
     public ResponseEntity<?> customResponse() {
-        return success(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, new User("customResponse", "customResponse", "customResponse"), customResponseWrapper);
+        return successWithWrapper(new User("customResponse", "customResponse", "customResponse"), customResponseWrapper);
     }
 }

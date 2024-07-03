@@ -53,6 +53,23 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
     Logger log = LoggerFactory.getLogger(HyggeController.class);
 
     /**
+     * 便用 entity 直接返回不进行包装的示例模版
+     */
+    HyggeControllerResponseWrapper<ResponseEntity<?>> emptyResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
+        // "status(HttpStatus status)" 方法在 Spring Boot 3.x 环境中不存在了，此处用 int 型重载进行兼容性优化
+        ResponseEntity.BodyBuilder builder = ResponseEntity.status(httpStatus.value());
+
+        ResponseEntity<?> response;
+        if (headers != null) {
+            response = builder.headers(headers).body(entity);
+        } else {
+            response = builder.body(entity);
+        }
+
+        return response;
+    };
+
+    /**
      * 非严重异常日志的简易开关(默认为 true ：进行打印)
      *
      * @param exception 异常信息
@@ -127,7 +144,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
         return (R) builder.body(HyggeControllerResponse);
     }
 
-    default <T> R fail(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity, Throwable e, HyggeControllerResponseWrapper<R> responseWrapper) {
+    default <T> R failWithWrapper(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity, Throwable e, HyggeControllerResponseWrapper<R> responseWrapper) {
         return responseWrapper.createResponse(httpStatus, headers, hyggeCode, msg, entity, e);
     }
 
@@ -135,12 +152,24 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
         return success(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, null);
     }
 
+    default R successWithWrapper(HyggeControllerResponseWrapper<R> responseWrapper) {
+        return successWithWrapper(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, null, responseWrapper);
+    }
+
     default <T> R success(T entity) {
         return success(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, entity);
     }
 
+    default <T> R successWithWrapper(T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
+        return successWithWrapper(HttpStatus.OK, null, GlobalHyggeCodeEnum.SUCCESS, null, entity, responseWrapper);
+    }
+
     default <T> R success(HyggeCode hyggeCode, String msg, T entity) {
         return success(HttpStatus.OK, null, hyggeCode, msg, entity);
+    }
+
+    default <T> R successWithWrapper(HyggeCode hyggeCode, String msg, T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
+        return successWithWrapper(HttpStatus.OK, null, hyggeCode, msg, entity, responseWrapper);
     }
 
     default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity) {
@@ -159,7 +188,7 @@ public interface HyggeController<R extends ResponseEntity<?>> extends AutoLogCon
         return response;
     }
 
-    default <T> R success(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
+    default <T> R successWithWrapper(HttpStatus httpStatus, HttpHeaders headers, HyggeCode hyggeCode, String msg, T entity, HyggeControllerResponseWrapper<R> responseWrapper) {
         return responseWrapper.createResponse(httpStatus, headers, hyggeCode, msg, entity, null);
     }
 
