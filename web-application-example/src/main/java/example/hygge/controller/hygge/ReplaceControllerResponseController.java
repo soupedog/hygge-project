@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "ReplaceControllerResponseController", description = "演示自定义数据结构相关操作，请与 '/logConfig/user/standard' 进行比较")
 public class ReplaceControllerResponseController implements HyggeController<ResponseEntity<?>> {
-
     /**
      * 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，需要对自定义 HyggeCode 进行额外处理，见 {@link CustomSystemCode}
      */
