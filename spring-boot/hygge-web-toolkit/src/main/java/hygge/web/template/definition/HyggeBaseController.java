@@ -38,6 +38,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
@@ -47,6 +48,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * @date 2024/7/3
  * @since 1.0
  */
+@ControllerAdvice
 public interface HyggeBaseController<R extends ResponseEntity<?>> {
     Logger log = LoggerFactory.getLogger(HyggeController.class);
 

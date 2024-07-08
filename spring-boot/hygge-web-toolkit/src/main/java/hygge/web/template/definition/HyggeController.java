@@ -17,7 +17,6 @@
 package hygge.web.template.definition;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 
 /**
  * Hygge Controller 基础功能上追加自动日志功能
@@ -26,6 +25,5 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
  * @date 2022/7/5
  * @since 1.0
  */
-@ControllerAdvice
 public interface HyggeController<R extends ResponseEntity<?>> extends HyggeBaseController<R>, AutoLogController {
 }
