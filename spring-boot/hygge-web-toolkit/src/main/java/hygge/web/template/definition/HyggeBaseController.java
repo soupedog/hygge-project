@@ -53,20 +53,14 @@ public interface HyggeBaseController<R extends ResponseEntity<?>> {
     Logger log = LoggerFactory.getLogger(HyggeController.class);
 
     /**
-     * 便用 entity 直接返回不进行包装的示例模版
+     * 便用 entity 直接返回而不进行包装的示例模版
      */
     HyggeControllerResponseWrapper<ResponseEntity<?>> emptyResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
         // "status(HttpStatus status)" 方法在 Spring Boot 3.x 环境中不存在了，此处用 int 型重载进行兼容性优化
         ResponseEntity.BodyBuilder builder = ResponseEntity.status(httpStatus.value());
 
-        ResponseEntity<?> response;
-        if (headers != null) {
-            response = builder.headers(headers).body(entity);
-        } else {
-            response = builder.body(entity);
-        }
-
-        return response;
+        return builder.headers(headers)
+                .body(entity);
     };
 
     /**

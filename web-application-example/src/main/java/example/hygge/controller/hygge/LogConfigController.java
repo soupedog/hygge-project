@@ -23,7 +23,6 @@ import hygge.commons.annotation.HyggeExpressionForOutputFunction;
 import hygge.commons.constant.enums.StringCategoryEnum;
 import hygge.commons.template.definition.HyggeInfo;
 import hygge.commons.template.definition.HyggeLogInfoObject;
-import hygge.util.UtilCreator;
 import hygge.util.template.HyggeJsonUtilContainer;
 import hygge.web.template.HyggeControllerResponse;
 import hygge.web.template.definition.HyggeController;
@@ -125,7 +124,7 @@ public class LogConfigController extends HyggeJsonUtilContainer implements Hygge
         log.info("info 模拟的日志信息");
         Map<Object, Object> mockObject = new HashMap<>();
         mockObject.put("1", 1);
-        String mockObjectStringVal = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(true).formatAsString(mockObject);
+        String mockObjectStringVal = jsonHelperIndent.formatAsString(mockObject);
         log.warn("warn 模拟的日志对象 {}", mockObjectStringVal);
         log.error("error 模拟的日志信息");
         return success();

@@ -19,6 +19,7 @@ package example.hygge.controller.hygge;
 import example.hygge.domain.ControllerResponse;
 import example.hygge.domain.CustomSystemCode;
 import example.hygge.domain.User;
+import hygge.web.template.definition.HyggeBaseController;
 import hygge.web.template.definition.HyggeController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +39,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "ReplaceControllerResponseController", description = "演示自定义数据结构相关操作，请与 '/logConfig/user/standard' 进行比较")
 public class ReplaceControllerResponseController implements HyggeController<ResponseEntity<?>> {
     /**
-     * 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，需要对自定义 HyggeCode 进行额外处理，见 {@link CustomSystemCode}
+     * 如果你的 customResponseWrapper 会使用到 HyggeCode 的 code/extraInfo 属性，需要对自定义 HyggeCode 进行额外处理，确保全局数据类型一致，见 {@link CustomSystemCode}
+     * <p>
+     * 此处为示例如何自定义，如果仅是为了直接返回 entity 可直接使用 {@link HyggeBaseController#emptyResponseWrapper}
      */
     private static final HyggeControllerResponseWrapper<ResponseEntity<?>> customResponseWrapper = (httpStatus, headers, hyggeCode, msg, entity, throwable) -> {
         // "status(HttpStatus status)" 方法在 Spring Boot 3.x 环境中不存在了，此处用 int 型重载进行兼容性优化
         ResponseEntity.BodyBuilder result = ResponseEntity.status(httpStatus.value());
-        return result.body(entity);
+        return result.headers(headers)
+                .body(entity);
     };
 
     /**

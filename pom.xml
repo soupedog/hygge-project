@@ -75,12 +75,13 @@
         </dependencies>
     </dependencyManagement>
 
-    <!--配置快照仓库-->
     <distributionManagement>
+        <!--配置快照仓库-->
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <!--配置中央仓库-->
         <repository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
