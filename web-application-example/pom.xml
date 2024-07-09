@@ -5,13 +5,13 @@
     <parent>
         <artifactId>hygge-project</artifactId>
         <groupId>io.github.soupedog</groupId>
-        <version>0.0.16</version>
+        <version>0.0.17</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>web-application-example</artifactId>
-    <version>0.0.16</version>
+    <version>0.0.17</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <hygge.version>0.0.16</hygge.version>
+        <hygge.version>0.0.17</hygge.version>
         <spring.boot.version>2.7.18</spring.boot.version>
         <lombok.version>1.18.30</lombok.version>
         <maven.deploy.skip>true</maven.deploy.skip>
