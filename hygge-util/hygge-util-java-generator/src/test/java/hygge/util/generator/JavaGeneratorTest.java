@@ -18,17 +18,17 @@ package hygge.util.generator;
 
 
 import hygge.commons.constant.ConstantParameters;
-import hygge.util.generator.java.bo.ClassInfo;
-import hygge.util.generator.java.bo.ClassType;
-import hygge.util.generator.java.bo.Modifier;
 import hygge.util.UtilCreator;
 import hygge.util.constant.ConstantClassInfoContainer;
 import hygge.util.definition.FileHelper;
 import hygge.util.generator.java.JavaGenerator;
-import hygge.util.generator.java.bo.JavaGeneratorConfiguration;
-import hygge.util.template.HyggeJsonUtilContainer;
+import hygge.util.generator.java.bo.ClassInfo;
+import hygge.util.generator.java.bo.ClassType;
 import hygge.util.generator.java.bo.EnumElement;
+import hygge.util.generator.java.bo.JavaGeneratorConfiguration;
+import hygge.util.generator.java.bo.Modifier;
 import hygge.util.generator.java.bo.Property;
+import hygge.util.template.HyggeJsonUtilContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -136,6 +136,11 @@ class JavaGeneratorTest extends HyggeJsonUtilContainer {
                                 .name("debt")
                                 .classInfo(ClassInfo.createMapClassInfo(ConstantClassInfoContainer.STRING, ConstantClassInfoContainer.BIG_DECIMAL))
                                 .build()
+                        ,
+                        Property.builder()
+                                .name("file")
+                                .classInfo(ConstantClassInfoContainer.BYTE_ARRAY)
+                                .build()
                 ))
                 .build()
                 .init(JAVA_GENERATOR_CONFIGURATION);
@@ -153,9 +158,7 @@ class JavaGeneratorTest extends HyggeJsonUtilContainer {
         );
 
         classInfo.getModifiers().add(Modifier.ABSTRACT);
-        classInfo.getProperties().forEach(item -> {
-            item.setModifiers(Modifier.createModifierList(Modifier.PROTECTED));
-        });
+        classInfo.getProperties().forEach(item -> item.setModifiers(Modifier.createModifierList(Modifier.PROTECTED)));
     }
 
     @Test

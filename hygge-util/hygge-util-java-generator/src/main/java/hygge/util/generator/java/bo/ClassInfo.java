@@ -19,7 +19,6 @@ package hygge.util.generator.java.bo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hygge.util.UtilCreator;
 import hygge.util.definition.CollectionHelper;
-import hygge.util.definition.ParameterHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,19 +27,11 @@ import java.util.List;
 import java.util.Objects;
 
 import static hygge.util.constant.ConstantClassInfoContainer.ALL_ARGS_CONSTRUCTOR;
-import static hygge.util.constant.ConstantClassInfoContainer.BOOLEAN;
 import static hygge.util.constant.ConstantClassInfoContainer.BUILDER;
-import static hygge.util.constant.ConstantClassInfoContainer.BYTE;
-import static hygge.util.constant.ConstantClassInfoContainer.DOUBLE;
-import static hygge.util.constant.ConstantClassInfoContainer.FLOAT;
 import static hygge.util.constant.ConstantClassInfoContainer.GENERATED;
 import static hygge.util.constant.ConstantClassInfoContainer.GETTER;
-import static hygge.util.constant.ConstantClassInfoContainer.INTEGER;
-import static hygge.util.constant.ConstantClassInfoContainer.LONG;
 import static hygge.util.constant.ConstantClassInfoContainer.NO_ARGS_CONSTRUCTOR;
 import static hygge.util.constant.ConstantClassInfoContainer.SETTER;
-import static hygge.util.constant.ConstantClassInfoContainer.SHORT;
-import static hygge.util.constant.ConstantClassInfoContainer.STRING;
 
 /**
  * 类描述信息
@@ -51,8 +42,10 @@ import static hygge.util.constant.ConstantClassInfoContainer.STRING;
  */
 public class ClassInfo {
     protected static final CollectionHelper collectionHelper = UtilCreator.INSTANCE.getDefaultInstance(CollectionHelper.class);
-    protected static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
-
+    /**
+     * 如果为 {@link Boolean#TRUE}，将认定为 JDK 基础类无需 import
+     */
+    private boolean isBasic = false;
     /**
      * 类所在包
      */
@@ -156,7 +149,7 @@ public class ClassInfo {
 
         // 依赖信息中排除自己或基础类型
         List<ClassInfo> result = collectionHelper.filterNonemptyItemAsArrayList(false, resultTemp, (item -> {
-            if (item.equals(currentClassInfo) || item.isBasicType()) {
+            if (item.equals(currentClassInfo) || item.isBasic()) {
                 return null;
             } else {
                 return item;
@@ -197,34 +190,25 @@ public class ClassInfo {
                 .build();
     }
 
-    @JsonIgnore
-    public boolean isBasicType() {
-        return STRING.equals(this)
-                || BYTE.equals(this)
-                || SHORT.equals(this)
-                || INTEGER.equals(this)
-                || LONG.equals(this)
-                || FLOAT.equals(this)
-                || DOUBLE.equals(this)
-                || BOOLEAN.equals(this)
-                ;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClassInfo classInfo = (ClassInfo) o;
-        return Objects.equals(packageInfo, classInfo.packageInfo) && Objects.equals(name, classInfo.name) && type == classInfo.type && Objects.equals(parent, classInfo.parent) && Objects.equals(annotations, classInfo.annotations) && Objects.equals(references, classInfo.references) && Objects.equals(properties, classInfo.properties) && Objects.equals(enumElements, classInfo.enumElements);
+        return isBasic == classInfo.isBasic && Objects.equals(packageInfo, classInfo.packageInfo) && Objects.equals(name, classInfo.name) && Objects.equals(modifiers, classInfo.modifiers) && type == classInfo.type && Objects.equals(parent, classInfo.parent) && Objects.equals(description, classInfo.description) && Objects.equals(annotations, classInfo.annotations) && Objects.equals(references, classInfo.references) && Objects.equals(properties, classInfo.properties) && Objects.equals(enumElements, classInfo.enumElements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(packageInfo, name, type, parent, annotations, references, properties, enumElements);
+        return Objects.hash(isBasic, packageInfo, name, modifiers, type, parent, description, annotations, references, properties, enumElements);
+    }
+
+    private static boolean $default$isBasic() {
+        return false;
     }
 
     private static List<Modifier> $default$modifiers() {
-        return collectionHelper.createCollection(new Modifier[]{Modifier.PUBLIC});
+        return collectionHelper.createCollection(Modifier.PUBLIC);
     }
 
     private static ClassType $default$type() {
@@ -249,6 +233,10 @@ public class ClassInfo {
 
     public static ClassInfoBuilder builder() {
         return new ClassInfoBuilder();
+    }
+
+    public boolean isBasic() {
+        return this.isBasic;
     }
 
     public String getPackageInfo() {
@@ -289,6 +277,10 @@ public class ClassInfo {
 
     public List<EnumElement> getEnumElements() {
         return this.enumElements;
+    }
+
+    public void setBasic(boolean isBasic) {
+        this.isBasic = isBasic;
     }
 
     public void setPackageInfo(String packageInfo) {
@@ -332,6 +324,7 @@ public class ClassInfo {
     }
 
     public ClassInfo() {
+        this.isBasic = $default$isBasic();
         this.modifiers = $default$modifiers();
         this.type = $default$type();
         this.annotations = $default$annotations();
@@ -340,7 +333,8 @@ public class ClassInfo {
         this.enumElements = $default$enumElements();
     }
 
-    public ClassInfo(String packageInfo, String name, List<Modifier> modifiers, ClassType type, ClassInfo parent, String description, List<ClassInfo> annotations, List<ClassInfo> references, List<Property> properties, List<EnumElement> enumElements) {
+    public ClassInfo(boolean isBasic, String packageInfo, String name, List<Modifier> modifiers, ClassType type, ClassInfo parent, String description, List<ClassInfo> annotations, List<ClassInfo> references, List<Property> properties, List<EnumElement> enumElements) {
+        this.isBasic = isBasic;
         this.packageInfo = packageInfo;
         this.name = name;
         this.modifiers = modifiers;
@@ -354,6 +348,8 @@ public class ClassInfo {
     }
 
     public static class ClassInfoBuilder {
+        private boolean isBasic$set;
+        private boolean isBasic$value;
         private String packageInfo;
         private String name;
         private boolean modifiers$set;
@@ -372,6 +368,12 @@ public class ClassInfo {
         private List<EnumElement> enumElements$value;
 
         ClassInfoBuilder() {
+        }
+
+        public ClassInfoBuilder isBasic(boolean isBasic) {
+            this.isBasic$value = isBasic;
+            this.isBasic$set = true;
+            return this;
         }
 
         public ClassInfoBuilder packageInfo(String packageInfo) {
@@ -431,6 +433,11 @@ public class ClassInfo {
         }
 
         public ClassInfo build() {
+            boolean isBasic$value = this.isBasic$value;
+            if (!this.isBasic$set) {
+                isBasic$value = ClassInfo.$default$isBasic();
+            }
+
             List<Modifier> modifiers$value = this.modifiers$value;
             if (!this.modifiers$set) {
                 modifiers$value = ClassInfo.$default$modifiers();
@@ -461,11 +468,11 @@ public class ClassInfo {
                 enumElements$value = ClassInfo.$default$enumElements();
             }
 
-            return new ClassInfo(this.packageInfo, this.name, modifiers$value, type$value, this.parent, this.description, annotations$value, references$value, properties$value, enumElements$value);
+            return new ClassInfo(isBasic$value, this.packageInfo, this.name, modifiers$value, type$value, this.parent, this.description, annotations$value, references$value, properties$value, enumElements$value);
         }
 
         public String toString() {
-            return "ClassInfo.ClassInfoBuilder(packageInfo=" + this.packageInfo + ", name=" + this.name + ", modifiers$value=" + this.modifiers$value + ", type$value=" + this.type$value + ", parent=" + this.parent + ", description=" + this.description + ", annotations$value=" + this.annotations$value + ", references$value=" + this.references$value + ", properties$value=" + this.properties$value + ", enumElements$value=" + this.enumElements$value + ")";
+            return "ClassInfo.ClassInfoBuilder(isBasic$value=" + this.isBasic$value + ", packageInfo=" + this.packageInfo + ", name=" + this.name + ", modifiers$value=" + this.modifiers$value + ", type$value=" + this.type$value + ", parent=" + this.parent + ", description=" + this.description + ", annotations$value=" + this.annotations$value + ", references$value=" + this.references$value + ", properties$value=" + this.properties$value + ", enumElements$value=" + this.enumElements$value + ")";
         }
     }
 }

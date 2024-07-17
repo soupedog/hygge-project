@@ -28,14 +28,15 @@ import hygge.util.generator.java.bo.ClassType;
  */
 @SuppressWarnings({"java:S1192"})
 public class ConstantClassInfoContainer {
-    public static final ClassInfo STRING = ClassInfo.builder().packageInfo("java.lang").name("String").build();
-    public static final ClassInfo BYTE = ClassInfo.builder().packageInfo("java.lang").name("Byte").build();
-    public static final ClassInfo SHORT = ClassInfo.builder().packageInfo("java.lang").name("Short").build();
-    public static final ClassInfo INTEGER = ClassInfo.builder().packageInfo("java.lang").name("Integer").build();
-    public static final ClassInfo LONG = ClassInfo.builder().packageInfo("java.lang").name("Long").build();
-    public static final ClassInfo FLOAT = ClassInfo.builder().packageInfo("java.lang").name("Float").build();
-    public static final ClassInfo DOUBLE = ClassInfo.builder().packageInfo("java.lang").name("Double").build();
-    public static final ClassInfo BOOLEAN = ClassInfo.builder().packageInfo("java.lang").name("Boolean").build();
+    public static final ClassInfo BYTE_ARRAY = ClassInfo.builder().isBasic(true).packageInfo("").name("byte[]").build();
+    public static final ClassInfo STRING = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("String").build();
+    public static final ClassInfo BYTE = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("Byte").build();
+    public static final ClassInfo SHORT = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("Short").build();
+    public static final ClassInfo INTEGER = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("Integer").build();
+    public static final ClassInfo LONG = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("Long").build();
+    public static final ClassInfo FLOAT = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("Float").build();
+    public static final ClassInfo DOUBLE = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("Double").build();
+    public static final ClassInfo BOOLEAN = ClassInfo.builder().isBasic(true).packageInfo("java.lang").name("Boolean").build();
     public static final ClassInfo BIG_DECIMAL = ClassInfo.builder().packageInfo("java.math").name("BigDecimal").build();
     public static final ClassInfo LOCAL_DATE_TIME = ClassInfo.builder().packageInfo("java.time").name("LocalDateTime").build();
     public static final ClassInfo ZONED_DATE_TIME = ClassInfo.builder().packageInfo("java.time").name("ZonedDateTime").build();
