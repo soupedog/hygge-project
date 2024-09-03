@@ -129,6 +129,9 @@ public class ClassInfo {
         return this;
     }
 
+    /**
+     * 此方法也有可能引发死循环，但原则上该方法在 {@link ClassInfo#getDependency()} 之后调用，应该已过滤掉了循环引用问题
+     */
     public String formatClassAsTypeName() {
         StringBuilder content = new StringBuilder();
 
@@ -252,6 +255,9 @@ public class ClassInfo {
         }
     }
 
+    /**
+     * 该方法有循环计数器，用于拦截循环引用
+     */
     private void initReferencesDependency(Set<ClassInfo> result, List<ClassInfo> references) {
         for (ClassInfo item : references) {
             increaseLoopCountAndValidate();
