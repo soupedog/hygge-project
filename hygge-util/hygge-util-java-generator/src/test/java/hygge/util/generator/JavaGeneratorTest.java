@@ -157,6 +157,17 @@ class JavaGeneratorTest extends HyggeJsonUtilContainer {
                 .build()
         );
 
+        classInfo.getProperties().add(Property.builder()
+                .name("complexType")
+                .classInfo(
+                        ClassInfo.createMapClassInfo(ConstantClassInfoContainer.STRING,
+                                ClassInfo.createListClassInfo(
+                                        ClassInfo.createSetClassInfo(classInfo))
+                        )
+                )
+                .build()
+        );
+
         classInfo.getModifiers().add(Modifier.ABSTRACT);
         classInfo.getProperties().forEach(item -> item.setModifiers(Modifier.createModifierList(Modifier.PROTECTED)));
     }

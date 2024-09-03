@@ -55,31 +55,6 @@ public class Property {
      */
     private List<Modifier> modifiers = Modifier.createModifierList(Modifier.PRIVATE);
 
-    public String formatClassAsString() {
-        StringBuilder content = new StringBuilder();
-
-        if (getClassInfo().getReferences().isEmpty()) {
-            content.append(getClassInfo().getName());
-        } else {
-            content.append(getClassInfo().getName());
-            content.append("<");
-
-            getClassInfo().getReferences().forEach(item -> {
-                content.append(item.getName());
-                content.append(",");
-                content.append(" ");
-            });
-
-            parameterHelper.removeStringFormTail(content, " ", 1);
-            parameterHelper.removeStringFormTail(content, ",", 1);
-
-            content.append(">");
-        }
-
-        return content.toString();
-    }
-
-
     private static List<ClassInfo> $default$annotations() {
         return new ArrayList();
     }

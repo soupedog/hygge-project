@@ -17,14 +17,17 @@
 package hygge.util.generator.java.bo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hygge.commons.exception.UtilRuntimeException;
 import hygge.util.UtilCreator;
 import hygge.util.definition.CollectionHelper;
+import hygge.util.definition.ParameterHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static hygge.util.constant.ConstantClassInfoContainer.ALL_ARGS_CONSTRUCTOR;
 import static hygge.util.constant.ConstantClassInfoContainer.BUILDER;
@@ -41,7 +44,16 @@ import static hygge.util.constant.ConstantClassInfoContainer.SETTER;
  * @since 1.0
  */
 public class ClassInfo {
+    /**
+     * 最大循环次数
+     */
+    private static final int MAX_LOOP_COUNT = 500;
     protected static final CollectionHelper collectionHelper = UtilCreator.INSTANCE.getDefaultInstance(CollectionHelper.class);
+    protected static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+    /**
+     * 用于检测是否死循环的标记位
+     */
+    private int loopCount = 0;
     /**
      * 如果为 {@link Boolean#TRUE}，将认定为 JDK 基础类无需 import
      */
@@ -117,39 +129,71 @@ public class ClassInfo {
         return this;
     }
 
+    public String formatClassAsTypeName() {
+        StringBuilder content = new StringBuilder();
+
+        if (getReferences().isEmpty()) {
+            content.append(getName());
+        } else {
+            content.append(getName());
+            content.append("<");
+
+            getReferences().forEach(item -> {
+                content.append(item.formatClassAsTypeName());
+                content.append(",");
+                content.append(" ");
+            });
+
+            parameterHelper.removeStringFormTail(content, " ", 1);
+            parameterHelper.removeStringFormTail(content, ",", 1);
+
+            content.append(">");
+        }
+
+        return content.toString();
+    }
+
+    @JsonIgnore
+    public String getSimpleClassName() {
+        return packageInfo + "." + name;
+    }
+
     @JsonIgnore
     public List<ClassInfo> getDependency() {
         HashSet<ClassInfo> resultTemp = new HashSet<>();
 
         // 继承依赖
         if (parent != null) {
-            resultTemp.add(parent);
+            smartAddDependency(resultTemp, parent);
         }
 
         // 类注解依赖
-        resultTemp.addAll(annotations);
+        smartAddDependency(resultTemp, annotations);
 
-        // 泛型依赖
-        references.forEach(item -> {
-            resultTemp.add(item);
-            resultTemp.addAll(item.getReferences());
-        });
+        // 当前类泛型依赖
+        initReferencesDependency(resultTemp, getReferences());
 
         // 类属性依赖
         properties.forEach(item -> {
-            resultTemp.add(item.getClassInfo());
+            ClassInfo itemClassInfo = item.getClassInfo();
 
-            if (!item.getClassInfo().getReferences().isEmpty()) {
-                // 泛型中可能存在自己而引发重复
-                resultTemp.addAll(item.getClassInfo().getReferences());
+            // 如果不是基础类型
+            if (!itemClassInfo.isBasic) {
+                resultTemp.add(itemClassInfo);
+
+                // 类属性的类型依赖
+                List<ClassInfo> itemReferences = itemClassInfo.getReferences();
+                if (!itemReferences.isEmpty()) {
+                    initReferencesDependency(resultTemp, itemReferences);
+                }
             }
         });
 
         ClassInfo currentClassInfo = this;
 
-        // 依赖信息中排除自己或基础类型
+        // 依赖信息中排除自己
         List<ClassInfo> result = collectionHelper.filterNonemptyItemAsArrayList(false, resultTemp, (item -> {
-            if (item.equals(currentClassInfo) || item.isBasic()) {
+            if (item.equals(currentClassInfo)) {
                 return null;
             } else {
                 return item;
@@ -190,17 +234,57 @@ public class ClassInfo {
                 .build();
     }
 
+    /**
+     * 根据布尔类型判定，排除一些不必要的 hash 碰撞
+     */
+    private void smartAddDependency(Set<ClassInfo> result, ClassInfo newItem) {
+        if (!newItem.isBasic) {
+            result.add(newItem);
+        }
+    }
+
+    /**
+     * 批量智能添加
+     */
+    private void smartAddDependency(Set<ClassInfo> result, List<ClassInfo> newItemList) {
+        for (ClassInfo newItem : newItemList) {
+            smartAddDependency(result, newItem);
+        }
+    }
+
+    private void initReferencesDependency(Set<ClassInfo> result, List<ClassInfo> references) {
+        for (ClassInfo item : references) {
+            increaseLoopCountAndValidate();
+
+            smartAddDependency(result, item);
+            if (item.getReferences().isEmpty()) {
+                continue;
+            }
+            initReferencesDependency(result, item.getReferences());
+        }
+    }
+
+    private void increaseLoopCountAndValidate() {
+        this.loopCount = loopCount + 1;
+        if (this.loopCount > MAX_LOOP_COUNT) {
+            throw new UtilRuntimeException(String.format("%s has raised more than %d loops and has been forbidden, check if a circular reference to a class has occurred.", getSimpleClassName(), MAX_LOOP_COUNT));
+        }
+    }
+
+    /**
+     * 包路径、类名相同就认为是重复的
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClassInfo classInfo = (ClassInfo) o;
-        return isBasic == classInfo.isBasic && Objects.equals(packageInfo, classInfo.packageInfo) && Objects.equals(name, classInfo.name) && Objects.equals(modifiers, classInfo.modifiers) && type == classInfo.type && Objects.equals(parent, classInfo.parent) && Objects.equals(description, classInfo.description) && Objects.equals(annotations, classInfo.annotations) && Objects.equals(references, classInfo.references) && Objects.equals(properties, classInfo.properties) && Objects.equals(enumElements, classInfo.enumElements);
+        return Objects.equals(packageInfo, classInfo.packageInfo) && Objects.equals(name, classInfo.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isBasic, packageInfo, name, modifiers, type, parent, description, annotations, references, properties, enumElements);
+        return Objects.hash(packageInfo, name);
     }
 
     private static boolean $default$isBasic() {

@@ -133,7 +133,7 @@ public class JavaGenerator extends FileContentGenerator {
                 content.append(" ");
             });
 
-            content.append(property.formatClassAsString());
+            content.append(property.getClassInfo().formatClassAsTypeName());
 
             content.append(" ");
 
@@ -175,13 +175,13 @@ public class JavaGenerator extends FileContentGenerator {
     }
 
     protected static void addGetFunction(int indentationLevel, StringBuilder content, Property property) {
-        addOneLine(indentationLevel + 1, content, String.format("public %s get%s() {", property.formatClassAsString(), parameterHelper.upperCaseFirstLetter(property.getName())));
+        addOneLine(indentationLevel + 1, content, String.format("public %s get%s() {", property.getClassInfo().formatClassAsTypeName(), parameterHelper.upperCaseFirstLetter(property.getName())));
         addOneLine(indentationLevel + 2, content, String.format("return %s;", property.getName()));
         addOneLine(indentationLevel + 1, content, "}");
     }
 
     private static void addSetFunction(int indentationLevel, StringBuilder content, Property property) {
-        addOneLine(indentationLevel + 1, content, String.format("public void set%s(%s %s) {", parameterHelper.upperCaseFirstLetter(property.getName()), property.formatClassAsString(), property.getName()));
+        addOneLine(indentationLevel + 1, content, String.format("public void set%s(%s %s) {", parameterHelper.upperCaseFirstLetter(property.getName()), property.getClassInfo().formatClassAsTypeName(), property.getName()));
         addOneLine(indentationLevel + 2, content, String.format("this.%s = %s;", property.getName(), property.getName()));
         addOneLine(indentationLevel + 1, content, "}");
     }
