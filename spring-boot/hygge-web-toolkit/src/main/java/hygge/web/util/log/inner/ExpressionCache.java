@@ -16,8 +16,8 @@
 
 package hygge.web.util.log.inner;
 
-import hygge.commons.template.container.base.AbstractHyggeKeeper;
 import hygge.commons.annotation.HyggeExpressionForInputFunction;
+import hygge.commons.template.container.base.AbstractHyggeKeeper;
 import org.springframework.expression.Expression;
 
 import java.util.Map;

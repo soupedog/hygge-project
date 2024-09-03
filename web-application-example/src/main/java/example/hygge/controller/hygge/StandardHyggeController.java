@@ -16,11 +16,11 @@
 
 package example.hygge.controller.hygge;
 
-import hygge.commons.exception.InternalRuntimeException;
-import hygge.commons.exception.LightRuntimeException;
 import example.hygge.domain.ControllerResponse;
 import example.hygge.domain.CustomSystemCode;
 import example.hygge.domain.User;
+import hygge.commons.exception.InternalRuntimeException;
+import hygge.commons.exception.LightRuntimeException;
 import hygge.web.template.definition.HyggeController;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

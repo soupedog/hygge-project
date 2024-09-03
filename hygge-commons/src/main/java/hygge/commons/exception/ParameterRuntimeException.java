@@ -18,8 +18,8 @@ package hygge.commons.exception;
 
 
 import hygge.commons.constant.enums.GlobalHyggeCodeEnum;
-import hygge.commons.template.definition.HyggeCode;
 import hygge.commons.exception.main.HyggeRuntimeException;
+import hygge.commons.template.definition.HyggeCode;
 
 /**
  * 入参不符合预期运行时异常

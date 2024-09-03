@@ -26,7 +26,12 @@ import hygge.util.definition.TimeHelper;
 
 import java.util.Properties;
 
-import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.*;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART1_LENGTH;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART1_VAL;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART2_LENGTH;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART2_VAL;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.SEQUENCE_PART_LENGTH;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.START_TS;
 
 /**
  * 通用的雪花算法 id 生成器<br/>
