@@ -68,6 +68,31 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>io.github.soupedog</groupId>
+                <artifactId>hygge-web-toolkit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.soupedog</groupId>
+                <artifactId>hygge-logging-log4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.soupedog</groupId>
+                <artifactId>hygge-logging-logback</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.soupedog</groupId>
+                <artifactId>hygge-util-generator-java</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.soupedog</groupId>
+                <artifactId>hygge-util-json-jackson</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
                 <version>1.10.0</version>

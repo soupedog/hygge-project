@@ -42,12 +42,10 @@
         <dependency>
             <groupId>io.github.soupedog</groupId>
             <artifactId>hygge-logging-logback</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.soupedog</groupId>
             <artifactId>hygge-util-json-jackson</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

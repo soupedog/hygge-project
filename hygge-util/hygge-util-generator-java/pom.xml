@@ -40,7 +40,6 @@
         <dependency>
             <groupId>io.github.soupedog</groupId>
             <artifactId>hygge-util-json-jackson</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
