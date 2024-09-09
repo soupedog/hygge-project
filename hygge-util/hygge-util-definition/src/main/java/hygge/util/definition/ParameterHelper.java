@@ -107,12 +107,22 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
         return result;
     }
 
+    default boolean containsText(CharSequence str) {
+        int strLen = str.length();
+        for (int i = 0; i < strLen; i++) {
+            if (!Character.isWhitespace(str.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 目标对象是否为空<br/>
      * <p/>
      * 下列内容被视为空：<br/>
      * null<br/>
-     * {@link String#trim()} 操作之后 {@link String#length()} 为 0 的字符串<br/>
+     * {@link String} 为空字符串字符串<br/>
      * {@link Collection#size()} 为 0 的 Collection<br/>
      * {@link Map#size()} 为 0 的 Map
      *
@@ -124,7 +134,8 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
 
         if (target != null) {
             if (target instanceof String) {
-                result = target.toString().trim().isEmpty();
+                String targetTemp = (String) target;
+                result = !targetTemp.isEmpty() && containsText(targetTemp);
             } else if (target instanceof Collection) {
                 result = ((Collection<?>) target).isEmpty();
             } else if (target instanceof Map) {
