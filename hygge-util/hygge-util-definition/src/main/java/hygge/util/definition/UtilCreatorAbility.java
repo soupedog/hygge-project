@@ -99,7 +99,8 @@ public interface UtilCreatorAbility {
         try {
             Constructor<C> constructor = customClass.getConstructor(Properties.class);
             return constructor.newInstance(properties);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 InvocationTargetException e) {
             throw new UtilRuntimeException("Fail to get instance of " + customClass.getName() + ".", e);
         }
     }

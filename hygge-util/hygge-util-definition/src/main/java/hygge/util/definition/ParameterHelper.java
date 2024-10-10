@@ -135,7 +135,7 @@ public interface ParameterHelper extends HyggeUtil, InfoMessageSupplier {
         if (target != null) {
             if (target instanceof String) {
                 String targetTemp = (String) target;
-                result = !targetTemp.isEmpty() && containsText(targetTemp);
+                result = targetTemp.isEmpty() || !containsText(targetTemp);
             } else if (target instanceof Collection) {
                 result = ((Collection<?>) target).isEmpty();
             } else if (target instanceof Map) {

@@ -134,7 +134,7 @@ public enum UtilCreator implements UtilCreatorAbility, InfoMessageSupplier, Alte
                 throw new UtilRuntimeException(String.format("There should only be one implementation of JsonHelper(%s), so please remove the redundant implementations.", info.toString()));
             } else if (list.isEmpty()) {
                 // 如果实现类不存在
-                throw new UtilRuntimeException("No JsonHelper implementations have been discovered, please make sure that at least one JsonHelper implementation has been introduced in the project via SPI.");
+                throw new UtilRuntimeException("No implementation of JsonHelper found, please make sure that at least one JsonHelper implementation has been introduced in the project via SPI.");
             }
 
             Properties properties = new Properties();

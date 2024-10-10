@@ -96,7 +96,7 @@ public class ControllerLogPointCut extends StaticMethodMatcherPointcut implement
         }
 
         // 不支持的方法无需作为切入点
-        if(ControllerLogType.UNKNOWN.equals(type)){
+        if (ControllerLogType.UNKNOWN.equals(type)) {
             return false;
         }
 
