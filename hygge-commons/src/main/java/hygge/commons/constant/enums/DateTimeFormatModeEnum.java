@@ -31,7 +31,7 @@ import java.time.temporal.ChronoField;
  */
 public enum DateTimeFormatModeEnum implements DateTimeFormatMode {
     /**
-     * 样例： 2020-12-3
+     * 样例： 2020-12-03
      */
     DATE("yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy-MM-dd"), false),
     /**
@@ -39,7 +39,7 @@ public enum DateTimeFormatModeEnum implements DateTimeFormatMode {
      */
     TIME("HH:mm:ss", DateTimeFormatter.ofPattern("HH:mm:ss"), false),
     /**
-     * 样例： 2020-12-3 04:18:28
+     * 样例： 2020-12-03 04:18:28
      */
     DEFAULT("yyyy-MM-dd HH:mm:ss", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"), false),
     /**
