@@ -27,13 +27,14 @@ import hygge.commons.template.definition.HyggeConfigurator;
  * @since 1.0
  */
 public interface JsonHelper<S> extends HyggeUtil {
+
     /**
-     * 该枚举直接作为带 {@link java.util.Properties} 参构造方法入参的 key
+     * 公共的标准配置项。<br/>
+     * 该枚举直接作为 {@link HyggeConfigurator} 的带 {@link java.util.Properties} 参构造方法入参的 key
      */
     enum ConfigKey {
         /**
-         * 是否开启排版缩进<p/>
-         * 可选值:<br/>
+         * 是否开启排版缩进，可选值:<br/>
          * {@link Boolean#TRUE} 开启缩进(方便肉眼观察 json 结构)<br/>
          * {@link Boolean#FALSE} 关闭缩进
          */

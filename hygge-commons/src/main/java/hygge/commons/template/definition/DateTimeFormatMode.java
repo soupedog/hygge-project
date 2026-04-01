@@ -40,5 +40,4 @@ public interface DateTimeFormatMode {
      * 当前字符串时间戳模板是否已经包含了时区信息
      */
     boolean withTimeZone();
-
 }

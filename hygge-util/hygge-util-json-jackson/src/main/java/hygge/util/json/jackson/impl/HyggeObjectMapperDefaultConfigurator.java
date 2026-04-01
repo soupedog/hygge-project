@@ -35,7 +35,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 /**
- * 对 {@link ObjectMapper} 进行配置的工具的默认实现
+ * 对 {@link ObjectMapper} 进行配置工具的默认实现
  *
  * @author Xavier
  * @date 2023/5/11
