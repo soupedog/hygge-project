@@ -26,17 +26,15 @@ import hygge.util.definition.TimeHelper;
 
 import java.util.Properties;
 
-import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART1_LENGTH;
-import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART1_VAL;
-import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART2_LENGTH;
-import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.PART2_VAL;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.IDENTITY_LENGTH;
+import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.IDENTITY_VAL;
 import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.SEQUENCE_PART_LENGTH;
 import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.START_TS;
 
 /**
  * 通用的雪花算法 id 生成器<br/>
- * 样例模板：64 位除去最左边的正负符号位，右侧可自定义的 63 位 = (part1 + part2 + sequencePart + tsPart)
- * 0 - part1 - part2 - sequencePart - tsPart
+ * 样例模板：64 位除去最左边的正负符号位，右侧可自定义的 63 位 = (tsPart + identity + sequencePart)
+ * 0 - tsPart - part1 - part2 - sequencePart
  *
  * @author Xavier
  * @date 2022/7/9
@@ -58,53 +56,37 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
      */
     private long endTs;
     /**
-     * 左起第一部分 位数
+     * 时间 位数
      */
-    private int part1Length;
+    private int tsPartLength;
     /**
-     * 左起第二部分 位数
+     * 生成节点标识位 位数
      */
-    private int part2Length;
+    private int identityLength;
+    /**
+     * 生成节点标识位 最大值
+     */
+    private long identityMaxVal;
     /**
      * 自增序列部分 位数
      */
     private int sequencePartLength;
     /**
-     * 自增序列部分 位数
-     */
-    private int tsPartLength;
-    /**
-     * 左起第一部分 最大值
-     */
-    private long part1MaxVal;
-    /**
-     * 左起第一部分 实际值
-     */
-    private long part1Val;
-    /**
-     * 左起第二部分 最大值
-     */
-    private long part2MaxVal;
-    /**
-     * 左起第二部分 实际值
-     */
-    private long part2Val;
-    /**
      * 自增序列部分 最大值
      */
     private long sequencePartMaxVal;
     /**
-     * 左起第一部分 按位或 目标
+     * 生成节点标识位 实际值
      */
-    private long part1OrTarget;
+    private long identityVal;
     /**
-     * 左起第二部分 按位或 目标
+     * 时间部分位移 偏移量
      */
-    private long part2OrTarget;
+    private long tsShift;
     /**
-     * 左起稳定部分 按位或 目标
+     * 生成节点标识位 按位或 目标
      */
-    private long stablePartOrTarget;
+    private long identityOrTarget;
     /**
      * 自增计数器
      */
@@ -116,81 +98,30 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
 
     public SnowFlakeGenerator() {
         Properties properties = createDefaultConfig();
-
-        parameterHelper.objectNotNull(properties, "Unexpected properties,it can't be null,or you can use SnowFlakeGenerator.createDefaultConfig.");
-        Long startTs = parameterHelper.longFormatNotEmpty(START_TS.getDescription(), properties.get(START_TS));
-        int part1Length = parameterHelper.integerFormatNotEmpty(PART1_LENGTH.getDescription(), properties.get(PART1_LENGTH));
-        int part2Length = parameterHelper.integerFormatNotEmpty(PART2_LENGTH.getDescription(), properties.get(PART2_LENGTH));
-        int sequencePartLength = parameterHelper.integerFormatNotEmpty(SEQUENCE_PART_LENGTH.getDescription(), properties.get(SEQUENCE_PART_LENGTH));
-        long part1Val = parameterHelper.longFormatNotEmpty(PART1_VAL.getDescription(), properties.get(PART1_VAL));
-        long part2Val = parameterHelper.longFormatNotEmpty(PART2_VAL.getDescription(), properties.get(PART2_VAL));
-
-        this.startTs = startTs;
-        this.part1Length = parameterHelper.integerFormatNotEmpty("part1Length", part1Length, 1, 60);
-        this.part2Length = parameterHelper.integerFormatNotEmpty("part2Length", part2Length, 1, 60);
-        this.sequencePartLength = parameterHelper.integerFormatNotEmpty("sequencePartLength", sequencePartLength, 1, 60);
-        this.tsPartLength = CUSTOM_LENGTH - parameterHelper.integerFormat("part1Length + part2Length + sequencePartLength", (part1Length + part2Length + sequencePartLength), 3, 62);
-        // this.endTs = this.startTs + (2 ^ this.tsPartLength - 1);
-        this.endTs = this.startTs + ~(-1L << this.tsPartLength);
-        // 2 ^ this.part1Length - 1;
-        this.part1MaxVal = ~(-1L << this.part1Length);
-        // 2 ^ this.part2Length - 1;
-        this.part2MaxVal = ~(-1L << this.part2Length);
-        // 2 ^ this.sequencePartLength - 1;
-        this.sequencePartMaxVal = ~(-1L << this.sequencePartLength);
-        init(part1Val, part2Val);
-    }
-
-    public SnowFlakeGenerator(Long startTs, int part1Length, int part2Length, int sequencePartLength, long part1Val, long part2Val) {
-        this.startTs = parameterHelper.longFormatOfNullable("startTs", startTs, System.currentTimeMillis());
-        this.part1Length = parameterHelper.integerFormatNotEmpty("part1Length", part1Length, 1, 60);
-        this.part2Length = parameterHelper.integerFormatNotEmpty("part2Length", part2Length, 1, 60);
-        this.sequencePartLength = parameterHelper.integerFormatNotEmpty("sequencePartLength", sequencePartLength, 1, 60);
-        this.tsPartLength = CUSTOM_LENGTH - parameterHelper.integerFormat("part1Length + part2Length + sequencePartLength", (part1Length + part2Length + sequencePartLength), 3, 62);
-        // this.endTs = this.startTs + (2 ^ this.tsPartLength - 1);
-        this.endTs = this.startTs + ~(-1L << this.tsPartLength);
-        // 2 ^ this.part1Length - 1;
-        this.part1MaxVal = ~(-1L << this.part1Length);
-        // 2 ^ this.part2Length - 1;
-        this.part2MaxVal = ~(-1L << this.part2Length);
-        // 2 ^ this.sequencePartLength - 1;
-        this.sequencePartMaxVal = ~(-1L << this.sequencePartLength);
-        init(part1Val, part2Val);
+        initWithProperties(properties);
     }
 
     public SnowFlakeGenerator(Properties properties) {
-        parameterHelper.objectNotNull(properties, "Unexpected properties,it can't be null,or you can use SnowFlakeGenerator.createDefaultConfig.");
-        Long startTs = parameterHelper.longFormatNotEmpty(START_TS.getDescription(), properties.get(START_TS));
-        int part1Length = parameterHelper.integerFormatNotEmpty(PART1_LENGTH.getDescription(), properties.get(PART1_LENGTH));
-        int part2Length = parameterHelper.integerFormatNotEmpty(PART2_LENGTH.getDescription(), properties.get(PART2_LENGTH));
-        int sequencePartLength = parameterHelper.integerFormatNotEmpty(SEQUENCE_PART_LENGTH.getDescription(), properties.get(SEQUENCE_PART_LENGTH));
-        long part1Val = parameterHelper.longFormatNotEmpty(PART1_VAL.getDescription(), properties.get(PART1_VAL));
-        long part2Val = parameterHelper.longFormatNotEmpty(PART2_VAL.getDescription(), properties.get(PART2_VAL));
+        initWithProperties(properties);
+    }
 
-        this.startTs = startTs;
-        this.part1Length = parameterHelper.integerFormatNotEmpty("part1Length", part1Length, 1, 60);
-        this.part2Length = parameterHelper.integerFormatNotEmpty("part2Length", part2Length, 1, 60);
-        this.sequencePartLength = parameterHelper.integerFormatNotEmpty("sequencePartLength", sequencePartLength, 1, 60);
-        this.tsPartLength = CUSTOM_LENGTH - parameterHelper.integerFormat("part1Length + part2Length + sequencePartLength", (part1Length + part2Length + sequencePartLength), 3, 62);
+    private void initWithProperties(Properties properties) {
+        parameterHelper.objectNotNull(properties, "Unexpected properties,it can't be null,or you can use SnowFlakeGenerator.createDefaultConfig.");
+        this.identityLength = parameterHelper.integerFormatNotEmpty(IDENTITY_LENGTH.getDescription(), properties.get(IDENTITY_LENGTH), 1, 60);
+        this.sequencePartLength = parameterHelper.integerFormatNotEmpty(SEQUENCE_PART_LENGTH.getDescription(), properties.get(SEQUENCE_PART_LENGTH), 1, 60);
+        this.tsPartLength = CUSTOM_LENGTH - parameterHelper.integerFormat("identityLength + sequencePartLength", (identityLength + sequencePartLength), 3, 62);
+
+        this.startTs = parameterHelper.longFormatNotEmpty(START_TS.getDescription(), properties.get(START_TS));
         // this.endTs = this.startTs + (2 ^ this.tsPartLength - 1);
         this.endTs = this.startTs + ~(-1L << this.tsPartLength);
         // 2 ^ this.part1Length - 1;
-        this.part1MaxVal = ~(-1L << this.part1Length);
-        // 2 ^ this.part2Length - 1;
-        this.part2MaxVal = ~(-1L << this.part2Length);
+        this.identityMaxVal = ~(-1L << this.identityLength);
         // 2 ^ this.sequencePartLength - 1;
         this.sequencePartMaxVal = ~(-1L << this.sequencePartLength);
-        init(part1Val, part2Val);
-    }
 
-    private void init(long part1Val, long part2Val) {
-        this.part1OrTarget = parameterHelper.longFormatNotEmpty("part1Val", part1Val, 0L, part1MaxVal)
-                << (tsPartLength + sequencePartLength + part2Length);
-        this.part1Val = part1Val;
-        this.part2OrTarget = parameterHelper.longFormatNotEmpty("part2Val", part2Val, 0L, part2MaxVal)
-                << (tsPartLength + sequencePartLength);
-        this.part2Val = part2Val;
-        this.stablePartOrTarget = part1OrTarget | part2OrTarget;
+        this.tsShift = identityLength + sequencePartLength;
+        this.identityOrTarget = parameterHelper.longFormatNotEmpty("identityVal", identityVal, 0L, identityMaxVal)
+                << (sequencePartLength);
     }
 
     /**
@@ -201,75 +132,88 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
     public static Properties createDefaultConfig() {
         Properties result = new Properties();
         result.put(START_TS, 803966400000L);
-        result.put(PART1_LENGTH, 2);
-        result.put(PART2_LENGTH, 5);
-        result.put(SEQUENCE_PART_LENGTH, 12);
-        result.put(PART1_VAL, 0L);
-        result.put(PART2_VAL, 0L);
+        result.put(IDENTITY_LENGTH, 2);
+        result.put(IDENTITY_VAL, 0L);
+        result.put(SEQUENCE_PART_LENGTH, 5);
         return result;
     }
 
     @Override
     public synchronized long createKey() {
         long currentTs = System.currentTimeMillis();
+        // 当前时间已超过最大截止时间，说明 id 用尽了，无法再生成无重复 id
         if (currentTs > endTs) {
             throw new UtilRuntimeException(String.format("SnowFlakeGenerator exhaustion %s .", this));
         }
-        long result;
-        if (currentTs == lastTs) {
-            if (sequence > sequencePartMaxVal) {
-                sequence = 0;
-                currentTs = blockToNextTs(currentTs);
-            }
-            result = calculateKey(currentTs - startTs);
-            lastTs = currentTs;
-        } else {
-            if (currentTs > lastTs) {
-                sequence = 0;
-                result = calculateKey(currentTs - startTs);
-                lastTs = currentTs;
+
+        if (lastTs > currentTs) {
+            // 系统不定期与时间服务器通信同步时间，可能存在时间回滚
+            if (lastTs - currentTs <= 5L) {
+                // 回拨 5 毫秒以内，进行自旋等待到最后一次生成 id 时间，提高可用性
+                currentTs = blockTo(lastTs);
             } else {
-                // 时间发生回滚
+                // 误差过大作为异常处理
                 throw new UtilRuntimeException(String.format("SnowFlakeGenerator back in time,currentTs:%d lastTs:%d.", currentTs, lastTs));
             }
         }
+
+        long result;
+
+        if (currentTs == lastTs) {
+            // 同毫秒内自增序列已耗尽
+            if (sequence > sequencePartMaxVal) {
+                // 重置自增序列并至少阻塞的下一毫秒
+                sequence = 0;
+                currentTs = blockTo(currentTs + 1L);
+            }
+            // 同毫秒内自增序列未耗尽直接生成 id
+            result = calculateKey(currentTs - startTs);
+        } else if (currentTs > lastTs) {
+            // 时间戳发生变化时重置自增序列
+            sequence = 0;
+            result = calculateKey(currentTs - startTs);
+        } else {
+            // 上方处理过后一定有 currentTs >= lastTs，这里不可能触发
+            throw new UtilRuntimeException("Dead Code.");
+        }
+
+        // 生成一次 id 更新一下最后 id 对应的时间戳
+        lastTs = currentTs;
         return result;
     }
 
     /**
-     * 自旋阻塞到下一个时间戳
+     * 自旋阻塞到目标时间戳
      *
-     * @param currentTs 当前时间戳
-     * @return 下一个时间戳
+     * @param targetTs 目标时间戳
+     * @return 阻塞结束对应的时间戳
      */
-    private long blockToNextTs(long currentTs) {
-        long result = System.currentTimeMillis();
-        while (result <= currentTs) {
-            result = System.currentTimeMillis();
+    private long blockTo(long targetTs) {
+        long currentTs = System.currentTimeMillis();
+        while (currentTs <= targetTs) {
+            currentTs = System.currentTimeMillis();
         }
-        return result;
+        return currentTs;
     }
 
     /**
      * 运算出一个 key
      */
     private long calculateKey(long tsPart) {
-        long result = stablePartOrTarget
-                | sequence << tsPartLength
-                | tsPart;
+        long result = tsPart << tsShift
+                | identityOrTarget
+                | sequence;
         sequence += 1;
         return result;
     }
 
     @Override
     public String toString() {
-        return String.format("{\"stablePart\":\"%s\",\"startTs\":%s,\"endTs\":%s,\"sequencePartLength\":%d,\"part1Val\":%d,\"part2Val\":%d}",
-                Long.toBinaryString(stablePartOrTarget),
+        return String.format("{\"startTs\":%s,\"endTs\":%s,\"identityVal\":%d,\"sequencePartLength\":%d}",
                 timeHelper.format(startTs, DateTimeFormatModeEnum.FULL_TRIM),
                 timeHelper.format(endTs, DateTimeFormatModeEnum.FULL_TRIM),
-                sequencePartLength,
-                part1Val,
-                part2Val
+                identityVal,
+                sequencePartLength
         );
     }
 
@@ -293,13 +237,9 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
          */
         START_TS("startTs"),
         /**
-         * 第一部分位数
+         * 生成节点标识位位数
          */
-        PART1_LENGTH("part1Length"),
-        /**
-         * 第二部分位数
-         */
-        PART2_LENGTH("part2Length"),
+        IDENTITY_LENGTH("identityLength"),
         /**
          * 自增序列部分位数
          */
@@ -307,11 +247,8 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
         /**
          * 第一部分实际值
          */
-        PART1_VAL("part1Val"),
-        /**
-         * 第二部分实际值
-         */
-        PART2_VAL("part2Val");
+        IDENTITY_VAL("identityVal"),
+        ;
 
         private final String description;
 
