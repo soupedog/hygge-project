@@ -34,7 +34,10 @@ import static hygge.util.impl.SnowFlakeGenerator.ConfigKey.START_TS;
 /**
  * 通用的雪花算法 id 生成器<br/>
  * 样例模板：64 位除去最左边的正负符号位，右侧可自定义的 63 位 = (tsPart + identity + sequencePart)
- * 0 - tsPart - part1 - part2 - sequencePart
+ * <br/>0 - tsPart - identity - sequencePart
+ * <br/>
+ * <br/>
+ * tip: 相较 2026.4.9 之前不保证严格自增的版本，性能下降约 50%
  *
  * @author Xavier
  * @date 2022/7/9
@@ -105,13 +108,23 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
         initWithProperties(properties);
     }
 
+    public SnowFlakeGenerator(Long startTs, int identityLength, int identityVal, int sequencePartLength) {
+        Properties properties = new Properties();
+        properties.put(START_TS, startTs);
+        properties.put(IDENTITY_LENGTH, identityLength);
+        properties.put(IDENTITY_VAL, identityVal);
+        properties.put(SEQUENCE_PART_LENGTH, sequencePartLength);
+
+        initWithProperties(properties);
+    }
+
     private void initWithProperties(Properties properties) {
         parameterHelper.objectNotNull(properties, "Unexpected properties,it can't be null,or you can use SnowFlakeGenerator.createDefaultConfig.");
-        this.identityLength = parameterHelper.integerFormatNotEmpty(IDENTITY_LENGTH.getDescription(), properties.get(IDENTITY_LENGTH), 1, 60);
-        this.sequencePartLength = parameterHelper.integerFormatNotEmpty(SEQUENCE_PART_LENGTH.getDescription(), properties.get(SEQUENCE_PART_LENGTH), 1, 60);
-        this.tsPartLength = CUSTOM_LENGTH - parameterHelper.integerFormat("identityLength + sequencePartLength", (identityLength + sequencePartLength), 3, 62);
-
+        this.identityLength = parameterHelper.integerFormatNotEmpty(IDENTITY_LENGTH.getDescription(), properties.get(IDENTITY_LENGTH), 1, 61);
+        this.sequencePartLength = parameterHelper.integerFormatNotEmpty(SEQUENCE_PART_LENGTH.getDescription(), properties.get(SEQUENCE_PART_LENGTH), 1, 61);
+        this.tsPartLength = CUSTOM_LENGTH - parameterHelper.integerFormat("identityLength + sequencePartLength", (identityLength + sequencePartLength), 2, 62);
         this.startTs = parameterHelper.longFormatNotEmpty(START_TS.getDescription(), properties.get(START_TS));
+
         // this.endTs = this.startTs + (2 ^ this.tsPartLength - 1);
         this.endTs = this.startTs + ~(-1L << this.tsPartLength);
         // 2 ^ this.part1Length - 1;
@@ -120,8 +133,8 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
         this.sequencePartMaxVal = ~(-1L << this.sequencePartLength);
 
         this.tsShift = identityLength + sequencePartLength;
-        this.identityOrTarget = parameterHelper.longFormatNotEmpty("identityVal", identityVal, 0L, identityMaxVal)
-                << (sequencePartLength);
+        this.identityVal = parameterHelper.longFormatNotEmpty("identityVal", identityVal, 0L, identityMaxVal);
+        this.identityOrTarget = identityVal << (sequencePartLength);
     }
 
     /**
@@ -132,9 +145,9 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
     public static Properties createDefaultConfig() {
         Properties result = new Properties();
         result.put(START_TS, 803966400000L);
-        result.put(IDENTITY_LENGTH, 2);
+        result.put(IDENTITY_LENGTH, 5);
         result.put(IDENTITY_VAL, 0L);
-        result.put(SEQUENCE_PART_LENGTH, 5);
+        result.put(SEQUENCE_PART_LENGTH, 12);
         return result;
     }
 

@@ -34,11 +34,22 @@ package hygge.util.impl;/*
 import hygge.util.UtilCreator;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 class SnowFlakeGeneratorTest {
     @Test
     void createId() {
         SnowFlakeGenerator snowFlakeGenerator = UtilCreator.INSTANCE.getDefaultInstance(SnowFlakeGenerator.class);
+        HashMap<Long, Boolean> map = new HashMap<>(7000000);
+        int count = 0;
 
-        System.out.println(snowFlakeGenerator.createKey());
+        long ts = System.currentTimeMillis() + 5000L;
+        while (System.currentTimeMillis() < ts) {
+            map.put(snowFlakeGenerator.createKey(), Boolean.TRUE);
+            count++;
+        }
+
+        System.out.println(snowFlakeGenerator);
+        System.out.println(String.format(" 5 秒共生成 %d 个 id ，无重复：%s ", map.size(), count == map.size()));
     }
 }
