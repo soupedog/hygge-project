@@ -121,6 +121,7 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
     private void initWithProperties(Properties properties) {
         parameterHelper.objectNotNull(properties, "Unexpected properties,it can't be null,or you can use SnowFlakeGenerator.createDefaultConfig.");
         this.identityLength = parameterHelper.integerFormatNotEmpty(IDENTITY_LENGTH.getDescription(), properties.get(IDENTITY_LENGTH), 1, 61);
+        this.identityVal = parameterHelper.longFormatNotEmpty(IDENTITY_VAL.getDescription(), properties.get(IDENTITY_VAL), 0L, (1L << this.identityLength) - 1L);
         this.sequencePartLength = parameterHelper.integerFormatNotEmpty(SEQUENCE_PART_LENGTH.getDescription(), properties.get(SEQUENCE_PART_LENGTH), 1, 61);
         this.tsPartLength = CUSTOM_LENGTH - parameterHelper.integerFormat("identityLength + sequencePartLength", (identityLength + sequencePartLength), 2, 62);
         this.startTs = parameterHelper.longFormatNotEmpty(START_TS.getDescription(), properties.get(START_TS));
@@ -242,6 +243,34 @@ public class SnowFlakeGenerator implements RandomUniqueGenerator {
      */
     public long getEndTs() {
         return endTs;
+    }
+
+    /**
+     * 从 id 中解析出时间戳（相对时间戳）
+     */
+    public long getTimestampFromId(long id) {
+        return id >>> tsShift;
+    }
+
+    /**
+     * 从 id 中解析出时间戳（绝对时间戳）
+     */
+    public long getRealTimestampFromId(long id) {
+        return (id >>> tsShift) + startTs;
+    }
+
+    /**
+     * 从 id 中解析出身份标识
+     */
+    public long getWorkerIdFromId(long id) {
+        return (id >>> sequencePartLength) & identityMaxVal;
+    }
+
+    /**
+     * 从 id 中解析出序列号
+     */
+    public long getSequenceFromId(long id) {
+        return id & sequencePartMaxVal;
     }
 
     public enum ConfigKey {

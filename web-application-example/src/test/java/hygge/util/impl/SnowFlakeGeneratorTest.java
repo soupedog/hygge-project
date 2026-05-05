@@ -31,16 +31,20 @@ package hygge.util.impl;/*
  */
 
 
+import hygge.commons.constant.enums.DateTimeFormatModeEnum;
 import hygge.util.UtilCreator;
+import hygge.util.definition.TimeHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
+@Slf4j
 class SnowFlakeGeneratorTest {
     @Test
     void createId() {
         SnowFlakeGenerator snowFlakeGenerator = UtilCreator.INSTANCE.getDefaultInstance(SnowFlakeGenerator.class);
-        HashMap<Long, Boolean> map = new HashMap<>(7000000);
+        HashMap<Long, Boolean> map = new HashMap<>(8000000);
         int count = 0;
 
         long ts = System.currentTimeMillis() + 5000L;
@@ -48,8 +52,27 @@ class SnowFlakeGeneratorTest {
             map.put(snowFlakeGenerator.createKey(), Boolean.TRUE);
             count++;
         }
+        log.info(snowFlakeGenerator.toString());
+        log.info(String.format(" 5 秒共生成 %d 个 id ，无重复：%s ", map.size(), count == map.size()));
+    }
 
-        System.out.println(snowFlakeGenerator);
-        System.out.println(String.format(" 5 秒共生成 %d 个 id ，无重复：%s ", map.size(), count == map.size()));
+    @Test
+    void analyze() {
+        SnowFlakeGenerator snowFlakeGenerator = new SnowFlakeGenerator(0L, 5, 4, 12);
+
+        TimeHelper timeHelper = UtilCreator.INSTANCE.getDefaultInstance(TimeHelper.class);
+        long id = snowFlakeGenerator.createKey();
+        // 稍微延迟一下，避免序列号是 0
+        id = snowFlakeGenerator.createKey();
+
+        log.info("解析回的自增序列：" + snowFlakeGenerator.getSequenceFromId(id));
+        log.info("解析回的生成器编号：" + snowFlakeGenerator.getWorkerIdFromId(id));
+        log.info(timeHelper.format(snowFlakeGenerator.getRealTimestampFromId(id), DateTimeFormatModeEnum.DEFAULT));
+
+        log.info("原始 ID 值：" + id);
+        IdObfuscator idObfuscator = new IdObfuscator();
+        String encrypted = idObfuscator.obfuscate(id);
+        log.info("混淆后 ID 值：" + encrypted);
+        log.info("解析后 ID 值：" + idObfuscator.reveal(encrypted));
     }
 }
