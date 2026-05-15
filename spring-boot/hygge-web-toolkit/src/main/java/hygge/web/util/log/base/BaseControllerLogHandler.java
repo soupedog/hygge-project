@@ -63,7 +63,7 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
     protected ControllerLogType type;
     protected String path;
     /**
-     * 日志是否进行记录，该值为 {@link Boolean#FALSE} 也仍会执行  {@link BaseControllerLogHandler#hook(ControllerLogContext, MethodInvocation)}
+     * 日志是否进行记录，该值为 {@link Boolean#FALSE} 也仍会执行  {@link BaseControllerLogHandler#finallyHook(ControllerLogContext, MethodInvocation)}
      */
     protected boolean logRecordEnable = true;
     /**
@@ -140,7 +140,7 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
      * <p>
      * 这是是个统计监控需求很好的扩展点
      */
-    protected abstract void hook(ControllerLogContext context, MethodInvocation methodInvocation);
+    protected abstract void finallyHook(ControllerLogContext context, MethodInvocation methodInvocation);
 
     /**
      * logRecordEnable 为 {@link Boolean#TRUE} 时需要执行的自动日志生成流程
@@ -173,7 +173,7 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
                 ControllerLogInfo logInfo = context.getLogInfo();
                 logInfo.setCost(System.currentTimeMillis() - startTs);
 
-                hook(context, methodInvocation);
+                finallyHook(context, methodInvocation);
 
                 String logInfoStringValue = getLogString(context);
                 if (logInfo.getErrorMessage() != null) {
@@ -186,7 +186,7 @@ public abstract class BaseControllerLogHandler extends HyggeJsonUtilContainer {
             try {
                 return processForNoneType(context, methodInvocation);
             } finally {
-                hook(context, methodInvocation);
+                finallyHook(context, methodInvocation);
             }
         }
     }

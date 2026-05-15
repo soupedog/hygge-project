@@ -38,7 +38,7 @@ public class DefaultControllerLogHandler extends BaseControllerLogHandler {
     }
 
     @Override
-    protected void hook(ControllerLogContext context, MethodInvocation methodInvocation) {
+    protected void finallyHook(ControllerLogContext context, MethodInvocation methodInvocation) {
         // 默认什么也不做
     }
 

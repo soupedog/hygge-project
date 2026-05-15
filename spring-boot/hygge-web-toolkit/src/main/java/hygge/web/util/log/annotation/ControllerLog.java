@@ -40,7 +40,7 @@ public @interface ControllerLog {
     /**
      * 指定日志是否进行记录。
      * <p>
-     * 该值为 {@link Boolean#FALSE} 时也仍会执行  {@link BaseControllerLogHandler#hook(ControllerLogContext, MethodInvocation)}
+     * 该值为 {@link Boolean#FALSE} 时也仍会执行  {@link BaseControllerLogHandler#finallyHook(ControllerLogContext, MethodInvocation)}
      */
     boolean logRecordEnable() default true;
 
