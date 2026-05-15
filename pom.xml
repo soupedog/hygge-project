@@ -13,7 +13,7 @@
         automatic logging tools, network request tools ...
     </description>
     <url>https://github.com/soupedog/hygge-project</url>
-    <version>0.0.19</version>
+    <version>0.0.20</version>
 
     <licenses>
         <license>
@@ -31,8 +31,9 @@
     </developers>
 
     <scm>
-        <connection>https://github.com/soupedog/hygge-project.git</connection>
         <url>https://github.com/soupedog/hygge-project</url>
+        <connection>scm:git:git://github.com/soupedog/hygge-project.git</connection>
+        <developerConnection>scm:git:ssh://github.com/soupedog/hygge-project.git</developerConnection>
     </scm>
 
     <modules>
@@ -99,19 +100,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <distributionManagement>
-        <!--配置快照仓库-->
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <!--配置中央仓库-->
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -199,7 +187,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.3</version>
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <useReleaseProfile>false</useReleaseProfile>
@@ -208,14 +195,13 @@
                         </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.9.0</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
                         </configuration>
                     </plugin>
                 </plugins>

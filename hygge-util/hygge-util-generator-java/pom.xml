@@ -22,11 +22,12 @@
     <parent>
         <groupId>io.github.soupedog</groupId>
         <artifactId>hygge-project</artifactId>
-        <version>0.0.19</version>
+        <version>0.0.20</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>hygge-util-generator-java</artifactId>
+    <name>${project.groupId}:${artifactId}</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
