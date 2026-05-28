@@ -24,6 +24,7 @@ import hygge.util.definition.RandomHelper;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 /**
  * 随机生成工具类基类
@@ -34,6 +35,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public abstract class BaseRandomHelper implements RandomHelper {
     protected ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
+    protected static final Pattern UUID_36_PATTERN = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+    protected static final Pattern UUID_32_PATTERN = Pattern.compile("^[0-9a-fA-F]{32}$");
 
     /**
      * 每次生成单个随机字符时触发,返回的 char 会影响最后生成字符
@@ -44,13 +47,13 @@ public abstract class BaseRandomHelper implements RandomHelper {
     protected abstract char hookSingleChar(char singleChar);
 
     @Override
-    public int getRandomInteger(int minValue, int maxValue) {
+    public int randomInteger(int minValue, int maxValue) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         return random.nextInt(minValue, maxValue + 1);
     }
 
     @Override
-    public String getRandomString(int size, StringCategoryEnum... stringCategoryEnums) {
+    public String randomString(int size, StringCategoryEnum... stringCategoryEnums) {
         parameterHelper.integerFormatNotEmpty("size", size, 1, Integer.MAX_VALUE);
         StringBuilder result = new StringBuilder();
         int currentStringCategoryIndex;
@@ -67,8 +70,14 @@ public abstract class BaseRandomHelper implements RandomHelper {
     }
 
     @Override
-    public String getUniversallyUniqueIdentifier(boolean withOutSpecialCharacters) {
+    public String randomUUID(boolean withOutSpecialCharacters) {
         return withOutSpecialCharacters ? UUID.randomUUID().toString().replace("-", "")
                 : UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean isUUID(String target, boolean withOutSpecialCharacters) {
+        return withOutSpecialCharacters ? UUID_32_PATTERN.matcher(target).matches()
+                : UUID_36_PATTERN.matcher(target).matches();
     }
 }

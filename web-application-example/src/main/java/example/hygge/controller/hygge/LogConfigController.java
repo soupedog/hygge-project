@@ -58,7 +58,7 @@ public class LogConfigController extends HyggeJsonUtilContainer implements Hygge
     @PostMapping("/logConfig/user/standard")
     public ResponseEntity<?> createUserStandard(@RequestBody User user,
                                                 @RequestParam(value = "prefix", required = false) String prefix) {
-        String randomUid = randomHelper.getRandomString(6, StringCategoryEnum.A_Z, StringCategoryEnum.a_z, StringCategoryEnum.NUMBER);
+        String randomUid = randomHelper.randomString(6, StringCategoryEnum.A_Z, StringCategoryEnum.a_z, StringCategoryEnum.NUMBER);
 
         if (parameterHelper.isNotEmpty(prefix)) {
             randomUid = prefix.concat(randomUid);
@@ -89,7 +89,7 @@ public class LogConfigController extends HyggeJsonUtilContainer implements Hygge
     @PostMapping("/logConfig/user/annotation")
     public ResponseEntity<?> createUserAnnotation(@RequestBody User user,
                                                   @RequestParam(value = "prefix", required = false) String prefix) {
-        String randomUid = randomHelper.getRandomString(6, StringCategoryEnum.A_Z, StringCategoryEnum.a_z, StringCategoryEnum.NUMBER);
+        String randomUid = randomHelper.randomString(6, StringCategoryEnum.A_Z, StringCategoryEnum.a_z, StringCategoryEnum.NUMBER);
 
         if (parameterHelper.isNotEmpty(prefix)) {
             randomUid = prefix.concat(randomUid);
@@ -107,7 +107,7 @@ public class LogConfigController extends HyggeJsonUtilContainer implements Hygge
     @PostMapping("/logConfig/user/specialDto")
     public ResponseEntity<?> createUserSpecialDto(@RequestBody UserSpecialForLog user,
                                                   @RequestParam(value = "prefix", required = false) String prefix) {
-        String randomUid = randomHelper.getRandomString(6, StringCategoryEnum.A_Z, StringCategoryEnum.a_z, StringCategoryEnum.NUMBER);
+        String randomUid = randomHelper.randomString(6, StringCategoryEnum.A_Z, StringCategoryEnum.a_z, StringCategoryEnum.NUMBER);
 
         if (parameterHelper.isNotEmpty(prefix)) {
             randomUid = prefix.concat(randomUid);

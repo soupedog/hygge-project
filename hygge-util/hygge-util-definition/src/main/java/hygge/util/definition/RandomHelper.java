@@ -33,7 +33,7 @@ public interface RandomHelper extends HyggeUtil {
      * @param maxValue 随机值最大值
      * @return 一个随机整数
      */
-    int getRandomInteger(int minValue, int maxValue);
+    int randomInteger(int minValue, int maxValue);
 
     /**
      * 可重复地生成随机字符串
@@ -42,13 +42,21 @@ public interface RandomHelper extends HyggeUtil {
      * @param stringCategory 随机字符池类型
      * @return 随机字符串
      */
-    String getRandomString(int size, StringCategoryEnum... stringCategory);
+    String randomString(int size, StringCategoryEnum... stringCategory);
 
     /**
      * 生成 UUID
      *
-     * @param withOutSpecialCharacters 是否包含特殊字符 "-"
+     * @param withOutSpecialCharacters 是否不包含特殊字符 "-"
      * @return UUID
      */
-    String getUniversallyUniqueIdentifier(boolean withOutSpecialCharacters);
+    String randomUUID(boolean withOutSpecialCharacters);
+
+    /**
+     * 验证是否为 UUID
+     *
+     * @param target                   待验证字符串
+     * @param withOutSpecialCharacters 是否不包含特殊字符 "-"
+     */
+    boolean isUUID(String target, boolean withOutSpecialCharacters);
 }
