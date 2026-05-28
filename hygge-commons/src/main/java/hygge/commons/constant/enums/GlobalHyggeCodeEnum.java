@@ -50,6 +50,10 @@ public enum GlobalHyggeCodeEnum implements HyggeCode {
      * 默认的不符合预期的入参入参引发异常
      */
     UNEXPECTED_PARAMETER(true, false, null, 400, null),
+    /**
+     * 不可能被执行的代码
+     */
+    UNREACHABLE_CODE(false, true, "External Server Error", 500, null),
     ;
 
     private boolean codeDuplicateEnable;
