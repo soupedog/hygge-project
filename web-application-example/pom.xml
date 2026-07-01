@@ -5,7 +5,7 @@
     <parent>
         <artifactId>hygge-project</artifactId>
         <groupId>io.github.soupedog</groupId>
-        <version>0.0.20</version>
+        <version>0.0.21</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,7 @@
     <artifactId>web-application-example</artifactId>
     <name>${project.groupId}:${artifactId}</name>
 
-    <version>0.0.20</version>
+    <version>0.0.21</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
