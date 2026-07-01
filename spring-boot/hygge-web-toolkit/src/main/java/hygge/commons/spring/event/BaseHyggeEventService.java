@@ -30,7 +30,7 @@ public abstract class BaseHyggeEventService {
      * @param source    SpringEvent 的 source
      * @param construct 调用两个入参构造函数的 Lambda 表达式
      */
-    public <T, E extends BaseHyggeEvent<T>> DefaultHyggeEventBuilder<T, E> buildEvent(T source, BiFunction<T, Clock, E> construct) {
+    public <S, E extends BaseHyggeEvent<S>> DefaultHyggeEventBuilder<S, E> buildEvent(S source, BiFunction<S, Clock, E> construct) {
         return new DefaultHyggeEventBuilder<>(construct, source);
     }
 }

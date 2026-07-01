@@ -18,20 +18,25 @@ package example.hygge.event;
 
 import example.hygge.service.HyggeEventService;
 import hygge.commons.spring.event.BaseHyggeEventListener;
+import hygge.commons.spring.event.HyggeEventListenerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static example.hygge.event.MockEventListenerKey.SOME_INFO;
+import static example.hygge.event.MockEventListenerKey.SOME_INFO_2;
 
 /**
  * @author Xavier
  * @date 2026/7/1
  */
 @Service
-public class MockEventListener extends BaseHyggeEventListener<MockEvent> {
+public class MockEventListener extends BaseHyggeEventListener<Integer, MockEvent> {
     private static final Logger log = LoggerFactory.getLogger(MockEventListener.class);
-    private static final String name = MockEventListener.class.getSimpleName();
+    private static final String NAME = MockEventListener.class.getSimpleName();
     private final HyggeEventService hyggeEventService;
 
     public MockEventListener(HyggeEventService hyggeEventService) {
@@ -40,11 +45,13 @@ public class MockEventListener extends BaseHyggeEventListener<MockEvent> {
 
     @Override
     protected String getListenerName() {
-        return name;
+        return NAME;
     }
 
     @Override
-    protected void handleEvent(MockEvent event) {
+    protected void handleEvent(HyggeEventListenerContext<Integer, MockEvent> context, MockEvent event) {
+        context.saveObject(SOME_INFO, "测试值");
+        context.saveObject(SOME_INFO_2, new ArrayList<>());
         // 模拟业务逻辑处理耗时
         try {
             Thread.sleep(ThreadLocalRandom.current().nextLong(100L));
@@ -64,5 +71,19 @@ public class MockEventListener extends BaseHyggeEventListener<MockEvent> {
 
             hyggeEventService.fireEvent(nextEvent);
         }
+    }
+
+    @Override
+    protected void printLog(HyggeEventListenerContext<Integer, MockEvent> context, String rowEventInfo) {
+        super.printLog(context, rowEventInfo);
+        log.info("演示 context 传递参数 SomeInfo:{} SomeInfo2:{}",
+                context.getObject(SOME_INFO),
+                context.getObject(SOME_INFO_2));
+
+    }
+
+    @Override
+    protected void handleThrowable(HyggeEventListenerContext<Integer, MockEvent> context, Throwable throwable) {
+        // 默认不进行处理，printLog 默认行为中有异常输出操作
     }
 }

@@ -25,41 +25,67 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 注意：异步执行的 Event 该基类会自动清扫 MDC，而同步执行的 Event 该基类不会有额外操作，默认主线程会自行处理
+ *
  * @author Xavier
  * @date 2026/6/30
  */
-public abstract class BaseHyggeEventListener<T extends BaseHyggeEvent<?>> implements ApplicationListener<T> {
+public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> implements ApplicationListener<E> {
     private static final Logger log = LoggerFactory.getLogger(BaseHyggeEventListener.class);
 
     @Override
-    public void onApplicationEvent(T event) {
-        if (event.isAsynchronous()) {
-            asynchronousProcess(event);
-        } else {
-            onStart(event);
-            recordEventInfo(event);
-            handleEvent(event);
+    public void onApplicationEvent(E event) {
+        mainProcess(event);
+    }
+
+    private void mainProcess(E event) {
+        HyggeEventListenerContext<S, E> context = new HyggeEventListenerContext<>();
+        context.setEvent(event);
+
+        if (event.isAsynchronous) {
+            asynchronousProcess(context, event);
+            return;
+        }
+
+        try {
+            stepAutoIncrease(context, event);
+
+            context.setRowEventInfo(getEventLogInfo(context, event));
+
+            handleEvent(context, event);
+        } catch (Throwable throwable) {
+            context.setThrowable(throwable);
+            handleThrowable(context, throwable);
+        } finally {
+            printLog(context, context.getRowEventInfo());
+            finallyHook(context, event);
         }
     }
 
-    private void asynchronousProcess(T event) {
+    private void asynchronousProcess(HyggeEventListenerContext<S, E> context, E event) {
         Map<String, String> contextMapFromParent = MDC.getCopyOfContextMap();
 
         CompletableFuture.runAsync(() -> {
             initMDCForSubThread(contextMapFromParent);
 
-            onStart(event);
-            recordEventInfo(event);
-            handleEvent(event);
+            stepAutoIncrease(context, event);
+
+            context.setRowEventInfo(getEventLogInfo(context, event));
+
+            handleEvent(context, event);
         }).handle((result, throwable) -> {
             try {
                 // 存在异常
                 if (throwable != null) {
-                    handleThrowableForSubThread(throwable);
+                    context.setThrowable(throwable);
+                    handleThrowable(context, throwable);
                 }
             } finally {
+                printLog(context, context.getRowEventInfo());
+                finallyHook(context, event);
+
                 // 清扫子线程 MDC
-                clearMDC();
+                clearMDCForSubThread();
             }
             return null;
         });
@@ -70,8 +96,12 @@ public abstract class BaseHyggeEventListener<T extends BaseHyggeEvent<?>> implem
      */
     protected abstract String getListenerName();
 
-    protected void onStart(T event) {
+    protected void stepAutoIncrease(HyggeEventListenerContext<S, E> context, E event) {
         event.getStepCount().addAndGet(1);
+    }
+
+    protected String getEventLogInfo(HyggeEventListenerContext<S, E> context, E event) {
+        return event.toJsonInfo();
     }
 
     /**
@@ -86,32 +116,42 @@ public abstract class BaseHyggeEventListener<T extends BaseHyggeEvent<?>> implem
     }
 
     /**
-     * 处理事件的具体方法。执行该方法前会先自动执行
+     * 仅针对需要异步处理的 event 进行子线程 MDC 配置
      */
-    protected abstract void handleEvent(T event);
-
-    /**
-     * 仅针对需要异步处理的 event 的异常处理机制。<br/>
-     * 默认行为是打印异常日志
-     *
-     * @param throwable 运行过程中抛出的异常
-     */
-    protected void handleThrowableForSubThread(Throwable throwable) {
-        String info = String.format("%s fail to consume event.", getListenerName());
-        log.error(info, throwable);
-    }
-
-    protected void clearMDC() {
+    protected void clearMDCForSubThread() {
         MDC.clear();
     }
 
     /**
-     * 仅在接受到
+     * 处理事件的具体方法。执行该方法前会先自动执行
      */
-    protected void recordEventInfo(T event) {
-        log.info("{} receive:{}",
-                getListenerName(),
-                event.toJsonInfo()
-        );
+    protected abstract void handleEvent(HyggeEventListenerContext<S, E> context, E event);
+
+    /**
+     * 执行中发生异常的处理机制
+     *
+     * @param throwable 运行过程中抛出的异常
+     */
+    protected abstract void handleThrowable(HyggeEventListenerContext<S, E> context, Throwable throwable);
+
+    /**
+     * 在 {@link BaseHyggeEventListener#finallyHook(HyggeEventListenerContext, BaseHyggeEvent)} 之前进行的日志输出
+     */
+    protected void printLog(HyggeEventListenerContext<S, E> context, String rowEventInfo) {
+        if (context.isExceptionOccurred()) {
+            String logInfo = getListenerName() + " fail to consume event:" + rowEventInfo;
+            log.error(logInfo, context.getThrowable());
+        } else {
+            log.info("{} receive success:{}",
+                    getListenerName(),
+                    rowEventInfo
+            );
+        }
+    }
+
+    /**
+     * 无论成功与否，必然会在最后执行的钩子函数，默认什么也不做。
+     */
+    protected void finallyHook(HyggeEventListenerContext<S, E> context, E event) {
     }
 }

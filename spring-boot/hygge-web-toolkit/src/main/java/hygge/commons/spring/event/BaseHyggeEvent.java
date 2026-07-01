@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Xavier
  * @date 2026/6/30
  */
-public abstract class BaseHyggeEvent<T> extends ApplicationEvent {
+public abstract class BaseHyggeEvent<S> extends ApplicationEvent {
     protected static final JsonHelper<ObjectMapper> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
     protected static final ParameterHelper parameterHelper = UtilCreator.INSTANCE.getDefaultInstance(ParameterHelper.class);
     /**
@@ -42,17 +42,17 @@ public abstract class BaseHyggeEvent<T> extends ApplicationEvent {
     protected String hyggeTraceInfo;
     protected AtomicInteger stepCount;
 
-    public BaseHyggeEvent(T source) {
+    protected BaseHyggeEvent(S source) {
         super(source);
     }
 
-    public BaseHyggeEvent(T source, Clock clock) {
+    protected BaseHyggeEvent(S source, Clock clock) {
         super(source, clock);
     }
 
     @SuppressWarnings("unchecked")
-    public T getActualSource() {
-        return (T) source;
+    public S getActualSource() {
+        return (S) source;
     }
 
     public boolean isAsynchronous() {
@@ -90,7 +90,7 @@ public abstract class BaseHyggeEvent<T> extends ApplicationEvent {
     /**
      * {@link BaseHyggeEvent#setTrigger(String, AtomicInteger, String)} 的语法糖
      */
-    public void setTrigger(BaseHyggeEvent<T> event) {
+    public void setTrigger(BaseHyggeEvent<S> event) {
         setTrigger(event.hyggeTraceRoot, event.getStepCount(), event.hyggeTraceInfo);
     }
 
