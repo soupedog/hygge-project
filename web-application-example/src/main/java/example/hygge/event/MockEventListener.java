@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static example.hygge.event.MockEventListenerKey.SOME_INFO;
@@ -74,7 +75,7 @@ public class MockEventListener extends BaseHyggeEventListener<Integer, MockEvent
     }
 
     @Override
-    protected void printLog(HyggeEventListenerContext<Integer, MockEvent> context, String rowEventInfo) {
+    protected void printLog(HyggeEventListenerContext<Integer, MockEvent> context, Map<String,Object> rowEventInfo) {
         super.printLog(context, rowEventInfo);
         log.info("演示 context 传递参数 SomeInfo:{} SomeInfo2:{}",
                 context.getObject(SOME_INFO),

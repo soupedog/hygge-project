@@ -18,14 +18,28 @@ package hygge.commons.spring.event;
 
 import hygge.commons.template.container.base.AbstractInterfaceKeyHyggeContext;
 
+import java.util.Map;
+
 /**
  * @author Xavier
  * @date 2026/7/1
  */
 public class HyggeEventListenerContext<S, E extends BaseHyggeEvent<S>> extends AbstractInterfaceKeyHyggeContext<Enum<?>, HyggeEventListenerContextKey> {
+    private final long startTs;
     private Throwable throwable;
-    private String rowEventInfo;
+    /**
+     * 用于日志输出的信息
+     */
+    private Map<String,Object> rowEventInfo;
     private E event;
+
+    public HyggeEventListenerContext() {
+        this.startTs = System.currentTimeMillis();
+    }
+
+    public long getStartTs() {
+        return startTs;
+    }
 
     public boolean isExceptionOccurred() {
         return throwable != null;
@@ -39,11 +53,11 @@ public class HyggeEventListenerContext<S, E extends BaseHyggeEvent<S>> extends A
         this.throwable = throwable;
     }
 
-    public String getRowEventInfo() {
+    public Map<String, Object> getRowEventInfo() {
         return rowEventInfo;
     }
 
-    public void setRowEventInfo(String rowEventInfo) {
+    public void setRowEventInfo(Map<String, Object> rowEventInfo) {
         this.rowEventInfo = rowEventInfo;
     }
 

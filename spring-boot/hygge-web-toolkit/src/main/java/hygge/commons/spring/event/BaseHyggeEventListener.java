@@ -16,6 +16,9 @@
 
 package hygge.commons.spring.event;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hygge.util.UtilCreator;
+import hygge.util.definition.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -32,6 +35,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> implements ApplicationListener<E> {
     private static final Logger log = LoggerFactory.getLogger(BaseHyggeEventListener.class);
+    private static final JsonHelper<ObjectMapper> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
 
     @Override
     public void onApplicationEvent(E event) {
@@ -100,8 +104,8 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
         event.getStepCount().addAndGet(1);
     }
 
-    protected String getEventLogInfo(HyggeEventListenerContext<S, E> context, E event) {
-        return event.toJsonInfo();
+    protected Map<String, Object> getEventLogInfo(HyggeEventListenerContext<S, E> context, E event) {
+        return event.toInfoMap();
     }
 
     /**
@@ -137,14 +141,20 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
     /**
      * 在 {@link BaseHyggeEventListener#finallyHook(HyggeEventListenerContext, BaseHyggeEvent)} 之前进行的日志输出
      */
-    protected void printLog(HyggeEventListenerContext<S, E> context, String rowEventInfo) {
+    protected void printLog(HyggeEventListenerContext<S, E> context, Map<String, Object> rowEventInfo) {
+        long cost = System.currentTimeMillis() - context.getStartTs();
+
+        rowEventInfo.put("cost", cost);
+
+        String jsonInfo = jsonHelper.formatAsString(rowEventInfo);
+
         if (context.isExceptionOccurred()) {
-            String logInfo = getListenerName() + " fail to consume event:" + rowEventInfo;
+            String logInfo = getListenerName() + " consume failure:" + jsonInfo;
             log.error(logInfo, context.getThrowable());
         } else {
-            log.info("{} receive success:{}",
+            log.info("{} consume success:{}",
                     getListenerName(),
-                    rowEventInfo
+                    jsonInfo
             );
         }
     }

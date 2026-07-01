@@ -124,6 +124,11 @@ public abstract class BaseHyggeEvent<S> extends ApplicationEvent {
     }
 
     public String toJsonInfo() {
+        Map<String, Object> resultTemp = toInfoMap();
+        return jsonHelper.formatAsString(resultTemp);
+    }
+
+    public Map<String, Object> toInfoMap() {
         Map<String, Object> resultTemp = new LinkedHashMap<>();
         resultTemp.put("ts", getTimestamp());
         if (isAsynchronous) {
@@ -136,6 +141,6 @@ public abstract class BaseHyggeEvent<S> extends ApplicationEvent {
         if (parameterHelper.isNotEmpty(stepCount)) {
             resultTemp.put("step", stepCount);
         }
-        return jsonHelper.formatAsString(resultTemp);
+        return resultTemp;
     }
 }
