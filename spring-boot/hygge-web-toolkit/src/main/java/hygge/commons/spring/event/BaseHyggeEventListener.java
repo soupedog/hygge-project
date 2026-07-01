@@ -136,7 +136,9 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
      *
      * @param throwable 运行过程中抛出的异常
      */
-    protected abstract void handleThrowable(HyggeEventListenerContext<S, E> context, Throwable throwable);
+    protected void handleThrowable(HyggeEventListenerContext<S, E> context, Throwable throwable) {
+        // 默认状态下，已经在 printLog 中进行了异常打印输出，此处不再额外操作
+    }
 
     /**
      * 在 {@link BaseHyggeEventListener#finallyHook(HyggeEventListenerContext, BaseHyggeEvent)} 之前进行的日志输出
@@ -163,5 +165,6 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
      * 无论成功与否，必然会在最后执行的钩子函数，默认什么也不做。
      */
     protected void finallyHook(HyggeEventListenerContext<S, E> context, E event) {
+        // 默认什么也不做，给子类提供一个钩子函数
     }
 }

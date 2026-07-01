@@ -75,16 +75,11 @@ public class MockEventListener extends BaseHyggeEventListener<Integer, MockEvent
     }
 
     @Override
-    protected void printLog(HyggeEventListenerContext<Integer, MockEvent> context, Map<String,Object> rowEventInfo) {
+    protected void printLog(HyggeEventListenerContext<Integer, MockEvent> context, Map<String, Object> rowEventInfo) {
         super.printLog(context, rowEventInfo);
         log.info("演示 context 传递参数 SomeInfo:{} SomeInfo2:{}",
                 context.getObject(SOME_INFO),
                 context.getObject(SOME_INFO_2));
 
-    }
-
-    @Override
-    protected void handleThrowable(HyggeEventListenerContext<Integer, MockEvent> context, Throwable throwable) {
-        // 默认不进行处理，printLog 默认行为中有异常输出操作
     }
 }
