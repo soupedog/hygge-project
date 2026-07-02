@@ -16,33 +16,83 @@
 
 package hygge.job;
 
+import org.springframework.util.LinkedMultiValueMap;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Xavier
  * @date 2026/7/2
  */
 public class JobReport<IUI> {
-    protected String title;
-    protected ConcurrentLinkedQueue<JobReportItem<IUI>> queue = new ConcurrentLinkedQueue<>();
+    protected final String title;
+    protected final ConcurrentLinkedQueue<String> batchInfoQueue;
+    protected final ConcurrentLinkedQueue<JobReportItem<IUI>> reportItemQueue;
+
+    public JobReport(String title, ConcurrentLinkedQueue<JobReportItem<IUI>> reportItemQueue) {
+        this.title = title;
+        this.reportItemQueue = reportItemQueue;
+        batchInfoQueue = new ConcurrentLinkedQueue<>();
+    }
+
+    public Map<String, Object> createReportInfo(HyggeJobContext context) {
+        LinkedMultiValueMap<Integer, JobReportItem<IUI>> reportInfo = new LinkedMultiValueMap<>();
+
+        AtomicBoolean noFail = new AtomicBoolean(true);
+
+        reportItemQueue.forEach(item -> {
+            reportInfo.add(item.batchCount, item);
+            if (noFail.get() && item.isFail != null && item.isFail) {
+                noFail.set(false);
+            }
+        });
+
+        LinkedHashMap<String, Object> logInfo = new LinkedHashMap<>();
+
+        if (title != null && !title.isEmpty()) {
+            logInfo.put("title", title);
+        }
+
+        logInfo.put("batchInfo", batchInfoQueue);
+
+        if (!reportInfo.isEmpty()) {
+            logInfo.put("detail", reportInfo);
+        }
+
+        // 批次出循环时默认会 +1 此处用来抵消
+        logInfo.put("totalBatch", context.batchCount - 1);
+
+        if (noFail.get()) {
+            logInfo.put("totalItem", context.getItemCount().get());
+        }
+
+        long cost = System.currentTimeMillis() - context.startTs;
+
+        logInfo.put("cost", cost);
+
+        return logInfo;
+    }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void addBatchInfo(String info) {
+        batchInfoQueue.add(info);
     }
 
-    public void add(JobReportItem<IUI> item) {
-        queue.add(item);
+    public void addReportItem(JobReportItem<IUI> item) {
+        reportItemQueue.add(item);
     }
 
-    public ConcurrentLinkedQueue<JobReportItem<IUI>> getQueue() {
-        return queue;
+    public ConcurrentLinkedQueue<String> getBatchInfoQueue() {
+        return batchInfoQueue;
     }
 
-    public void setQueue(ConcurrentLinkedQueue<JobReportItem<IUI>> queue) {
-        this.queue = queue;
+    public ConcurrentLinkedQueue<JobReportItem<IUI>> getReportItemQueue() {
+        return reportItemQueue;
     }
 }

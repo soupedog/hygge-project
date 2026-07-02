@@ -38,8 +38,8 @@ public class MockJob extends BaseHyggeJob<MockJobItem, MockJobItemData, String> 
     private static final RandomHelper randomHelper = UtilCreator.INSTANCE.getDefaultInstance(RandomHelper.class);
     private final List<MockJobItem> mockDataFromDB;
 
-    public MockJob(int batchSize, boolean bachAsynchronousEnable) {
-        super(batchSize, bachAsynchronousEnable);
+    public MockJob(String title, int batchSize, boolean bachAsynchronousEnable) {
+        super(title, batchSize, bachAsynchronousEnable);
         this.mockDataFromDB = new ArrayList<>();
 
         // 模拟从数据库拉取的数据
@@ -49,9 +49,7 @@ public class MockJob extends BaseHyggeJob<MockJobItem, MockJobItemData, String> 
                     .someData(randomHelper.randomInteger(-50, 50))
                     .build();
 
-            mockDataFromDB.add(
-                    new MockJobItem(data, data.getId())
-            );
+            mockDataFromDB.add(new MockJobItem(data));
         }
     }
 
@@ -66,7 +64,7 @@ public class MockJob extends BaseHyggeJob<MockJobItem, MockJobItemData, String> 
 
         Collection<MockJobItem> result = new ArrayList<>();
 
-        for (int i = 0; i < batchSize; i++) {
+        for (int i = 0; i < defaultBatchSize; i++) {
             if (!mockDataFromDB.isEmpty()) {
                 result.add(mockDataFromDB.remove(0));
             }
@@ -79,7 +77,7 @@ public class MockJob extends BaseHyggeJob<MockJobItem, MockJobItemData, String> 
     protected Collection<MockJobItem> getNextBatch(HyggeJobContext context) {
         Collection<MockJobItem> result = new ArrayList<>();
 
-        for (int i = 0; i < batchSize; i++) {
+        for (int i = 0; i < defaultBatchSize; i++) {
             if (!mockDataFromDB.isEmpty()) {
                 result.add(mockDataFromDB.remove(0));
             }

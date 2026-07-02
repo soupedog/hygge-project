@@ -23,11 +23,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @date 2026/7/2
  */
 public class JobReportItem<UI> {
+    protected int batchCount;
     protected Boolean isFail;
     protected UI uniqueIdentifier;
-    protected int batchCount;
-    protected long cost;
     protected String content;
+    protected long cost;
+
+    @JsonIgnore
+    public int getBatchCount() {
+        return batchCount;
+    }
+
+    public void setBatchCount(int batchCount) {
+        this.batchCount = batchCount;
+    }
 
     public Boolean getFail() {
         return isFail;
@@ -45,13 +54,12 @@ public class JobReportItem<UI> {
         this.uniqueIdentifier = uniqueIdentifier;
     }
 
-    @JsonIgnore
-    public int getBatchCount() {
-        return batchCount;
+    public String getContent() {
+        return content;
     }
 
-    public void setBatchCount(int batchCount) {
-        this.batchCount = batchCount;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public long getCost() {
@@ -60,13 +68,5 @@ public class JobReportItem<UI> {
 
     public void setCost(long cost) {
         this.cost = cost;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 }

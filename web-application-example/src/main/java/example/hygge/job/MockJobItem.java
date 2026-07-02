@@ -25,22 +25,22 @@ import hygge.job.JobReportItem;
  * @date 2026/7/2
  */
 public class MockJobItem extends BaseHyggeJobItem<MockJobItemData, String> {
-    public MockJobItem(MockJobItemData source, String uniqueIdentifier) {
-        super(source, uniqueIdentifier);
+    protected MockJobItem(MockJobItemData source) {
+        super(source);
     }
 
     @Override
-    public JobReportItem<String> createReportAfterStop(HyggeJobContext context) {
+    public JobReportItem<String> createReportAfterStop(HyggeJobContext context, long cost) {
         // 成功时不输出日志
-        if (throwable == null) {
+        if (exception == null) {
             return null;
         }
 
         JobReportItem<String> result = new JobReportItem<>();
-
-        result.setUniqueIdentifier(getUniqueIdentifier());
         result.setFail(true);
-        result.setContent(throwable.getMessage());
+        result.setCost(cost);
+        result.setUniqueIdentifier(source.getId());
+        result.setContent(exception.getMessage());
 
         return result;
     }

@@ -21,13 +21,11 @@ import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Xavier
@@ -35,24 +33,29 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> {
     private static final Logger log = LoggerFactory.getLogger(BaseHyggeJob.class);
-    private static final JsonHelper<ObjectMapper> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
+    private static final JsonHelper<ObjectMapper> jsonHelper_indent = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(true);
     /**
-     * 批次编号，从 1 开始
+     * 默认的 批次编号，从 1 开始
      */
-    protected int batchCount = 1;
-    protected int batchSize;
-    protected AtomicInteger count = new AtomicInteger(0);
+    protected int defaultBatchCount = 1;
+    /**
+     * 默认的 单批次拉取多少最小执行单元
+     */
+    protected int defaultBatchSize;
+    /**
+     * 执行报告
+     */
     protected JobReport<IUI> jobReport;
     /**
      * 为 true 时，单批次内的最小单元互相会异步执行，单批次内所有最小单元执行完成后才可能进入下一个批次
      */
     protected boolean bachAsynchronousEnable;
 
-    protected BaseHyggeJob(int batchSize, boolean bachAsynchronousEnable) {
-        this.batchSize = batchSize;
+    protected BaseHyggeJob(String title, int defaultBatchSize, boolean bachAsynchronousEnable) {
+        this.defaultBatchSize = defaultBatchSize;
         this.bachAsynchronousEnable = bachAsynchronousEnable;
 
-        jobReport = new JobReport<>();
+        jobReport = new JobReport<>(title, new ConcurrentLinkedQueue<>());
     }
 
     /**
@@ -61,12 +64,16 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
     protected abstract String getJobName();
 
     public void execute() {
-        mainProcess();
+        HyggeJobContext context = new HyggeJobContext();
+        try {
+            mainProcess(context);
+        } catch (Throwable throwable) {
+            // 兜底包括 JVM 层面也不放过
+            ultimateThrowableHook(context, throwable);
+        }
     }
 
-    protected void mainProcess() {
-        HyggeJobContext context = new HyggeJobContext();
-
+    protected void mainProcess(HyggeJobContext context) {
         try {
             initHook(context);
 
@@ -75,6 +82,9 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
 
             while (batchItemContainer != null && !batchItemContainer.isEmpty()) {
                 batchStartTs = System.currentTimeMillis();
+
+                batchInitHook(context, batchStartTs, batchItemContainer);
+
                 if (bachAsynchronousEnable) {
                     asynchronousProcess(batchItemContainer, context);
                 } else {
@@ -85,11 +95,11 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
 
                 batchCompleteHook(context, batchStartTs, batchItemContainer);
 
-                context.batchIncrease();
+                context.batchContIncrease();
                 batchItemContainer = getNextBatch(context);
             }
-        } catch (Throwable throwable) {
-            handleThrowable(context, throwable);
+        } catch (Exception exception) {
+            handleException(context, exception);
         } finally {
             finallyHook(context);
             printLog(context);
@@ -97,18 +107,18 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
     }
 
     protected void initHook(HyggeJobContext context) {
-        context.setBatchCount(batchCount);
-        context.setBatchSize(batchSize);
+        context.setBatchCount(defaultBatchCount);
+        context.setBatchSize(defaultBatchSize);
     }
 
     /**
      * 全局中发生异常的处理机制
      *
-     * @param throwable 运行过程中抛出的异常
+     * @param exception 运行过程中抛出的异常
      */
-    protected void handleThrowable(HyggeJobContext context, Throwable throwable) {
-        String loginInfo = " unexpected exception.";
-        log.error(loginInfo, throwable);
+    protected void handleException(HyggeJobContext context, Exception exception) {
+        String loginInfo = getJobName() + " unexpected exception.";
+        log.error(loginInfo, exception);
     }
 
     /**
@@ -118,40 +128,21 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
         // 默认什么也不做，给子类提供一个钩子函数
     }
 
+    protected Map<String, Object> getLogInfo(HyggeJobContext context) {
+        return jobReport.createReportInfo(context);
+    }
+
     protected void printLog(HyggeJobContext context) {
-        LinkedMultiValueMap<Integer, JobReportItem<IUI>> reportInfo = new LinkedMultiValueMap<>();
+        Map<String, Object> logInfo = getLogInfo(context);
 
-        AtomicBoolean noFail = new AtomicBoolean(true);
+        boolean isSuccess = logInfo.containsKey("totalItem");
 
-        jobReport.queue.forEach(item -> {
-            reportInfo.add(item.batchCount, item);
-            if (noFail.get() && item.isFail != null && item.isFail) {
-                noFail.set(false);
-            }
-        });
+        String jsonInfo = jsonHelper_indent.formatAsString(logInfo);
 
-        LinkedHashMap<String, Object> logInfo = new LinkedHashMap<>();
-
-        boolean hasFail = !noFail.get();
-
-        if (!hasFail) {
-            logInfo.put("total", count.get());
-        }
-
-        if (!reportInfo.isEmpty()) {
-            logInfo.put("report", reportInfo);
-        }
-
-        long cost = System.currentTimeMillis() - context.startTs;
-
-        logInfo.put("cost", cost);
-
-        String jsonInfo = jsonHelper.formatAsString(logInfo);
-
-        if (hasFail) {
-            log.warn("{} execute fail:{}", getJobName(), jsonInfo);
-        } else {
+        if (isSuccess) {
             log.info("{} execute success:{}", getJobName(), jsonInfo);
+        } else {
+            log.warn("{} execute fail:{}", getJobName(), jsonInfo);
         }
     }
 
@@ -171,30 +162,35 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
      * 执行中，单个数据执行发生异常的处理机制
      *
      * @param jobItem   引发异常的待处理数据
-     * @param throwable 运行过程中抛出的异常
+     * @param exception 运行过程中抛出的异常
      */
-    protected void handleThrowableForItem(HyggeJobContext context, JT jobItem, Throwable throwable) {
+    protected void handleExceptionForItem(HyggeJobContext context, JT jobItem, Exception exception) {
         // 默认用户会在 JobItem 的 createReportAfterStop 中输出日志，该方法不会有额外操作
     }
 
     protected void executeSingleItem(HyggeJobContext context, JT jobItem) {
+        long startTs = System.currentTimeMillis();
         try {
-            long startTs = System.currentTimeMillis();
             jobItem.setStartTs(startTs);
 
             handleSingleItem(context, jobItem);
-            count.incrementAndGet();
-        } catch (Throwable throwable) {
-            jobItem.setThrowable(throwable);
-            handleThrowableForItem(context, jobItem, throwable);
+            context.itemCountIncrease();
+        } catch (Exception exception) {
+            jobItem.setException(exception);
+            handleExceptionForItem(context, jobItem, exception);
         } finally {
-            finallyHookForItem(context, jobItem);
+            try {
+                finallyHookForItem(context, jobItem);
 
-            jobItem.stop();
-            JobReportItem<IUI> reportItem = jobItem.createReportAfterStop(context);
-            if (reportItem != null) {
-                reportItem.setBatchCount(context.getBatchCount());
-                jobReport.add(reportItem);
+                long cost = System.currentTimeMillis() - startTs;
+
+                JobReportItem<IUI> reportItem = jobItem.createReportAfterStop(context, cost);
+                if (reportItem != null) {
+                    reportItem.setBatchCount(context.getBatchCount());
+                    jobReport.addReportItem(reportItem);
+                }
+            } catch (Throwable throwable) {
+                ultimateThrowableHook(context, throwable);
             }
         }
     }
@@ -220,14 +216,28 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
         CompletableFuture.allOf(all).join();
     }
 
+    protected void batchInitHook(HyggeJobContext context, long batchStartTs, Collection<JT> batchItemContainer) {
+        // 批次开始钩子函数，默认什么也不干
+    }
+
     protected void batchCompleteHook(HyggeJobContext context, long batchStartTs, Collection<JT> batchItemContainer) {
         long batchCost = System.currentTimeMillis() - batchStartTs;
 
-        log.info("{} batch:{} itemSize:{} cost:{}",
-                getJobName(),
+        jobReport.addBatchInfo(String.format("batch:%d itemSize:%d cost:%d",
                 context.getBatchCount(),
                 batchItemContainer.size(),
-                batchCost);
+                batchCost
+        ));
+    }
+
+    /**
+     * 最终的异常处理器，这是最后一道防线，该方法严禁抛出异常。<br/>
+     * <p>
+     * 默认实现是单纯打印日志。
+     */
+    protected void ultimateThrowableHook(HyggeJobContext context, Throwable throwable) {
+        String logInfo = getJobName() + " unexpected error.";
+        log.error(logInfo, throwable);
     }
 
 }

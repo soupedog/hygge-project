@@ -35,7 +35,7 @@ public class JobController implements HyggeController<ResponseEntity<?>> {
     @GetMapping("/job")
     public ResponseEntity<?> executeJob(@RequestParam(value = "batchSize", required = false, defaultValue = "3") Integer batchSize,
                                         @RequestParam(value = "bachAsynchronousEnable", required = false, defaultValue = "true") Boolean bachAsynchronousEnable) {
-        MockJob job = new MockJob(batchSize, bachAsynchronousEnable);
+        MockJob job = new MockJob("模拟的 Job，成功执行概率是随机的，需要多执行几次", batchSize, bachAsynchronousEnable);
         job.execute();
         return success();
     }

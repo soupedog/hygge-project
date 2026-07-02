@@ -32,35 +32,32 @@ public abstract class BaseHyggeJobItem<T, UI> {
      */
     protected T source;
     /**
-     * 原始数据唯一标识
-     */
-    protected UI uniqueIdentifier;
-    /**
      * 当前原始数据处理过程中遇到的异常
      */
-    protected Throwable throwable;
+    protected Exception exception;
     /**
      * 当前数据处理耗时(毫秒)
      */
     protected long cost;
 
-    public void setStartTs(long startTs) {
-        this.startTs = startTs;
-    }
-
-    protected BaseHyggeJobItem(T source, UI uniqueIdentifier) {
+    protected BaseHyggeJobItem(T source) {
         this.source = source;
-        this.uniqueIdentifier = uniqueIdentifier;
-    }
-
-    public void stop() {
-        this.cost = System.currentTimeMillis() - startTs;
     }
 
     /**
      * 如果返回为 null，讲不会汇总到 Job 的 jobReport 中
+     *
+     * @param cost 当前最小单元执行的耗时(毫秒)
      */
-    public abstract JobReportItem<UI> createReportAfterStop(HyggeJobContext context);
+    public abstract JobReportItem<UI> createReportAfterStop(HyggeJobContext context, long cost);
+
+    public long getStartTs() {
+        return startTs;
+    }
+
+    public void setStartTs(long startTs) {
+        this.startTs = startTs;
+    }
 
     public T getSource() {
         return source;
@@ -70,20 +67,13 @@ public abstract class BaseHyggeJobItem<T, UI> {
         this.source = source;
     }
 
-    public UI getUniqueIdentifier() {
-        return uniqueIdentifier;
+
+    public Exception getException() {
+        return exception;
     }
 
-    public void setUniqueIdentifier(UI uniqueIdentifier) {
-        this.uniqueIdentifier = uniqueIdentifier;
-    }
-
-    public Throwable getThrowable() {
-        return throwable;
-    }
-
-    public void setThrowable(Throwable throwable) {
-        this.throwable = throwable;
+    public void setException(Exception exception) {
+        this.exception = exception;
     }
 
     public long getCost() {

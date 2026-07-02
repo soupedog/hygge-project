@@ -18,14 +18,32 @@ package hygge.job;
 
 import hygge.commons.template.container.base.AbstractInterfaceKeyHyggeContext;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author Xavier
  * @date 2026/7/2
  */
 public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, HyggeJobContextKey> {
     protected final Long startTs = System.currentTimeMillis();
+    /**
+     * 最小执行单元处理数
+     */
+    protected AtomicInteger itemCount = new AtomicInteger(0);
     protected int batchCount;
     protected int batchSize;
+
+    public AtomicInteger getItemCount() {
+        return itemCount;
+    }
+
+    public void setItemCount(AtomicInteger itemCount) {
+        this.itemCount = itemCount;
+    }
+
+    public void itemCountIncrease() {
+        this.itemCount.incrementAndGet();
+    }
 
     public int getBatchCount() {
         return batchCount;
@@ -35,7 +53,7 @@ public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, H
         this.batchCount = batchCount;
     }
 
-    public void batchIncrease() {
+    public void batchContIncrease() {
         this.batchCount = this.batchCount + 1;
     }
 
