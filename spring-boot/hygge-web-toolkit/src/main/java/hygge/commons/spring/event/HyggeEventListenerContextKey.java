@@ -23,5 +23,4 @@ import hygge.commons.template.container.base.HyggeContainerKey;
  * @date 2026/7/1
  */
 public interface HyggeEventListenerContextKey extends HyggeContainerKey<Enum<?>> {
-
 }
