@@ -39,31 +39,21 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
 
     @Override
     public void onApplicationEvent(E event) {
-        mainProcess(event);
-    }
-
-    protected void mainProcess(E event) {
         HyggeEventListenerContext<S, E> context = new HyggeEventListenerContext<>();
         context.setEvent(event);
+        try {
+            mainProcess(context, event);
+        } catch (Throwable throwable) {
+            ultimateThrowableHook(context, throwable);
+        }
+    }
 
+    protected void mainProcess(HyggeEventListenerContext<S, E> context, E event) {
         if (event.isAsynchronous) {
             asynchronousProcess(context, event);
             return;
         }
-
-        try {
-            stepAutoIncrease(context, event);
-
-            context.setRowEventInfo(getEventLogInfo(context, event));
-
-            handleEvent(context, event);
-        } catch (Throwable throwable) {
-            context.setThrowable(throwable);
-            handleThrowable(context, throwable);
-        } finally {
-            finallyHook(context, event);
-            printLog(context, context.getRowEventInfo());
-        }
+        executeEvent(context, event);
     }
 
     protected void asynchronousProcess(HyggeEventListenerContext<S, E> context, E event) {
@@ -72,27 +62,31 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
         CompletableFuture.runAsync(() -> {
             initMDCForSubThread(contextMapFromParent);
 
+            executeEvent(context, event);
+
+            // 清扫子线程 MDC
+            clearMDCForSubThread();
+        }).exceptionally(throwable -> {
+            ultimateThrowableHook(context, throwable);
+            // 自动转换 Void
+            return null;
+        });
+    }
+
+    protected void executeEvent(HyggeEventListenerContext<S, E> context, E event) {
+        try {
             stepAutoIncrease(context, event);
 
             context.setRowEventInfo(getEventLogInfo(context, event));
 
             handleEvent(context, event);
-        }).handle((result, throwable) -> {
-            try {
-                // 存在异常
-                if (throwable != null) {
-                    context.setThrowable(throwable);
-                    handleThrowable(context, throwable);
-                }
-            } finally {
-                finallyHook(context, event);
-                printLog(context, context.getRowEventInfo());
-
-                // 清扫子线程 MDC
-                clearMDCForSubThread();
-            }
-            return null;
-        });
+        } catch (Exception exception) {
+            context.setException(exception);
+            handleException(context, exception);
+        } finally {
+            finallyHook(context, event);
+            printLog(context, context.getRowEventInfo());
+        }
     }
 
     /**
@@ -101,7 +95,7 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
     protected abstract String getListenerName();
 
     protected void stepAutoIncrease(HyggeEventListenerContext<S, E> context, E event) {
-        event.getStepCount().addAndGet(1);
+        event.setStepCount(event.getStepCount() + 1);
     }
 
     protected Map<String, Object> getEventLogInfo(HyggeEventListenerContext<S, E> context, E event) {
@@ -134,9 +128,9 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
     /**
      * 执行中发生异常的处理机制
      *
-     * @param throwable 运行过程中抛出的异常
+     * @param exception 运行过程中抛出的异常
      */
-    protected void handleThrowable(HyggeEventListenerContext<S, E> context, Throwable throwable) {
+    protected void handleException(HyggeEventListenerContext<S, E> context, Exception exception) {
         // 默认状态下，已经在 printLog 中进行了异常打印输出，此处不再额外操作
     }
 
@@ -152,7 +146,7 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
 
         if (context.isExceptionOccurred()) {
             String logInfo = getListenerName() + " consume failure:" + jsonInfo;
-            log.error(logInfo, context.getThrowable());
+            log.error(logInfo, context.getException());
         } else {
             log.info("{} consume success:{}",
                     getListenerName(),
@@ -166,5 +160,15 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
      */
     protected void finallyHook(HyggeEventListenerContext<S, E> context, E event) {
         // 默认什么也不做，给子类提供一个钩子函数
+    }
+
+    /**
+     * 最终的异常处理器，这是最后一道防线，该方法严禁抛出异常。<br/>
+     * <p>
+     * 默认实现是单纯打印日志。
+     */
+    protected void ultimateThrowableHook(HyggeEventListenerContext<S, E> context, Throwable throwable) {
+        String logInfo = getListenerName() + " unexpected error.";
+        log.error(logInfo, throwable);
     }
 }

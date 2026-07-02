@@ -36,7 +36,7 @@ public class DefaultHyggeEventBuilder<T, R extends BaseHyggeEvent<T>> {
     protected boolean asynchronous;
     protected String hyggeTraceRoot;
     protected String hyggeTraceInfo;
-    protected AtomicInteger stepCount;
+    protected int stepCount;
     protected final BiFunction<T, Clock, R> construct;
 
     public DefaultHyggeEventBuilder(BiFunction<T, Clock, R> construct, T source) {
@@ -69,7 +69,7 @@ public class DefaultHyggeEventBuilder<T, R extends BaseHyggeEvent<T>> {
         return this;
     }
 
-    public DefaultHyggeEventBuilder<T, R> stepCount(AtomicInteger stepCount) {
+    public DefaultHyggeEventBuilder<T, R> stepCount(int stepCount) {
         this.stepCount = stepCount;
         return this;
     }
@@ -96,11 +96,7 @@ public class DefaultHyggeEventBuilder<T, R extends BaseHyggeEvent<T>> {
         if (parameterHelper.isNotEmpty(hyggeTraceInfo)) {
             event.setHyggeTraceInfo(hyggeTraceInfo);
         }
-        if (parameterHelper.isNotEmpty(stepCount)) {
-            event.setStepCount(stepCount);
-        } else {
-            event.setStepCount(new AtomicInteger(0));
-        }
+        event.setStepCount(stepCount);
 
         return event;
     }

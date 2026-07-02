@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class HyggeEventListenerContext<S, E extends BaseHyggeEvent<S>> extends AbstractInterfaceKeyHyggeContext<Enum<?>, HyggeEventListenerContextKey> {
     private final long startTs;
-    private Throwable throwable;
+    private Exception exception;
     /**
      * 用于日志输出的信息
      */
@@ -42,15 +42,15 @@ public class HyggeEventListenerContext<S, E extends BaseHyggeEvent<S>> extends A
     }
 
     public boolean isExceptionOccurred() {
-        return throwable != null;
+        return exception != null;
     }
 
-    public Throwable getThrowable() {
-        return throwable;
+    public Exception getException() {
+        return exception;
     }
 
-    public void setThrowable(Throwable throwable) {
-        this.throwable = throwable;
+    public void setException(Exception exception) {
+        this.exception = exception;
     }
 
     public Map<String, Object> getRowEventInfo() {

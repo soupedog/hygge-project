@@ -207,7 +207,12 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
 
         int index = 0;
         for (JT item : batchItemContainer) {
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> executeSingleItem(context, item));
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> executeSingleItem(context, item))
+                    .exceptionally(throwable -> {
+                        ultimateThrowableHook(context, throwable);
+                        // 自动转换 Void
+                        return null;
+                    });
             all[index] = future;
             index = index + 1;
         }

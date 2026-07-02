@@ -40,7 +40,7 @@ public abstract class BaseHyggeEvent<S> extends ApplicationEvent {
     protected boolean isAsynchronous;
     protected String hyggeTraceRoot;
     protected String hyggeTraceInfo;
-    protected AtomicInteger stepCount;
+    protected int stepCount;
 
     protected BaseHyggeEvent(S source) {
         super(source);
@@ -79,16 +79,16 @@ public abstract class BaseHyggeEvent<S> extends ApplicationEvent {
         this.hyggeTraceInfo = hyggeTraceInfo;
     }
 
-    public AtomicInteger getStepCount() {
+    public int getStepCount() {
         return stepCount;
     }
 
-    public void setStepCount(AtomicInteger stepCount) {
+    public void setStepCount(int stepCount) {
         this.stepCount = stepCount;
     }
 
     /**
-     * {@link BaseHyggeEvent#setTrigger(String, AtomicInteger, String)} 的语法糖
+     * {@link BaseHyggeEvent#setTrigger(String, int, String)} 的语法糖
      */
     public void setTrigger(BaseHyggeEvent<S> event) {
         setTrigger(event.hyggeTraceRoot, event.getStepCount(), event.hyggeTraceInfo);
@@ -99,12 +99,10 @@ public abstract class BaseHyggeEvent<S> extends ApplicationEvent {
      * @param stepCount      同线程内共享的步骤计数器
      * @param traceInfo      线程切换位点记录
      */
-    public void setTrigger(String hyggeTraceRoot, AtomicInteger stepCount, String traceInfo) {
-        int triggerCount = stepCount.get();
-
+    public void setTrigger(String hyggeTraceRoot, int stepCount, String traceInfo) {
         if (isAsynchronous) {
             // 异步执行事件
-            String triggerStep = String.valueOf(triggerCount);
+            String triggerStep = String.valueOf(stepCount);
 
             if (parameterHelper.isEmpty(traceInfo)) {
                 traceInfo = triggerStep;
@@ -112,7 +110,7 @@ public abstract class BaseHyggeEvent<S> extends ApplicationEvent {
                 traceInfo = traceInfo.concat("-").concat(triggerStep);
             }
 
-            this.stepCount = new AtomicInteger(0);
+            this.stepCount = 0;
         } else {
             // 同步执行事件
             this.stepCount = stepCount;
