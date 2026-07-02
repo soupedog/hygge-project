@@ -42,7 +42,7 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
         mainProcess(event);
     }
 
-    private void mainProcess(E event) {
+    protected void mainProcess(E event) {
         HyggeEventListenerContext<S, E> context = new HyggeEventListenerContext<>();
         context.setEvent(event);
 
@@ -61,12 +61,12 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
             context.setThrowable(throwable);
             handleThrowable(context, throwable);
         } finally {
-            printLog(context, context.getRowEventInfo());
             finallyHook(context, event);
+            printLog(context, context.getRowEventInfo());
         }
     }
 
-    private void asynchronousProcess(HyggeEventListenerContext<S, E> context, E event) {
+    protected void asynchronousProcess(HyggeEventListenerContext<S, E> context, E event) {
         Map<String, String> contextMapFromParent = MDC.getCopyOfContextMap();
 
         CompletableFuture.runAsync(() -> {
@@ -85,8 +85,8 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
                     handleThrowable(context, throwable);
                 }
             } finally {
-                printLog(context, context.getRowEventInfo());
                 finallyHook(context, event);
+                printLog(context, context.getRowEventInfo());
 
                 // 清扫子线程 MDC
                 clearMDCForSubThread();
