@@ -19,7 +19,6 @@ package hygge.commons.spring.event;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
 import static hygge.commons.spring.event.BaseHyggeEvent.parameterHelper;

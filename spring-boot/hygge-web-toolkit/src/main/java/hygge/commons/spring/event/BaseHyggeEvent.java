@@ -25,7 +25,6 @@ import org.springframework.context.ApplicationEvent;
 import java.time.Clock;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Xavier
