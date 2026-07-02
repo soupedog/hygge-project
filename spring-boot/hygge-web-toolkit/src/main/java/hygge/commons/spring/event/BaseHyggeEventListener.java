@@ -134,9 +134,6 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
         // 默认状态下，已经在 printLog 中进行了异常打印输出，此处不再额外操作
     }
 
-    /**
-     * 在 {@link BaseHyggeEventListener#finallyHook(HyggeEventListenerContext, BaseHyggeEvent)} 之前进行的日志输出
-     */
     protected void printLog(HyggeEventListenerContext<S, E> context, Map<String, Object> rowEventInfo) {
         long cost = System.currentTimeMillis() - context.getStartTs();
 
