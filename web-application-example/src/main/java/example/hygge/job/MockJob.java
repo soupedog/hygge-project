@@ -59,7 +59,9 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
 
     @Override
     protected MockJobContext createContext() {
-        return new MockJobContext();
+        MockJobContext context = new MockJobContext();
+        context.setTitle("有随机模拟抛出异常，需要多试几次");
+        return context;
     }
 
     @Override

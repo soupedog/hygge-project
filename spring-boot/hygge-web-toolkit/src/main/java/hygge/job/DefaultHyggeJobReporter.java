@@ -35,8 +35,10 @@ public class DefaultHyggeJobReporter implements HyggeJobReporter {
     }
 
     @Override
-    public Map<String, Object> createReportInfo(String title, HyggeJobContext context) {
+    public Map<String, Object> createReportInfo(HyggeJobContext context) {
         LinkedHashMap<String, Object> logInfo = new LinkedHashMap<>();
+
+        String title = context.getTitle();
 
         if (title != null && !title.isEmpty()) {
             logInfo.put("title", title);

@@ -23,7 +23,7 @@ import java.util.Map;
  * @date 2026/7/2
  */
 public interface HyggeJobReporter {
-    Map<String, Object> createReportInfo(String title, HyggeJobContext context);
+    Map<String, Object> createReportInfo(HyggeJobContext context);
 
     void addBatchInfo(String batchInfo);
 

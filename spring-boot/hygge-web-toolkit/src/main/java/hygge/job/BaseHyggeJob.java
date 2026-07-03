@@ -165,7 +165,7 @@ public abstract class BaseHyggeJob<
     }
 
     protected Map<String, Object> getLogInfo(C context) {
-        return context.getJobReporter().createReportInfo("", context);
+        return context.getJobReporter().createReportInfo(context);
     }
 
     protected void printLog(C context) {
