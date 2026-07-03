@@ -19,6 +19,7 @@ package example.hygge.job;
 import hygge.commons.constant.enums.StringCategoryEnum;
 import hygge.job.BaseHyggeJob;
 import hygge.job.DefaultHyggeJobBatchItem;
+import hygge.job.HyggeJobContext;
 import hygge.job.SimpleHyggeJob;
 import hygge.util.UtilCreator;
 import hygge.util.definition.RandomHelper;
@@ -57,6 +58,9 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
         return this.getClass().getSimpleName();
     }
 
+    /**
+     * 直接继承 {@link SimpleHyggeJob} 则该方法非必须，此处演示如何扩展 {@link HyggeJobContext}
+     */
     @Override
     protected MockJobContext createContext() {
         MockJobContext context = new MockJobContext();
@@ -64,6 +68,9 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
         return context;
     }
 
+    /**
+     * 直接继承 {@link SimpleHyggeJob} 则该方法非必须，此处演示如何扩展 {@link DefaultHyggeJobBatchItem}
+     */
     @Override
     protected DefaultHyggeJobBatchItem<MockJobItem> createJobBatchItem(MockJobContext context) {
         return new DefaultHyggeJobBatchItem<>();
@@ -128,5 +135,15 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
         // 此处实例不需要返回值单纯查询操作，如有需要可以返回如 UserDTO
         // 通过重写 batchCompleteHook，可以对 UserDTO 进行使用
         return null;
+    }
+
+    /**
+     * 该方法非必须，方便批处理操作的钩子函数，此处能获取到 fetch 的原始数据，和当前批次所有的处理后结果。<br/>
+     * <p>
+     * (演示代码是 Void 泛型，有需要可以自行修改为其他类型)
+     */
+    @Override
+    protected void batchCompleteHook(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem, List<User> rawDataCollection, List<Void> processedDataCollection) {
+        super.batchCompleteHook(context, jobBatchItem, rawDataCollection, processedDataCollection);
     }
 }
