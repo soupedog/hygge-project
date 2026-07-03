@@ -24,14 +24,19 @@ import hygge.util.definition.ParameterHelper;
 
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Collection 处理工具类基类
@@ -64,6 +69,10 @@ public abstract class BaseCollectionHelper implements CollectionHelper {
 
     @Override
     public <T> ArrayList<T> createCollection(T... targetArray) {
+        if (targetArray == null) {
+            return new ArrayList<>();
+        }
+
         ArrayList<T> result = new ArrayList<>(targetArray.length);
         Collections.addAll(result, targetArray);
         return result;
@@ -71,53 +80,53 @@ public abstract class BaseCollectionHelper implements CollectionHelper {
 
     @Override
     public <T> HashSet<T> createUniqueCollection(T... targetArray) {
-        HashSet<T> result = new HashSet<>(targetArray.length);
-        Collections.addAll(result, targetArray);
-        return result;
+        if (targetArray == null) {
+            return new HashSet<>(0);
+        }
+        return new HashSet<>(Arrays.asList(targetArray));
     }
 
     @Override
     public <T, R> ArrayList<R> filterNonemptyItemAsArrayList(boolean enableContainCheck, Collection<T> target, Function<T, R> getItemFunction) {
         if (parameterHelper.isEmpty(target)) {
-            return new ArrayList<>(0);
+            return new ArrayList<>();
         }
 
-        ArrayList<R> result = new ArrayList<>(target.size());
-        for (T collectionItem : target) {
-            if (collectionItem == null) {
-                continue;
-            }
+        Stream<R> stream = target.stream()
+                .filter(Objects::nonNull)                     // collectionItem == null 跳过
+                .map(getItemFunction)                         // 转换成 R
+                .filter(r -> parameterHelper.isNotEmpty(r));  // 过滤空结果
 
-            R resultItem = getItemFunction.apply(collectionItem);
-            if (parameterHelper.isNotEmpty(resultItem)) {
-                if (enableContainCheck) {
-                    if (!result.contains(resultItem)) {
-                        result.add(resultItem);
-                    }
-                } else {
-                    result.add(resultItem);
-                }
-            }
+        if (enableContainCheck) {
+            stream = stream.distinct();                       // 去重，O(n) 且保持顺序
         }
-        return result;
+
+        return stream.collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     public <T, R> HashSet<R> filterNonemptyItemAsHashSet(Collection<T> target, Function<T, R> getItemFunction) {
-        HashSet<R> result = new HashSet<>();
-
         if (parameterHelper.isEmpty(target)) {
-            return result;
+            return new HashSet<>(0);
         }
 
-        for (T collectionItem : target) {
-            if (collectionItem == null) {
-                continue;
-            }
-            R resultItem = getItemFunction.apply(collectionItem);
-            result.add(resultItem);
-        }
-        return result;
+        return target.stream()
+                .filter(Objects::nonNull)                          // 跳过 null 元素
+                .map(getItemFunction)                              // 转换
+                .filter(r -> parameterHelper.isNotEmpty(r))        // 过滤空结果
+                .collect(Collectors.toCollection(HashSet::new));
+    }
+
+    private <T, K, V> void initMapData(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction, Map<K, V> result) {
+        target.stream()
+                .filter(Objects::nonNull)
+                .forEach(item -> {
+                    K key = kFunction.apply(item);
+                    V value = vFunction.apply(item);
+                    if (parameterHelper.isNotEmpty(key) && parameterHelper.isNotEmpty(value)) {
+                        result.put(key, value);
+                    }
+                });
     }
 
     @Override
@@ -127,14 +136,7 @@ public abstract class BaseCollectionHelper implements CollectionHelper {
         }
 
         HashMap<K, V> result = new HashMap<>(target.size());
-        for (T collectionItem : target) {
-            if (collectionItem == null) {
-                continue;
-            }
-            K key = kFunction.apply(collectionItem);
-            V value = vFunction.apply(collectionItem);
-            result.put(key, value);
-        }
+        initMapData(target, kFunction, vFunction, result);
         return result;
     }
 
@@ -145,43 +147,29 @@ public abstract class BaseCollectionHelper implements CollectionHelper {
 
     @Override
     public <T, K, V> TreeMap<K, V> filterNonemptyItemAsTreeMap(Collection<T> target, Comparator<K> comparator, Function<T, K> kFunction, Function<T, V> vFunction) {
-        TreeMap<K, V> result;
-        if (parameterHelper.isNotEmpty(comparator)) {
-            result = new TreeMap<>(comparator);
-        } else {
-            result = new TreeMap<>(Collator.getInstance());
-        }
         if (parameterHelper.isEmpty(target)) {
-            return result;
+            return createTreeMap(comparator);
         }
 
-        for (T collectionItem : target) {
-            if (collectionItem == null) {
-                continue;
-            }
-            K key = kFunction.apply(collectionItem);
-            V value = vFunction.apply(collectionItem);
-            if (key != null) {
-                result.put(key, value);
-            }
-        }
+        TreeMap<K, V> result = createTreeMap(comparator);
+        initMapData(target, kFunction, vFunction, result);
         return result;
+    }
+
+    private <K, V> TreeMap<K, V> createTreeMap(Comparator<K> comparator) {
+        if (comparator != null) {
+            return new TreeMap<>(comparator);
+        }
+        return new TreeMap<>(Collator.getInstance());
     }
 
     @Override
     public <T, K, V> ConcurrentHashMap<K, V> filterNonemptyItemAsConcurrentHashMap(Collection<T> target, Function<T, K> kFunction, Function<T, V> vFunction) {
-        parameterHelper.objectNotNull("collectionTarget", target);
-        ConcurrentHashMap<K, V> result = new ConcurrentHashMap<>(target.size());
-        for (T collectionItem : target) {
-            if (collectionItem == null) {
-                continue;
-            }
-            K key = kFunction.apply(collectionItem);
-            V value = vFunction.apply(collectionItem);
-            if (key != null && value != null) {
-                result.put(key, value);
-            }
+        if (parameterHelper.isEmpty(target)) {
+            return new ConcurrentHashMap<>(0);
         }
+        ConcurrentHashMap<K, V> result = new ConcurrentHashMap<>(target.size());
+        initMapData(target, kFunction, vFunction, result);
         return result;
     }
 }
