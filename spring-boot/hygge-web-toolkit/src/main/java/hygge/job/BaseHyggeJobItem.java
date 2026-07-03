@@ -42,6 +42,10 @@ public abstract class BaseHyggeJobItem<RD, PD, UI> extends JobTimeInfo {
      */
     protected Exception exception;
 
+    protected BaseHyggeJobItem(RD rawData) {
+        this.rawData = rawData;
+    }
+
     /**
      * 获取唯一标识，用于日志打印等环节，请确保它能被序列化。
      */

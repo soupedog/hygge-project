@@ -23,9 +23,8 @@ import hygge.job.BaseHyggeJobItem;
  * @date 2026/7/2
  */
 public class MockJobItem extends BaseHyggeJobItem<User, Void, Integer> {
-
     public MockJobItem(User rawData) {
-        this.rawData = rawData;
+        super(rawData);
     }
 
     @Override

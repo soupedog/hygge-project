@@ -99,6 +99,8 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
         MockPage<User> page = context.getPage();
         // 模拟翻页并查询得到下一个 page 对象
         page = page.nextPageable();
+        context.setPage(page);
+
         if (page.isLast()) {
             context.saveObject(MockJobKey.NO_NEXT_PAGE, true);
         }
