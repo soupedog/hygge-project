@@ -26,12 +26,30 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, HyggeJobContextKey> {
     protected final Long startTs = System.currentTimeMillis();
+    protected String title;
     /**
      * 最小执行单元处理数
      */
     protected AtomicInteger itemCount = new AtomicInteger(0);
     protected int batchCount;
     protected int batchSize;
+    protected HyggeJobReporter jobReporter;
+
+    public void batchContIncrease() {
+        this.batchCount = this.batchCount + 1;
+    }
+
+    public Long getStartTs() {
+        return startTs;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public AtomicInteger getItemCount() {
         return itemCount;
@@ -53,15 +71,19 @@ public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, H
         this.batchCount = batchCount;
     }
 
-    public void batchContIncrease() {
-        this.batchCount = this.batchCount + 1;
-    }
-
     public int getBatchSize() {
         return batchSize;
     }
 
     public void setBatchSize(int batchSize) {
         this.batchSize = batchSize;
+    }
+
+    public HyggeJobReporter getJobReporter() {
+        return jobReporter;
+    }
+
+    public void setJobReporter(HyggeJobReporter jobReporter) {
+        this.jobReporter = jobReporter;
     }
 }

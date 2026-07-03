@@ -17,23 +17,38 @@
 package hygge.job;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hygge.commons.exception.InternalRuntimeException;
 import hygge.util.UtilCreator;
 import hygge.util.definition.JsonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 /**
+ * @param <C>   上下文容器，所有执行单元共享。
+ * @param <JBI> 批次容器，同批次内执行单元共享。
+ * @param <JI>  最小执行单元容器，JI 内部泛型是 DF 处理过后的数据类型。
+ * @param <RD>  待处理的原始数据。
+ * @param <PD>  处理完成后的数据。
  * @author Xavier
  * @date 2026/7/2
  */
-public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> {
+public abstract class BaseHyggeJob<
+        C extends HyggeJobContext,
+        JBI extends DefaultHyggeJobBatchItem<JI>,
+        JI extends BaseHyggeJobItem<RD, PD, ?>,
+        RD,
+        PD> {
     private static final Logger log = LoggerFactory.getLogger(BaseHyggeJob.class);
     private static final JsonHelper<ObjectMapper> jsonHelper_indent = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(true);
+    private static final JsonHelper<ObjectMapper> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
     /**
      * 默认的 批次编号，从 1 开始
      */
@@ -43,19 +58,13 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
      */
     protected int defaultBatchSize;
     /**
-     * 执行报告
-     */
-    protected JobReport<IUI> jobReport;
-    /**
      * 为 true 时，单批次内的最小单元互相会异步执行，单批次内所有最小单元执行完成后才可能进入下一个批次
      */
     protected boolean bachAsynchronousEnable;
 
-    protected BaseHyggeJob(String title, int defaultBatchSize, boolean bachAsynchronousEnable) {
+    protected BaseHyggeJob(int defaultBatchSize, boolean bachAsynchronousEnable) {
         this.defaultBatchSize = defaultBatchSize;
         this.bachAsynchronousEnable = bachAsynchronousEnable;
-
-        jobReport = new JobReport<>(title, new ConcurrentLinkedQueue<>());
     }
 
     /**
@@ -64,8 +73,13 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
     protected abstract String getJobName();
 
     public void execute() {
-        HyggeJobContext context = new HyggeJobContext();
+        C context = null;
         try {
+            context = createContext();
+            context.setBatchSize(defaultBatchSize);
+            context.setBatchCount(defaultBatchCount);
+            HyggeJobReporter jobReporter = createHyggeJobReporter(context);
+            context.setJobReporter(jobReporter);
             mainProcess(context);
         } catch (Throwable throwable) {
             // 兜底包括 JVM 层面也不放过
@@ -73,30 +87,49 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
         }
     }
 
-    protected void mainProcess(HyggeJobContext context) {
+    protected void mainProcess(C context) {
         try {
-            initHook(context);
+            JBI jobBatchItem = createJobBatchItem(context);
+            jobBatchItem.initStartTs();
+            jobBatchItem.setBatchCount(context.getBatchCount());
+            boolean isFirstBatch = true;
 
-            Collection<JT> batchItemContainer = firstFetch(context);
-            long batchStartTs;
+            List<RD> rawDataCollection = firstFetch(context, jobBatchItem);
+            List<PD> processedDataCollection;
+            batchInitHook(context, jobBatchItem, rawDataCollection);
 
-            while (batchItemContainer != null && !batchItemContainer.isEmpty()) {
-                batchStartTs = System.currentTimeMillis();
+            while (rawDataCollection != null && !rawDataCollection.isEmpty()) {
+                if (isFirstBatch) {
+                    isFirstBatch = false;
+                } else {
+                    // 仅当不是第 1 批次时需要创建
+                    jobBatchItem = createJobBatchItem(context);
+                    jobBatchItem.initStartTs();
+                    jobBatchItem.setBatchCount(context.getBatchCount());
+                    batchInitHook(context, jobBatchItem, rawDataCollection);
+                }
 
-                batchInitHook(context, batchStartTs, batchItemContainer);
+                List<JI> jobItemList = pressToJobItem(context, jobBatchItem, rawDataCollection);
+                jobBatchItem.setJobItemCollection(jobItemList);
 
                 if (bachAsynchronousEnable) {
-                    asynchronousProcess(batchItemContainer, context);
+                    processedDataCollection = asynchronousProcess(context, jobBatchItem, jobItemList);
                 } else {
-                    for (JT item : batchItemContainer) {
-                        executeSingleItem(context, item);
+                    processedDataCollection = new ArrayList<>();
+                    for (JI item : jobItemList) {
+                        PD jobItemProcessedData = executeSingleItem(context, item);
+                        jobItemSuccessCheck(item);
+
+                        processedDataCollection.add(jobItemProcessedData);
                     }
                 }
 
-                batchCompleteHook(context, batchStartTs, batchItemContainer);
-
+                batchCompleteHook(context, jobBatchItem, rawDataCollection, processedDataCollection);
+                jobBatchItem.stop();
+                //当前批次结束
                 context.batchContIncrease();
-                batchItemContainer = getNextBatch(context);
+
+                rawDataCollection = getNextBatch(context, jobBatchItem);
             }
         } catch (Exception exception) {
             handleException(context, exception);
@@ -106,17 +139,20 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
         }
     }
 
-    protected void initHook(HyggeJobContext context) {
-        context.setBatchCount(defaultBatchCount);
-        context.setBatchSize(defaultBatchSize);
+    protected HyggeJobReporter createHyggeJobReporter(C context) {
+        return new DefaultHyggeJobReporter(new ArrayList<>(context.getBatchSize()), new ConcurrentLinkedQueue<>());
     }
+
+    protected abstract C createContext();
+
+    protected abstract JBI createJobBatchItem(C context);
 
     /**
      * 全局中发生异常的处理机制
      *
      * @param exception 运行过程中抛出的异常
      */
-    protected void handleException(HyggeJobContext context, Exception exception) {
+    protected void handleException(C context, Exception exception) {
         String loginInfo = getJobName() + " unexpected exception.";
         log.error(loginInfo, exception);
     }
@@ -124,15 +160,15 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
     /**
      * 无论成功与否，必然会在最后执行的钩子函数，默认什么也不做。
      */
-    protected void finallyHook(HyggeJobContext context) {
+    protected void finallyHook(C context) {
         // 默认什么也不做，给子类提供一个钩子函数
     }
 
-    protected Map<String, Object> getLogInfo(HyggeJobContext context) {
-        return jobReport.createReportInfo(context);
+    protected Map<String, Object> getLogInfo(C context) {
+        return context.getJobReporter().createReportInfo("", context);
     }
 
-    protected void printLog(HyggeJobContext context) {
+    protected void printLog(C context) {
         Map<String, Object> logInfo = getLogInfo(context);
 
         boolean isSuccess = logInfo.containsKey("totalItem");
@@ -149,14 +185,16 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
     /**
      * 返回 null 时，任务会自动结束
      */
-    protected abstract Collection<JT> firstFetch(HyggeJobContext context);
+    protected abstract List<RD> firstFetch(C context, JBI jobBatchItem);
 
     /**
      * 返回 null 时，任务会自动结束
      */
-    protected abstract Collection<JT> getNextBatch(HyggeJobContext context);
+    protected abstract List<RD> getNextBatch(C context, JBI jobBatchItem);
 
-    protected abstract void handleSingleItem(HyggeJobContext context, JT jobItem);
+    protected abstract JI createJobItem(C context, JBI jobBatchItem, RD rawData);
+
+    protected abstract PD handleSingleItem(C context, JI jobItem);
 
     /**
      * 执行中，单个数据执行发生异常的处理机制
@@ -164,85 +202,108 @@ public abstract class BaseHyggeJob<JT extends BaseHyggeJobItem<S, IUI>, S, IUI> 
      * @param jobItem   引发异常的待处理数据
      * @param exception 运行过程中抛出的异常
      */
-    protected void handleExceptionForItem(HyggeJobContext context, JT jobItem, Exception exception) {
-        // 默认用户会在 JobItem 的 createReportAfterStop 中输出日志，该方法不会有额外操作
+    protected void handleExceptionForItem(C context, JI jobItem, Exception exception) {
+        // 默认什么也不干
     }
 
-    protected void executeSingleItem(HyggeJobContext context, JT jobItem) {
-        long startTs = System.currentTimeMillis();
+    protected PD executeSingleItem(C context, JI jobItem) {
+        PD result = null;
         try {
-            jobItem.setStartTs(startTs);
+            jobItem.initStartTs();
 
-            handleSingleItem(context, jobItem);
+            result = handleSingleItem(context, jobItem);
+            jobItem.setProcessedData(result);
             context.itemCountIncrease();
         } catch (Exception exception) {
             jobItem.setException(exception);
+            context.getJobReporter().addFailedInfo(jobItem.getErrorInfo());
             handleExceptionForItem(context, jobItem, exception);
         } finally {
             try {
                 finallyHookForItem(context, jobItem);
 
-                long cost = System.currentTimeMillis() - startTs;
-
-                JobReportItem<IUI> reportItem = jobItem.createReportAfterStop(context, cost);
-                if (reportItem != null) {
-                    reportItem.setBatchCount(context.getBatchCount());
-                    jobReport.addReportItem(reportItem);
-                }
+                jobItem.stop();
             } catch (Throwable throwable) {
                 ultimateThrowableHook(context, throwable);
             }
         }
+        return result;
     }
 
     /**
      * 无论成功与否，必然会单个数据处理完成后执行的钩子函数，默认什么也不做。
      */
-    protected void finallyHookForItem(HyggeJobContext context, JT jobItem) {
+    protected void finallyHookForItem(C context, JI jobItem) {
         // 默认什么也不做，给子类提供一个钩子函数
     }
 
-    protected void asynchronousProcess(Collection<JT> batchItemContainer, HyggeJobContext context) {
-        CompletableFuture<?>[] all = new CompletableFuture[batchItemContainer.size()];
+    protected List<PD> asynchronousProcess(C context, JBI jobBatchItem, Collection<JI> batchItemContainer) {
+        List<CompletableFuture<PD>> futures = batchItemContainer.stream()
+                .map(jobItem -> CompletableFuture.supplyAsync(() -> executeSingleItem(context, jobItem)))
+                .collect(Collectors.toList());
 
-        int index = 0;
-        for (JT item : batchItemContainer) {
-            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> executeSingleItem(context, item))
-                    .exceptionally(throwable -> {
-                        ultimateThrowableHook(context, throwable);
-                        // 自动转换 Void
-                        return null;
-                    });
-            all[index] = future;
-            index = index + 1;
-        }
+        CompletableFuture<Void> allFutures = CompletableFuture.allOf(
+                futures.toArray(new CompletableFuture[0])
+        );
 
-        // 阻塞回整个批次的执行
-        CompletableFuture.allOf(all).join();
+        allFutures.join();
+
+        jobItemSuccessCheck(batchItemContainer);
+
+        return futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
     }
 
-    protected void batchInitHook(HyggeJobContext context, long batchStartTs, Collection<JT> batchItemContainer) {
+    protected void jobItemSuccessCheck(JI jobItem) {
+        if (jobItem.isFailure()) {
+            throw new InternalRuntimeException(getJobName() + " sub-task(" + jobItem.getUniqueIdentifier() + ") were failed.");
+        }
+    }
+
+    protected void jobItemSuccessCheck(Collection<JI> batchItemContainer) {
+        List<Object> jobItemIdList = batchItemContainer
+                .stream()
+                .filter(BaseHyggeJobItem::isFailure)
+                .map(BaseHyggeJobItem::getUniqueIdentifier)
+                .collect(Collectors.toList());
+
+        if (!jobItemIdList.isEmpty()) {
+            throw new InternalRuntimeException(getJobName() + " sub-task(" + jsonHelper.formatAsString(jobItemIdList) + ") were failed.");
+        }
+    }
+
+    protected void batchInitHook(C context, JBI jobBatchItem, List<RD> rawDataCollection) {
         // 批次开始钩子函数，默认什么也不干
     }
 
-    protected void batchCompleteHook(HyggeJobContext context, long batchStartTs, Collection<JT> batchItemContainer) {
-        long batchCost = System.currentTimeMillis() - batchStartTs;
+    protected void batchCompleteHook(C context, JBI jobBatchItem, List<RD> rawDataCollection, List<PD> processedDataCollection) {
+        long batchCost = System.currentTimeMillis() - jobBatchItem.getStartTs();
 
-        jobReport.addBatchInfo(String.format("batch:%d itemSize:%d cost:%d",
+        context.getJobReporter().addBatchInfo(String.format("batch:%d itemSize:%d cost:%d",
                 context.getBatchCount(),
-                batchItemContainer.size(),
+                jobBatchItem.getJobItemCollection().size(),
                 batchCost
         ));
     }
 
     /**
-     * 最终的异常处理器，这是最后一道防线，该方法严禁抛出异常。<br/>
-     * <p>
-     * 默认实现是单纯打印日志。
+     * 最终的异常处理器，这是最后一道防线，该方法严禁抛出异常。默认实现是单纯打印日志。
+     *
+     * @param context 可能为空，仅在 {@link BaseHyggeJob#createContext()} ()} 异常或无返回值时为 null，
      */
-    protected void ultimateThrowableHook(HyggeJobContext context, Throwable throwable) {
+    protected void ultimateThrowableHook(C context, Throwable throwable) {
         String logInfo = getJobName() + " unexpected error.";
         log.error(logInfo, throwable);
     }
 
+    protected List<JI> pressToJobItem(C context, JBI jobBatchItem, Collection<RD> rawDataCollection) {
+        return rawDataCollection.stream()
+                .map(raw -> {
+                    JI jobItem = createJobItem(context, jobBatchItem, raw);
+                    jobItem.setBatchCount(jobBatchItem.getBatchCount());
+                    return jobItem;
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
 }

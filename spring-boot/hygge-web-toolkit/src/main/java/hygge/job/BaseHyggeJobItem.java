@@ -16,57 +16,80 @@
 
 package hygge.job;
 
+import java.util.LinkedHashMap;
+
 /**
- * 任务执行时，最小单元数据的包装类
+ * 任务执行的最小单元
  *
  * @author Xavier
  * @date 2026/7/2
  */
-public abstract class BaseHyggeJobItem<T, UI> {
+public abstract class BaseHyggeJobItem<RD, PD, UI> extends JobTimeInfo {
     /**
-     * 该最小单元执行的开始时间
+     * 所属的批次执行编号，用于和 {@link DefaultHyggeJobBatchItem} 实例建立关联关系。
      */
-    protected long startTs;
+    protected int batchCount;
     /**
-     * 原始数据
+     * 原始数据。
      */
-    protected T source;
+    protected RD rawData;
     /**
-     * 当前原始数据处理过程中遇到的异常
+     * 原始数据加工后的结果。
+     */
+    protected PD processedData;
+    /**
+     * 当前原始数据处理过程中遇到的异常。
      */
     protected Exception exception;
-    /**
-     * 当前数据处理耗时(毫秒)
-     */
-    protected long cost;
-
-    protected BaseHyggeJobItem(T source) {
-        this.source = source;
-    }
 
     /**
-     * 如果返回为 null，讲不会汇总到 Job 的 jobReport 中
-     *
-     * @param cost 当前最小单元执行的耗时(毫秒)
+     * 获取唯一标识，用于日志打印等环节，请确保它能被序列化。
      */
-    public abstract JobReportItem<UI> createReportAfterStop(HyggeJobContext context, long cost);
+    public abstract UI getUniqueIdentifier();
 
-    public long getStartTs() {
-        return startTs;
+    public Object getErrorInfo() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("identifier", getUniqueIdentifier());
+        map.put("batchCount", batchCount);
+        if (exception == null) {
+            map.put("message", "unknown(exception empty)");
+        } else {
+            map.put("message", exception.getMessage());
+        }
+        return map;
     }
 
-    public void setStartTs(long startTs) {
-        this.startTs = startTs;
+    public boolean isFailure() {
+        return exception != null;
     }
 
-    public T getSource() {
-        return source;
+    public boolean isSuccess() {
+        return !isFailure();
     }
 
-    public void setSource(T source) {
-        this.source = source;
+    public int getBatchCount() {
+        return batchCount;
     }
 
+    public void setBatchCount(int batchCount) {
+        this.batchCount = batchCount;
+    }
+
+    public RD getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(RD rawData) {
+        this.rawData = rawData;
+    }
+
+    public PD getProcessedData() {
+        return processedData;
+    }
+
+    public void setProcessedData(PD processedData) {
+        this.processedData = processedData;
+    }
 
     public Exception getException() {
         return exception;
@@ -74,13 +97,5 @@ public abstract class BaseHyggeJobItem<T, UI> {
 
     public void setException(Exception exception) {
         this.exception = exception;
-    }
-
-    public long getCost() {
-        return cost;
-    }
-
-    public void setCost(long cost) {
-        this.cost = cost;
     }
 }
