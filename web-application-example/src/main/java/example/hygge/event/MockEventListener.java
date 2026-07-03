@@ -72,6 +72,10 @@ public class MockEventListener extends BaseHyggeEventListener<Integer, MockEvent
 
             hyggeEventService.fireEvent(nextEvent);
         }
+
+        if (ThreadLocalRandom.current().nextInt(10) > 8) {
+            throw new RuntimeException(getListenerName() + " 模拟的随机异常：" + ThreadLocalRandom.current().nextInt(6666));
+        }
     }
 
     @Override

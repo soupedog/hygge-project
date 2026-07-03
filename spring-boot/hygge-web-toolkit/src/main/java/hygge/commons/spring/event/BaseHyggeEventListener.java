@@ -60,12 +60,14 @@ public abstract class BaseHyggeEventListener<S, E extends BaseHyggeEvent<S>> imp
         Map<String, String> contextMapFromParent = MDC.getCopyOfContextMap();
 
         CompletableFuture.runAsync(() -> {
-            initMDCForSubThread(contextMapFromParent);
+            try {
+                initMDCForSubThread(contextMapFromParent);
 
-            executeEvent(context, event);
-
-            // 清扫子线程 MDC
-            clearMDCForSubThread();
+                executeEvent(context, event);
+            } finally {
+                // 清扫子线程 MDC
+                clearMDCForSubThread();
+            }
         }).exceptionally(throwable -> {
             ultimateThrowableHook(context, throwable);
             // 自动转换 Void
