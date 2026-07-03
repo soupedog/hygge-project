@@ -17,40 +17,39 @@
 package example.hygge.job;
 
 import hygge.commons.constant.enums.StringCategoryEnum;
-import hygge.commons.exception.LightRuntimeException;
 import hygge.job.BaseHyggeJob;
-import hygge.job.HyggeJobContext;
+import hygge.job.DefaultHyggeJobBatchItem;
+import hygge.job.SimpleHyggeJob;
 import hygge.util.UtilCreator;
 import hygge.util.definition.RandomHelper;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
+ * 如果不需要扩展 Context 和 JobBatchItem，直接继承 {@link SimpleHyggeJob} 即可。
+ * <p>
+ * 大致执行逻辑：<br/>
+ * <p>
+ * 1.firstFetch、getNextBatch 扫描数据库数据，一次拉取对应了一个批次
+ * <p>
+ * 2.处理扫描到的数据，如果 fetch 返回了空 List，那么终止任务
+ * <p>
+ * 3.进行简要的日志打印
+ * <p>
+ * 得到的特性：<br/>
+ * 1.调整 bachAsynchronousEnable 参数值就可便捷实现同批次数据进行异步处理。异步处理时，仅当同批次所有数据处理完成才可能进入下一批次
+ *
  * @author Xavier
  * @date 2026/7/2
  */
 @Slf4j
-public class MockJob extends BaseHyggeJob<MockJobItem, MockJobItemData, String> {
+public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchItem<MockJobItem>, MockJobItem, User, Void> {
     private static final RandomHelper randomHelper = UtilCreator.INSTANCE.getDefaultInstance(RandomHelper.class);
-    private final List<MockJobItem> mockDataFromDB;
 
-    public MockJob(String title, int batchSize, boolean bachAsynchronousEnable) {
-        super(title, batchSize, bachAsynchronousEnable);
-        this.mockDataFromDB = new ArrayList<>();
-
-        // 模拟从数据库拉取的数据
-        for (int i = 0; i < 24; i++) {
-            MockJobItemData data = MockJobItemData.builder()
-                    .id(randomHelper.randomUUID(true))
-                    .someData(randomHelper.randomInteger(-50, 50))
-                    .build();
-
-            mockDataFromDB.add(new MockJobItem(data));
-        }
+    public MockJob(int defaultBatchSize, boolean bachAsynchronousEnable) {
+        super(defaultBatchSize, bachAsynchronousEnable);
     }
 
     @Override
@@ -59,44 +58,71 @@ public class MockJob extends BaseHyggeJob<MockJobItem, MockJobItemData, String> 
     }
 
     @Override
-    protected Collection<MockJobItem> firstFetch(HyggeJobContext context) {
-        context.saveObject(MockJobKey.SUCCESS_DIRECT, ThreadLocalRandom.current().nextBoolean());
-
-        Collection<MockJobItem> result = new ArrayList<>();
-
-        for (int i = 0; i < defaultBatchSize; i++) {
-            if (!mockDataFromDB.isEmpty()) {
-                result.add(mockDataFromDB.remove(0));
-            }
-        }
-
-        return result;
+    protected MockJobContext createContext() {
+        return new MockJobContext();
     }
 
     @Override
-    protected Collection<MockJobItem> getNextBatch(HyggeJobContext context) {
-        Collection<MockJobItem> result = new ArrayList<>();
-
-        for (int i = 0; i < defaultBatchSize; i++) {
-            if (!mockDataFromDB.isEmpty()) {
-                result.add(mockDataFromDB.remove(0));
-            }
-        }
-
-        return result;
+    protected DefaultHyggeJobBatchItem<MockJobItem> createJobBatchItem(MockJobContext context) {
+        return new DefaultHyggeJobBatchItem<>();
     }
 
     @Override
-    protected void handleSingleItem(HyggeJobContext context, MockJobItem jobItem) {
+    protected List<User> firstFetch(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem) {
+        MockPage<User> page = new MockPage<>(context.getBatchSize());
+        // 模拟 Jpa 某个查询返回了 Page 对象
+        page = page.nextPageable();
+
+        // 演示扩展 Context 属性
+        context.setPage(page);
+
+        if (page.isLast()) {
+            // 演示上下文保存对象
+            context.saveObject(MockJobKey.NO_NEXT_PAGE, true);
+        } else {
+            context.saveObject(MockJobKey.NO_NEXT_PAGE, false);
+        }
+
+        return page.getContent();
+    }
+
+
+    @Override
+    protected List<User> getNextBatch(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem) {
+        if (context.getObject(MockJobKey.NO_NEXT_PAGE)) {
+            return Collections.emptyList();
+        }
+
+        // 演示上下文获取对象
+        MockPage<User> page = context.getPage();
+        // 模拟翻页并查询得到下一个 page 对象
+        page = page.nextPageable();
+        if (page.isLast()) {
+            context.saveObject(MockJobKey.NO_NEXT_PAGE, true);
+        }
+        return page.getContent();
+    }
+
+    @Override
+    protected MockJobItem createJobItem(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem, User rawData) {
+        return new MockJobItem(rawData);
+    }
+
+    @Override
+    protected Void handleSingleItem(MockJobContext context, MockJobItem jobItem) {
+        // 模拟业务耗时
         try {
-            // 模拟处理业务耗时
-            Thread.sleep(randomHelper.randomInteger(50, 200));
+            Thread.sleep(randomHelper.randomInteger(50, 100));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        if (!(boolean) context.getObject(MockJobKey.SUCCESS_DIRECT) && jobItem.getSource().getSomeData() > 0) {
-            throw new LightRuntimeException("模拟的异常" + randomHelper.randomString(5, StringCategoryEnum.A_Z, StringCategoryEnum.NUMBER));
+        if (randomHelper.randomInteger(1, 100) > 98) {
+            throw new RuntimeException("随机模拟的业务处理异常:" + randomHelper.randomString(3, StringCategoryEnum.A_Z));
         }
+
+        // 此处实例不需要返回值单纯查询操作，如有需要可以返回如 UserDTO
+        // 通过重写 batchCompleteHook，可以对 UserDTO 进行使用
+        return null;
     }
 }

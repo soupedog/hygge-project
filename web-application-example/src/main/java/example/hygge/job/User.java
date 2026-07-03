@@ -16,19 +16,25 @@
 
 package example.hygge.job;
 
-import hygge.job.HyggeJobContextKey;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Generated;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Xavier
  * @date 2026/7/2
  */
-public enum MockJobKey implements HyggeJobContextKey {
-    PAGE,
-    NO_NEXT_PAGE
-    ;
-
-    @Override
-    public Enum<?> getKey() {
-        return this;
-    }
+@Getter
+@Setter
+@Builder
+@Generated
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+    private Integer uid;
+    private String name;
 }
+

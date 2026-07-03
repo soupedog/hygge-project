@@ -16,25 +16,20 @@
 
 package example.hygge.job;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Generated;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import hygge.job.HyggeJobContext;
 
 /**
  * @author Xavier
- * @date 2026/7/2
+ * @date 2026/7/3
  */
-@Getter
-@Setter
-@Builder
-@Generated
-@NoArgsConstructor
-@AllArgsConstructor
-public class MockJobItemData {
-    private String id;
-    private Integer someData;
-}
+public class MockJobContext extends HyggeJobContext {
+    private MockPage<User> page;
 
+    public MockPage<User> getPage() {
+        return page;
+    }
+
+    public void setPage(MockPage<User> page) {
+        this.page = page;
+    }
+}

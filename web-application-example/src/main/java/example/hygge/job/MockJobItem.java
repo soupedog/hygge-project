@@ -17,31 +17,19 @@
 package example.hygge.job;
 
 import hygge.job.BaseHyggeJobItem;
-import hygge.job.HyggeJobContext;
-import hygge.job.JobReportItem;
 
 /**
  * @author Xavier
  * @date 2026/7/2
  */
-public class MockJobItem extends BaseHyggeJobItem<MockJobItemData, String> {
-    protected MockJobItem(MockJobItemData source) {
-        super(source);
+public class MockJobItem extends BaseHyggeJobItem<User, Void, Integer> {
+
+    public MockJobItem(User rawData) {
+        this.rawData = rawData;
     }
 
     @Override
-    public JobReportItem<String> createReportAfterStop(HyggeJobContext context, long cost) {
-        // 成功时不输出日志
-        if (exception == null) {
-            return null;
-        }
-
-        JobReportItem<String> result = new JobReportItem<>();
-        result.setFail(true);
-        result.setCost(cost);
-        result.setUniqueIdentifier(source.getId());
-        result.setContent(exception.getMessage());
-
-        return result;
+    public Integer getUniqueIdentifier() {
+        return getRawData().getUid();
     }
 }
