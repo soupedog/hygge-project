@@ -16,8 +16,12 @@
 
 package example.hygge.controller.hygge;
 
+import example.hygge.job.MockExclusiveJob;
 import example.hygge.job.MockJob;
+import example.hygge.job.MockJobContext;
+import hygge.job.JobStatusEnum;
 import hygge.web.template.definition.HyggeController;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,12 +35,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "JobController", description = "演示 BaseHyggeJob 配套模板用法")
 public class JobController implements HyggeController<ResponseEntity<?>> {
+    private final MockJob mockJob;
+    private final MockExclusiveJob mockExclusiveJob;
+
+    public JobController(MockJob mockJob, MockExclusiveJob mockExclusiveJob) {
+        this.mockJob = mockJob;
+        this.mockExclusiveJob = mockExclusiveJob;
+    }
 
     @GetMapping("/job")
     public ResponseEntity<?> executeJob(@RequestParam(value = "batchSize", required = false, defaultValue = "3") Integer batchSize,
                                         @RequestParam(value = "bachAsynchronousEnable", required = false, defaultValue = "true") Boolean bachAsynchronousEnable) {
-        MockJob job = new MockJob(batchSize, bachAsynchronousEnable);
-        job.execute();
-        return success();
+        MockJobContext context = mockJob.execute("会随机模拟抛出异常，可多试几次", batchSize, bachAsynchronousEnable);
+        return success(context.getStatus());
+    }
+
+    @GetMapping("/exclusiveJob")
+    @Operation(summary = "模拟独占 Job，同一时刻仅一个 Job 能被执行", description = "Swagger 页面访问会触发某种防重复请求机制，请把 http://localhost:8080/exclusiveJob 复制到浏览器访问，并按 F5 刷新发起真正的多次请求。")
+    public ResponseEntity<?> exclusiveJob() {
+        MockJobContext context = mockExclusiveJob.execute("独占运行的任务，同时刻不允许多个 Job 执行(模拟单次耗时 5 秒)", 10, true);
+        return success(JobStatusEnum.REJECT.equals(context.getStatus()) ? "已存在正在运行的 Job，请稍后再试" : "执行任务成功");
     }
 }

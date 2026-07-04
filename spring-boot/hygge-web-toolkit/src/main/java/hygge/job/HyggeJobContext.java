@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date 2026/7/2
  */
 public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, HyggeJobContextKey> {
+    protected JobStatusEnum status = JobStatusEnum.SUCCESS;
     protected final Long startTs = System.currentTimeMillis();
     protected String title;
     /**
@@ -35,8 +36,27 @@ public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, H
     protected int batchSize;
     protected HyggeJobReporter jobReporter;
 
+    /**
+     * 执行成功时，最后出循环会额外 +1，需要 -1 补正。
+     */
+    public int getActualTotalBatch() {
+        if (JobStatusEnum.SUCCESS.equals(status)) {
+            return batchCount - 1;
+        } else {
+            return batchCount;
+        }
+    }
+
     public void batchContIncrease() {
         this.batchCount = this.batchCount + 1;
+    }
+
+    public JobStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(JobStatusEnum status) {
+        this.status = status;
     }
 
     public Long getStartTs() {

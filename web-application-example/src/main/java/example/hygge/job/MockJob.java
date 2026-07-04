@@ -17,67 +17,40 @@
 package example.hygge.job;
 
 import hygge.commons.constant.enums.StringCategoryEnum;
+import hygge.job.BaseHyggeExclusiveJob;
 import hygge.job.BaseHyggeJob;
-import hygge.job.DefaultHyggeJobBatchItem;
-import hygge.job.HyggeJobContext;
+import hygge.job.HyggeJobBatchItem;
+import hygge.job.SimpleHyggeExclusiveJob;
 import hygge.job.SimpleHyggeJob;
 import hygge.util.UtilCreator;
 import hygge.util.definition.RandomHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * 如果不需要扩展 Context 和 JobBatchItem，直接继承 {@link SimpleHyggeJob} 即可。
+ * 演示基本用法，详情见其最上层父类。<br/>
  * <p>
- * 大致执行逻辑：<br/>
- * <p>
- * 1.firstFetch、getNextBatch 扫描数据库数据，一次拉取对应了一个批次
- * <p>
- * 2.处理扫描到的数据，如果 fetch 返回了空 List，那么终止任务
- * <p>
- * 3.进行简要的日志打印
- * <p>
- * 得到的特性：<br/>
- * 1.调整 bachAsynchronousEnable 参数值就可便捷实现同批次数据进行异步处理。异步处理时，仅当同批次所有数据处理完成才可能进入下一批次
+ * 如果想实现同一时刻独占运行，可以继承 {@link BaseHyggeExclusiveJob}，也有基于 CAS 内存级非分布式的默认实现。{@link SimpleHyggeExclusiveJob}
  *
  * @author Xavier
  * @date 2026/7/2
+ * @see BaseHyggeJob
  */
 @Slf4j
-public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchItem<MockJobItem>, MockJobItem, User, Void> {
+@Component
+public class MockJob extends SimpleHyggeJob<MockJobContext, MockJobItem, User, Void> {
     private static final RandomHelper randomHelper = UtilCreator.INSTANCE.getDefaultInstance(RandomHelper.class);
-
-    public MockJob(int defaultBatchSize, boolean bachAsynchronousEnable) {
-        super(defaultBatchSize, bachAsynchronousEnable);
-    }
 
     @Override
     protected String getJobName() {
         return this.getClass().getSimpleName();
     }
 
-    /**
-     * 直接继承 {@link SimpleHyggeJob} 则该方法非必须，此处演示如何扩展 {@link HyggeJobContext}
-     */
     @Override
-    protected MockJobContext createContext() {
-        MockJobContext context = new MockJobContext();
-        context.setTitle("有随机模拟抛出异常，需要多试几次");
-        return context;
-    }
-
-    /**
-     * 直接继承 {@link SimpleHyggeJob} 则该方法非必须，此处演示如何扩展 {@link DefaultHyggeJobBatchItem}
-     */
-    @Override
-    protected DefaultHyggeJobBatchItem<MockJobItem> createJobBatchItem(MockJobContext context) {
-        return new DefaultHyggeJobBatchItem<>();
-    }
-
-    @Override
-    protected List<User> firstFetch(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem) {
+    protected List<User> firstFetch(MockJobContext context, HyggeJobBatchItem<MockJobItem> jobBatchItem) {
         MockPage<User> page = new MockPage<>(context.getBatchSize());
         // 模拟 Jpa 某个查询返回了 Page 对象
         page = page.nextPageable();
@@ -95,9 +68,8 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
         return page.getContent();
     }
 
-
     @Override
-    protected List<User> getNextBatch(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem) {
+    protected List<User> getNextBatch(MockJobContext context, HyggeJobBatchItem<MockJobItem> jobBatchItem) {
         if (context.getObject(MockJobKey.NO_NEXT_PAGE)) {
             return Collections.emptyList();
         }
@@ -115,7 +87,7 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
     }
 
     @Override
-    protected MockJobItem createJobItem(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem, User rawData) {
+    protected MockJobItem createJobItem(MockJobContext context, HyggeJobBatchItem<MockJobItem> jobBatchItem, User rawData) {
         return new MockJobItem(rawData);
     }
 
@@ -128,7 +100,7 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
             throw new RuntimeException(e);
         }
 
-        if (randomHelper.randomInteger(1, 100) > 98) {
+        if (context.isMockException() && randomHelper.randomInteger(1, 100) > 80) {
             throw new RuntimeException("随机模拟的业务处理异常:" + randomHelper.randomString(3, StringCategoryEnum.A_Z));
         }
 
@@ -143,7 +115,12 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
      * (演示代码是 Void 泛型，有需要可以自行修改为其他类型)
      */
     @Override
-    protected void batchCompleteHook(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem, List<User> rawDataList, List<Void> processedDataList) {
+    protected void batchCompleteHook(MockJobContext context, HyggeJobBatchItem<MockJobItem> jobBatchItem, List<User> rawDataList, List<Void> processedDataList) {
         super.batchCompleteHook(context, jobBatchItem, rawDataList, processedDataList);
+    }
+
+    @Override
+    protected MockJobContext createContext() {
+        return new MockJobContext();
     }
 }

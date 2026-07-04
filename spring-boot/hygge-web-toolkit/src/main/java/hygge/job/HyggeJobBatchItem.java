@@ -22,7 +22,7 @@ import java.util.List;
  * @author Xavier
  * @date 2026/7/3
  */
-public class DefaultHyggeJobBatchItem<JI extends BaseHyggeJobItem<?, ?, ?>> extends JobTimeInfo {
+public class HyggeJobBatchItem<JI extends BaseHyggeJobItem<?, ?, ?>> extends JobTimeInfo {
     /**
      * 批次执行编号
      */

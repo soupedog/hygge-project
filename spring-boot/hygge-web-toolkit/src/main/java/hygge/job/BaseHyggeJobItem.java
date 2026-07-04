@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
  */
 public abstract class BaseHyggeJobItem<RD, PD, UI> extends JobTimeInfo {
     /**
-     * 所属的批次执行编号，用于和 {@link DefaultHyggeJobBatchItem} 实例建立关联关系。
+     * 所属的批次执行编号，用于和 {@link HyggeJobBatchItem} 实例建立关联关系。
      */
     protected int batchCount;
     /**

@@ -52,8 +52,7 @@ public class DefaultHyggeJobReporter implements HyggeJobReporter {
             logInfo.put("totalItem", context.getItemCount().get());
         }
 
-        // 批次出循环时默认会 +1 此处用来抵消
-        logInfo.put("totalBatch", context.batchCount - 1);
+        logInfo.put("totalBatch", context.getActualTotalBatch());
 
         long cost = System.currentTimeMillis() - context.getStartTs();
 

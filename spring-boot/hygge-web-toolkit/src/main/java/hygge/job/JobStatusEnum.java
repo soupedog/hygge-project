@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package example.hygge.job;
-
-import hygge.job.HyggeJobContext;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.concurrent.ThreadLocalRandom;
+package hygge.job;
 
 /**
  * @author Xavier
- * @date 2026/7/3
+ * @date 2026/7/4
  */
-@Getter
-@Setter
-public class MockJobContext extends HyggeJobContext {
-    private MockPage<User> page;
-    private boolean mockException = ThreadLocalRandom.current().nextBoolean();
+public enum JobStatusEnum {
+    /**
+     * 执行无误。
+     */
+    SUCCESS,
+    /**
+     * 如 Job 独占，当前执行被拒绝执行。
+     */
+    REJECT,
+    /**
+     * 执行过程中发生了异常
+     */
+    FAILURE,
 }

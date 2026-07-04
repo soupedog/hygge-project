@@ -17,25 +17,16 @@
 package hygge.job;
 
 /**
- * 不打算扩展 {@link HyggeJobContext}、和 {@link DefaultHyggeJobBatchItem} 的语法糖基类。
+ * 不打算扩展 {@link HyggeJobBatchItem} 的语法糖基类。
  *
  * @author Xavier
  * @date 2026/7/3
  */
-public abstract class SimpleHyggeJob<JI extends BaseHyggeJobItem<RD, PD, ?>, RD, PD>
-        extends BaseHyggeJob<HyggeJobContext, DefaultHyggeJobBatchItem<JI>, JI, RD, PD> {
-
-    protected SimpleHyggeJob(int defaultBatchSize, boolean bachAsynchronousEnable) {
-        super(defaultBatchSize, bachAsynchronousEnable);
-    }
+public abstract class SimpleHyggeJob<C extends HyggeJobContext, JI extends BaseHyggeJobItem<RD, PD, ?>, RD, PD>
+        extends BaseHyggeJob<C, HyggeJobBatchItem<JI>, JI, RD, PD> {
 
     @Override
-    protected HyggeJobContext createContext() {
-        return new HyggeJobContext();
-    }
-
-    @Override
-    protected DefaultHyggeJobBatchItem<JI> createJobBatchItem(HyggeJobContext context) {
-        return new DefaultHyggeJobBatchItem<>();
+    protected HyggeJobBatchItem<JI> createJobBatchItem(HyggeJobContext context) {
+        return new HyggeJobBatchItem<>();
     }
 }

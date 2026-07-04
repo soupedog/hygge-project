@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 /**
- * 如果不需要扩展 Context 和 JobBatchItem，直接继承 {@link SimpleHyggeJob} 即可。
+ * 如果不需要扩展 JobBatchItem，直接继承 {@link SimpleHyggeJob} 即可。
  * <p>
  * 大致执行逻辑：<br/>
  * <p>
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  */
 public abstract class BaseHyggeJob<
         C extends HyggeJobContext,
-        JBI extends DefaultHyggeJobBatchItem<JI>,
+        JBI extends HyggeJobBatchItem<JI>,
         JI extends BaseHyggeJobItem<RD, PD, ?>,
         RD,
         PD> {
@@ -68,41 +68,35 @@ public abstract class BaseHyggeJob<
      * 默认的 批次编号，从 1 开始
      */
     protected int defaultBatchCount = 1;
-    /**
-     * 默认的 单批次拉取多少最小执行单元
-     */
-    protected int defaultBatchSize;
-    /**
-     * 为 true 时，单批次内的最小单元互相会异步执行，单批次内所有最小单元执行完成后才可能进入下一个批次
-     */
-    protected boolean bachAsynchronousEnable;
-
-    protected BaseHyggeJob(int defaultBatchSize, boolean bachAsynchronousEnable) {
-        this.defaultBatchSize = defaultBatchSize;
-        this.bachAsynchronousEnable = bachAsynchronousEnable;
-    }
 
     /**
      * 获取名称，用于自动日志记录
      */
     protected abstract String getJobName();
 
-    public void execute() {
+    /**
+     * @param title                  当前 Job 执行报告的标题。
+     * @param batchSize              当前 Job 执行的单批次最小执行单元数量。
+     * @param bachAsynchronousEnable 单批次内所有最小执行单元是否异步执行。
+     */
+    public C execute(String title, int batchSize, boolean bachAsynchronousEnable) {
         C context = null;
         try {
             context = createContext();
-            context.setBatchSize(defaultBatchSize);
+            context.setTitle(title);
+            context.setBatchSize(batchSize);
             context.setBatchCount(defaultBatchCount);
             HyggeJobReporter jobReporter = createHyggeJobReporter(context);
             context.setJobReporter(jobReporter);
-            mainProcess(context);
+            mainProcess(bachAsynchronousEnable, context);
         } catch (Throwable throwable) {
             // 兜底包括 JVM 层面也不放过
             ultimateThrowableHook(context, throwable);
         }
+        return context;
     }
 
-    protected void mainProcess(C context) {
+    protected void mainProcess(boolean bachAsynchronousEnable, C context) {
         try {
             JBI jobBatchItem = createJobBatchItem(context);
             jobBatchItem.initStartTs();
@@ -133,7 +127,7 @@ public abstract class BaseHyggeJob<
                     processedDataList = new ArrayList<>(context.getBatchSize());
                     for (JI item : jobItemList) {
                         PD jobItemProcessedData = executeSingleItem(context, item);
-                        jobItemSuccessCheck(item);
+                        jobItemSuccessCheck(context, item);
 
                         processedDataList.add(jobItemProcessedData);
                     }
@@ -153,14 +147,6 @@ public abstract class BaseHyggeJob<
             printLog(context);
         }
     }
-
-    protected HyggeJobReporter createHyggeJobReporter(C context) {
-        return new DefaultHyggeJobReporter(new ArrayList<>(context.getBatchSize()), new ConcurrentLinkedQueue<>());
-    }
-
-    protected abstract C createContext();
-
-    protected abstract JBI createJobBatchItem(C context);
 
     /**
      * 全局中发生异常的处理机制
@@ -198,15 +184,21 @@ public abstract class BaseHyggeJob<
     }
 
     /**
-     * 返回 null 时，任务会自动结束
+     * 初次拉取待处理的数据，该方法最多执行一次，后续改为循环调用 {@link BaseHyggeJob#getNextBatch(HyggeJobContext, HyggeJobBatchItem)}。<br/>
+     * <p>
+     * 仅当返回 null 或 空列表 时，任务会自动结束。
      */
     protected abstract List<RD> firstFetch(C context, JBI jobBatchItem);
 
     /**
-     * 返回 null 时，任务会自动结束
+     * 上一个批次任务结束后会循环调用该方法。<br/>
+     * 仅当返回 null 或 空列表 时，任务会自动结束。
      */
     protected abstract List<RD> getNextBatch(C context, JBI jobBatchItem);
 
+    /**
+     * 将待处理数据包装成任务最小执行单元。
+     */
     protected abstract JI createJobItem(C context, JBI jobBatchItem, RD rawData);
 
     protected abstract PD handleSingleItem(C context, JI jobItem);
@@ -236,20 +228,20 @@ public abstract class BaseHyggeJob<
         } finally {
             try {
                 finallyHookForItem(context, jobItem);
-
-                jobItem.stop();
             } catch (Throwable throwable) {
                 ultimateThrowableHook(context, throwable);
+            } finally {
+                jobItem.stop();
             }
         }
         return result;
     }
 
     /**
-     * 无论成功与否，必然会单个数据处理完成后执行的钩子函数，默认什么也不做。
+     * 无论成功与否，最小执行单元执行结束后会执行的钩子函数。
      */
     protected void finallyHookForItem(C context, JI jobItem) {
-        // 默认什么也不做，给子类提供一个钩子函数
+        // 默认什么也不做
     }
 
     protected List<PD> asynchronousProcess(C context, JBI jobBatchItem, List<JI> batchItemContainer) {
@@ -263,20 +255,21 @@ public abstract class BaseHyggeJob<
 
         allFutures.join();
 
-        jobItemSuccessCheck(batchItemContainer);
+        jobItemSuccessCheck(context, batchItemContainer);
 
         return futures.stream()
                 .map(CompletableFuture::join)
                 .collect(Collectors.toList());
     }
 
-    protected void jobItemSuccessCheck(JI jobItem) {
+    protected void jobItemSuccessCheck(C contex, JI jobItem) {
         if (jobItem.isFailure()) {
+            contex.setStatus(JobStatusEnum.FAILURE);
             throw new InternalRuntimeException(getJobName() + " sub-task(" + jobItem.getUniqueIdentifier() + ") were failed.");
         }
     }
 
-    protected void jobItemSuccessCheck(List<JI> batchItemContainer) {
+    protected void jobItemSuccessCheck(C contex, List<JI> batchItemContainer) {
         List<Object> jobItemIdList = batchItemContainer
                 .stream()
                 .filter(BaseHyggeJobItem::isFailure)
@@ -284,14 +277,21 @@ public abstract class BaseHyggeJob<
                 .collect(Collectors.toList());
 
         if (!jobItemIdList.isEmpty()) {
+            contex.setStatus(JobStatusEnum.FAILURE);
             throw new InternalRuntimeException(getJobName() + " sub-task(" + jsonHelper.formatAsString(jobItemIdList) + ") were failed.");
         }
     }
 
+    /**
+     * 每个批次开始时都会执行的钩子函数。
+     */
     protected void batchInitHook(C context, JBI jobBatchItem, List<RD> rawDataList) {
-        // 批次开始钩子函数，默认什么也不干
+        // 默认什么也不干
     }
 
+    /**
+     * 每个批次结束时都会执行的钩子函数。
+     */
     protected void batchCompleteHook(C context, JBI jobBatchItem, List<RD> rawDataList, List<PD> processedDataList) {
         long batchCost = System.currentTimeMillis() - jobBatchItem.getStartTs();
 
@@ -321,4 +321,18 @@ public abstract class BaseHyggeJob<
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
+    protected HyggeJobReporter createHyggeJobReporter(C context) {
+        return new DefaultHyggeJobReporter(new ArrayList<>(context.getBatchSize()), new ConcurrentLinkedQueue<>());
+    }
+
+    /**
+     * 如果无扩展需求，可以直接创建 {@link HyggeJobContext}，无需创建自定义 Context 类。
+     */
+    protected abstract C createContext();
+
+    /**
+     * 如果无扩展需求，可以直接创建 {@link HyggeJobBatchItem}，无需创建自定义 HyggeJobBatchItem 类。
+     */
+    protected abstract JBI createJobBatchItem(C context);
 }
