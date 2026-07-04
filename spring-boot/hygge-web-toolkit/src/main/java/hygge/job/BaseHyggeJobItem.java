@@ -53,6 +53,8 @@ public abstract class BaseHyggeJobItem<RD, PD, UI> extends JobTimeInfo {
 
     public Object getErrorInfo() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        // 最小执行单元之内
+        map.put("scope", "unit");
         map.put("identifier", getUniqueIdentifier());
         map.put("batchCount", batchCount);
         if (exception == null) {

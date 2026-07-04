@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -88,7 +89,14 @@ public abstract class BaseHyggeJob<
      * 开始执行 Job。
      */
     public C execute(C inputContext) {
-        return mainProcess(inputContext);
+        C context = null;
+
+        try {
+            context = mainProcess(inputContext);
+        } catch (Throwable throwable) {
+            ultimateThrowableHook(context, throwable);
+        }
+        return context;
     }
 
     protected C mainProcess(C context) {
@@ -163,11 +171,22 @@ public abstract class BaseHyggeJob<
     }
 
     /**
-     * 全局中发生异常的处理机制
+     * 全局中发生异常的处理机制，原则上这个方法不能再抛出异常。
      *
+     * @param context   可能为空
      * @param exception 运行过程中抛出的异常
      */
     protected void handleException(C context, Exception exception) {
+        if (context != null) {
+            context.setStatus(JobStatusEnum.FAILURE);
+            LinkedHashMap<String, Object> exceptionInfo = new LinkedHashMap<>();
+            // 单元之外的整个运行上下文（调度、线程池、资源等）
+            exceptionInfo.put("scope", "context");
+            exceptionInfo.put("batchCount", context.getBatchCount());
+            exceptionInfo.put("message", exception.getMessage());
+            context.getJobReporter().addFailedInfo(exceptionInfo);
+        }
+
         String loginInfo = getJobName() + " unexpected exception.";
         log.error(loginInfo, exception);
     }
@@ -235,13 +254,18 @@ public abstract class BaseHyggeJob<
     protected abstract PD handleSingleItem(C context, JI jobItem);
 
     /**
-     * 执行中，单个数据执行发生异常的处理机制
+     * 最小执行单元中发生异常的处理机制，原则上这个方法不能再抛出异常。
      *
+     * @param context   可能为空
      * @param jobItem   引发异常的待处理数据
      * @param exception 运行过程中抛出的异常
      */
     protected void handleExceptionForItem(C context, JI jobItem, Exception exception) {
-        // 默认什么也不干
+        jobItem.setException(exception);
+        context.getJobReporter().addFailedInfo(jobItem.getErrorInfo());
+
+        String loginInfo = getJobName() + " unexpected exception(in unit).";
+        log.error(loginInfo, exception);
     }
 
     protected PD executeSingleItem(C context, JI jobItem) {
@@ -253,14 +277,12 @@ public abstract class BaseHyggeJob<
             jobItem.setProcessedData(result);
             context.itemCountIncrease();
         } catch (Exception exception) {
-            jobItem.setException(exception);
-            context.getJobReporter().addFailedInfo(jobItem.getErrorInfo());
             handleExceptionForItem(context, jobItem, exception);
         } finally {
             try {
                 finallyHookForItem(context, jobItem);
-            } catch (Throwable throwable) {
-                ultimateThrowableHook(context, throwable);
+            } catch (Exception exception) {
+                handleExceptionForItem(context, jobItem, exception);
             } finally {
                 jobItem.stop();
             }
@@ -339,6 +361,10 @@ public abstract class BaseHyggeJob<
      * @param context 可能为空，仅在 {@link BaseHyggeJob#createContext()} ()} 异常或无返回值时为 null，
      */
     protected void ultimateThrowableHook(C context, Throwable throwable) {
+        if (context != null) {
+            context.setStatus(JobStatusEnum.FAILURE);
+        }
+
         String logInfo = getJobName() + " unexpected error.";
         log.error(logInfo, throwable);
     }
