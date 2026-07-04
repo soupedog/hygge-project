@@ -16,7 +16,7 @@
 
 package hygge.job;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Xavier
@@ -30,28 +30,28 @@ public class DefaultHyggeJobBatchItem<JI extends BaseHyggeJobItem<?, ?, ?>> exte
     /**
      * 当前批次下的 JobItem
      */
-    protected Collection<JI> jobItemCollection;
+    protected List<JI> jobItemList;
 
     /**
      * 当前批次内均成功
      */
     public boolean isSuccess() {
-        return this.jobItemCollection.stream().allMatch(BaseHyggeJobItem::isSuccess);
+        return this.jobItemList.stream().allMatch(BaseHyggeJobItem::isSuccess);
     }
 
     /**
      * 当前批次至少有一个执行失败
      */
     public boolean hasFailed() {
-        return this.jobItemCollection.stream().anyMatch(BaseHyggeJobItem::isFailure);
+        return this.jobItemList.stream().anyMatch(BaseHyggeJobItem::isFailure);
     }
 
-    public Collection<JI> getJobItemCollection() {
-        return jobItemCollection;
+    public List<JI> getJobItemList() {
+        return jobItemList;
     }
 
-    public void setJobItemCollection(Collection<JI> jobItemCollection) {
-        this.jobItemCollection = jobItemCollection;
+    public void setJobItemList(List<JI> jobItemList) {
+        this.jobItemList = jobItemList;
     }
 
     public int getBatchCount() {

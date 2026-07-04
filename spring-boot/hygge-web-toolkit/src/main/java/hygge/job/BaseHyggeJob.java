@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -32,9 +31,25 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 /**
+ * 如果不需要扩展 Context 和 JobBatchItem，直接继承 {@link SimpleHyggeJob} 即可。
+ * <p>
+ * 大致执行逻辑：<br/>
+ * <p>
+ * 1.firstFetch、getNextBatch 扫描数据库数据，一次拉取对应了一个批次
+ * <p>
+ * 2.处理扫描到的数据，如果 fetch 返回了空 List，那么终止任务
+ * <p>
+ * 3.进行简要的日志打印
+ * <p>
+ * 得到的特性：<br/>
+ * 1.调整 bachAsynchronousEnable 参数值就可便捷实现同批次数据进行异步处理。
+ * 2.最小单元异步处理时，仅当同批次所有数据处理完成才可能进入下一批次。<br/>
+ * 每个批次结束可以在 {@link BaseHyggeJob#batchCompleteHook} 中对处理后的数据进行集中处理，这是批量进行数据持久化的好位点。<br/>
+ * 3.简要的执行报告，会统计批次耗时与 Job 总耗时，以及错误摘要等信息。默认情况下，执行中发生的异常会被完整输出到日志系统。
+ *
  * @param <C>   上下文容器，所有执行单元共享。
  * @param <JBI> 批次容器，同批次内执行单元共享。
- * @param <JI>  最小执行单元容器，JI 内部泛型是 DF 处理过后的数据类型。
+ * @param <JI>  最小执行单元容器，JI 内部包含 RD 和 PD。
  * @param <RD>  待处理的原始数据。
  * @param <PD>  处理完成后的数据。
  * @author Xavier
@@ -94,11 +109,11 @@ public abstract class BaseHyggeJob<
             jobBatchItem.setBatchCount(context.getBatchCount());
             boolean isFirstBatch = true;
 
-            List<RD> rawDataCollection = firstFetch(context, jobBatchItem);
-            List<PD> processedDataCollection;
-            batchInitHook(context, jobBatchItem, rawDataCollection);
+            List<RD> rawDataList = firstFetch(context, jobBatchItem);
+            List<PD> processedDataList;
+            batchInitHook(context, jobBatchItem, rawDataList);
 
-            while (rawDataCollection != null && !rawDataCollection.isEmpty()) {
+            while (rawDataList != null && !rawDataList.isEmpty()) {
                 if (isFirstBatch) {
                     isFirstBatch = false;
                 } else {
@@ -106,30 +121,30 @@ public abstract class BaseHyggeJob<
                     jobBatchItem = createJobBatchItem(context);
                     jobBatchItem.initStartTs();
                     jobBatchItem.setBatchCount(context.getBatchCount());
-                    batchInitHook(context, jobBatchItem, rawDataCollection);
+                    batchInitHook(context, jobBatchItem, rawDataList);
                 }
 
-                List<JI> jobItemList = pressToJobItem(context, jobBatchItem, rawDataCollection);
-                jobBatchItem.setJobItemCollection(jobItemList);
+                List<JI> jobItemList = pressToJobItem(context, jobBatchItem, rawDataList);
+                jobBatchItem.setJobItemList(jobItemList);
 
                 if (bachAsynchronousEnable) {
-                    processedDataCollection = asynchronousProcess(context, jobBatchItem, jobItemList);
+                    processedDataList = asynchronousProcess(context, jobBatchItem, jobItemList);
                 } else {
-                    processedDataCollection = new ArrayList<>();
+                    processedDataList = new ArrayList<>(context.getBatchSize());
                     for (JI item : jobItemList) {
                         PD jobItemProcessedData = executeSingleItem(context, item);
                         jobItemSuccessCheck(item);
 
-                        processedDataCollection.add(jobItemProcessedData);
+                        processedDataList.add(jobItemProcessedData);
                     }
                 }
 
-                batchCompleteHook(context, jobBatchItem, rawDataCollection, processedDataCollection);
+                batchCompleteHook(context, jobBatchItem, rawDataList, processedDataList);
                 jobBatchItem.stop();
                 //当前批次结束
                 context.batchContIncrease();
 
-                rawDataCollection = getNextBatch(context, jobBatchItem);
+                rawDataList = getNextBatch(context, jobBatchItem);
             }
         } catch (Exception exception) {
             handleException(context, exception);
@@ -237,7 +252,7 @@ public abstract class BaseHyggeJob<
         // 默认什么也不做，给子类提供一个钩子函数
     }
 
-    protected List<PD> asynchronousProcess(C context, JBI jobBatchItem, Collection<JI> batchItemContainer) {
+    protected List<PD> asynchronousProcess(C context, JBI jobBatchItem, List<JI> batchItemContainer) {
         List<CompletableFuture<PD>> futures = batchItemContainer.stream()
                 .map(jobItem -> CompletableFuture.supplyAsync(() -> executeSingleItem(context, jobItem)))
                 .collect(Collectors.toList());
@@ -261,7 +276,7 @@ public abstract class BaseHyggeJob<
         }
     }
 
-    protected void jobItemSuccessCheck(Collection<JI> batchItemContainer) {
+    protected void jobItemSuccessCheck(List<JI> batchItemContainer) {
         List<Object> jobItemIdList = batchItemContainer
                 .stream()
                 .filter(BaseHyggeJobItem::isFailure)
@@ -273,16 +288,16 @@ public abstract class BaseHyggeJob<
         }
     }
 
-    protected void batchInitHook(C context, JBI jobBatchItem, List<RD> rawDataCollection) {
+    protected void batchInitHook(C context, JBI jobBatchItem, List<RD> rawDataList) {
         // 批次开始钩子函数，默认什么也不干
     }
 
-    protected void batchCompleteHook(C context, JBI jobBatchItem, List<RD> rawDataCollection, List<PD> processedDataCollection) {
+    protected void batchCompleteHook(C context, JBI jobBatchItem, List<RD> rawDataList, List<PD> processedDataList) {
         long batchCost = System.currentTimeMillis() - jobBatchItem.getStartTs();
 
         context.getJobReporter().addBatchInfo(String.format("batch:%d itemSize:%d cost:%d",
                 context.getBatchCount(),
-                jobBatchItem.getJobItemCollection().size(),
+                jobBatchItem.getJobItemList().size(),
                 batchCost
         ));
     }
@@ -297,8 +312,8 @@ public abstract class BaseHyggeJob<
         log.error(logInfo, throwable);
     }
 
-    protected List<JI> pressToJobItem(C context, JBI jobBatchItem, Collection<RD> rawDataCollection) {
-        return rawDataCollection.stream()
+    protected List<JI> pressToJobItem(C context, JBI jobBatchItem, List<RD> rawDataList) {
+        return rawDataList.stream()
                 .map(raw -> {
                     JI jobItem = createJobItem(context, jobBatchItem, raw);
                     jobItem.setBatchCount(jobBatchItem.getBatchCount());

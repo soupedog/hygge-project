@@ -143,7 +143,7 @@ public class MockJob extends BaseHyggeJob<MockJobContext, DefaultHyggeJobBatchIt
      * (演示代码是 Void 泛型，有需要可以自行修改为其他类型)
      */
     @Override
-    protected void batchCompleteHook(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem, List<User> rawDataCollection, List<Void> processedDataCollection) {
-        super.batchCompleteHook(context, jobBatchItem, rawDataCollection, processedDataCollection);
+    protected void batchCompleteHook(MockJobContext context, DefaultHyggeJobBatchItem<MockJobItem> jobBatchItem, List<User> rawDataList, List<Void> processedDataList) {
+        super.batchCompleteHook(context, jobBatchItem, rawDataList, processedDataList);
     }
 }
