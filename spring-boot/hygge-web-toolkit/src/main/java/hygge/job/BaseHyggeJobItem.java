@@ -42,7 +42,7 @@ public abstract class BaseHyggeJobItem<RD, PD, UI> extends JobTimeInfo {
      */
     protected Exception exception;
 
-    protected BaseHyggeJobItem(RD rawData) {
+    public BaseHyggeJobItem(RD rawData) {
         this.rawData = rawData;
     }
 
