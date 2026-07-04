@@ -116,7 +116,7 @@ public abstract class BaseHyggeJob<
 
             List<RD> rawDataList = firstFetch(context, jobBatchItem);
             List<PD> processedDataList;
-            batchInitHook(context, jobBatchItem, rawDataList);
+            batchStartHook(context, jobBatchItem, rawDataList);
 
             while (rawDataList != null && !rawDataList.isEmpty()) {
                 if (isFirstBatch) {
@@ -126,7 +126,7 @@ public abstract class BaseHyggeJob<
                     jobBatchItem = createJobBatchItem(context);
                     jobBatchItem.initStartTs();
                     jobBatchItem.setBatchCount(context.getBatchCount());
-                    batchInitHook(context, jobBatchItem, rawDataList);
+                    batchStartHook(context, jobBatchItem, rawDataList);
                 }
 
                 List<JI> jobItemList = pressToJobItem(context, jobBatchItem, rawDataList);
@@ -316,7 +316,7 @@ public abstract class BaseHyggeJob<
     /**
      * 每个批次开始时都会执行的钩子函数。
      */
-    protected void batchInitHook(C context, JBI jobBatchItem, List<RD> rawDataList) {
+    protected void batchStartHook(C context, JBI jobBatchItem, List<RD> rawDataList) {
         // 默认什么也不干
     }
 
