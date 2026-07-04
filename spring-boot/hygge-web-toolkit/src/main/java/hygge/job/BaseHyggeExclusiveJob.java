@@ -32,12 +32,12 @@ public abstract class BaseHyggeExclusiveJob<
         extends BaseHyggeJob<C, JBI, JI, RD, PD> {
 
     /**
-     * 拒绝策略。返回 true 则会拒绝执行 Job ，并返回默认的 Context 标记为 {@link JobStatusEnum#REJECT}。
+     * 拒绝策略。返回 true 则会拒绝执行 Job ，并返回默认的 context 标记为 {@link JobStatusEnum#REJECT}。
      */
-    protected abstract boolean reject();
+    protected abstract boolean reject(C context);
 
     /**
-     * 独占任务执行完成后的回调，用于重置 {@link BaseHyggeExclusiveJob#reject()} 的判断依据为未执行。<br/>
+     * 独占任务执行完成后的回调，用于重置 {@link BaseHyggeExclusiveJob#reject(C)} 的判断依据为未执行。<br/>
      */
     protected abstract void restRunningFlag();
 
@@ -49,19 +49,18 @@ public abstract class BaseHyggeExclusiveJob<
     }
 
     @Override
-    public C execute(String title, int batchSize, boolean bachAsynchronousEnable) {
-        C context = null;
-
+    public C execute(C context) {
         try {
-            if (reject()) {
+            if (context == null) {
                 context = createContext();
-                context.setTitle(title);
-                context.setBatchSize(batchSize);
+            }
+
+            if (reject(context)) {
                 context.setStatus(JobStatusEnum.REJECT);
             } else {
                 try {
                     // super.execute 已经进行过异常捕获了，这里无需处理
-                    context = super.execute(resetTitle(title), batchSize, bachAsynchronousEnable);
+                    context = super.execute(context);
                 } finally {
                     restRunningFlag();
                 }
@@ -71,5 +70,14 @@ public abstract class BaseHyggeExclusiveJob<
         }
 
         return context;
+    }
+
+    @Override
+    protected void jobStartHook(C context) {
+        String title = context.getTitle();
+        // 尝试与普通 job 做名称上的区分，添加尾缀
+        if (title != null && !title.trim().isEmpty()) {
+            context.setTitle(resetTitle(title));
+        }
     }
 }

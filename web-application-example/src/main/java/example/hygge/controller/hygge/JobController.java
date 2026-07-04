@@ -46,14 +46,25 @@ public class JobController implements HyggeController<ResponseEntity<?>> {
     @GetMapping("/job")
     public ResponseEntity<?> executeJob(@RequestParam(value = "batchSize", required = false, defaultValue = "3") Integer batchSize,
                                         @RequestParam(value = "bachAsynchronousEnable", required = false, defaultValue = "true") Boolean bachAsynchronousEnable) {
-        MockJobContext context = mockJob.execute("会随机模拟抛出异常，可多试几次", batchSize, bachAsynchronousEnable);
+        MockJobContext inputContext = mockJob.createContext();
+        inputContext.setTitle("会随机模拟抛出异常，可多试几次");
+        inputContext.setBatchSize(batchSize);
+        inputContext.setBachAsynchronousEnable(bachAsynchronousEnable);
+        MockJobContext context = mockJob.execute(inputContext);
+
         return success(context.getStatus());
     }
 
     @GetMapping("/exclusiveJob")
     @Operation(summary = "模拟独占 Job，同一时刻仅一个 Job 能被执行", description = "Swagger 页面访问会触发某种防重复请求机制，请把 http://localhost:8080/exclusiveJob 复制到浏览器访问，并按 F5 刷新发起真正的多次请求。")
     public ResponseEntity<?> exclusiveJob() {
-        MockJobContext context = mockExclusiveJob.execute("独占运行的任务，同时刻不允许多个 Job 执行(模拟单次耗时 5 秒)", 10, true);
+
+        MockJobContext inputContext = mockExclusiveJob.createContext();
+        inputContext.setTitle("独占运行的任务，同时刻不允许多个 Job 执行(模拟单次耗时 5 秒)");
+        inputContext.setBatchSize(10);
+        inputContext.setBachAsynchronousEnable(true);
+        MockJobContext context = mockExclusiveJob.execute(inputContext);
+
         return success(JobStatusEnum.REJECT.equals(context.getStatus()) ? "已存在正在运行的 Job，请稍后再试" : "执行任务成功");
     }
 }

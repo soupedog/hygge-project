@@ -70,7 +70,7 @@ public class MockExclusiveJob extends SimpleHyggeExclusiveJob<MockJobContext, Mo
     }
 
     @Override
-    protected MockJobContext createContext() {
+    public MockJobContext createContext() {
         return new MockJobContext();
     }
 }

@@ -16,6 +16,7 @@
 
 package hygge.job;
 
+import hygge.commons.exception.InternalRuntimeException;
 import hygge.commons.template.container.base.AbstractInterfaceKeyHyggeContext;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,13 +28,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, HyggeJobContextKey> {
     protected JobStatusEnum status = JobStatusEnum.SUCCESS;
     protected final Long startTs = System.currentTimeMillis();
+    /**
+     * 当前 Job 执行报告的标题
+     */
     protected String title;
+    /**
+     * 当前 Job 执行的单批次最小执行单元数量
+     */
+    protected int batchSize;
+    /**
+     * 单批次内所有最小执行单元是否异步执行
+     */
+    protected boolean bachAsynchronousEnable;
+    /**
+     * 批次编号，每个批次结束后会进行自增
+     */
+    protected int batchCount;
     /**
      * 最小执行单元处理数
      */
     protected AtomicInteger itemCount = new AtomicInteger(0);
-    protected int batchCount;
-    protected int batchSize;
     protected HyggeJobReporter jobReporter;
 
     /**
@@ -44,6 +58,15 @@ public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, H
             return batchCount - 1;
         } else {
             return batchCount;
+        }
+    }
+
+    public void initConfigurationCheck() {
+        if (title == null || title.trim().isEmpty()) {
+            throw new InternalRuntimeException("HyggeJobContext: title can't be empty.");
+        }
+        if (batchSize < 1) {
+            throw new InternalRuntimeException("HyggeJobContext: batchSize can't less than 1.");
         }
     }
 
@@ -97,6 +120,14 @@ public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, H
 
     public void setBatchSize(int batchSize) {
         this.batchSize = batchSize;
+    }
+
+    public boolean isBachAsynchronousEnable() {
+        return bachAsynchronousEnable;
+    }
+
+    public void setBachAsynchronousEnable(boolean bachAsynchronousEnable) {
+        this.bachAsynchronousEnable = bachAsynchronousEnable;
     }
 
     public HyggeJobReporter getJobReporter() {

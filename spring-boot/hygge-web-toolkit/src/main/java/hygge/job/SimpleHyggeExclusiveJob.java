@@ -33,7 +33,7 @@ public abstract class SimpleHyggeExclusiveJob<C extends HyggeJobContext, JI exte
     protected final AtomicBoolean IS_RUNNING = new AtomicBoolean(false);
 
     @Override
-    protected boolean reject() {
+    protected boolean reject(C context) {
         return !IS_RUNNING.compareAndSet(false, true);
     }
 

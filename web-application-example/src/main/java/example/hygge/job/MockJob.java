@@ -120,7 +120,7 @@ public class MockJob extends SimpleHyggeJob<MockJobContext, MockJobItem, User, V
     }
 
     @Override
-    protected MockJobContext createContext() {
+    public MockJobContext createContext() {
         return new MockJobContext();
     }
 }

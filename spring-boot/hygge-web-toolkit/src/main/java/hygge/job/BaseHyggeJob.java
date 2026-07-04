@@ -65,9 +65,9 @@ public abstract class BaseHyggeJob<
     private static final JsonHelper<ObjectMapper> jsonHelper_indent = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(true);
     private static final JsonHelper<ObjectMapper> jsonHelper = UtilCreator.INSTANCE.getDefaultJsonHelperInstance(false);
     /**
-     * 默认的 批次编号，从 1 开始
+     * 初始批次编号，从 1 开始
      */
-    protected int defaultBatchCount = 1;
+    protected int initialBatchCount = 1;
 
     /**
      * 获取名称，用于自动日志记录
@@ -75,29 +75,40 @@ public abstract class BaseHyggeJob<
     protected abstract String getJobName();
 
     /**
-     * @param title                  当前 Job 执行报告的标题。
-     * @param batchSize              当前 Job 执行的单批次最小执行单元数量。
-     * @param bachAsynchronousEnable 单批次内所有最小执行单元是否异步执行。
+     * 开始执行 Job。<br/>
+     * <p>
+     * 这是语法糖，会自行调用 {@link BaseHyggeJob#createContext()} 作为初始上下文，请确保，创建方法已初始了必要参数。
+     *
      */
-    public C execute(String title, int batchSize, boolean bachAsynchronousEnable) {
-        C context = null;
-        try {
-            context = createContext();
-            context.setTitle(title);
-            context.setBatchSize(batchSize);
-            context.setBatchCount(defaultBatchCount);
-            HyggeJobReporter jobReporter = createHyggeJobReporter(context);
-            context.setJobReporter(jobReporter);
-            mainProcess(bachAsynchronousEnable, context);
-        } catch (Throwable throwable) {
-            // 兜底包括 JVM 层面也不放过
-            ultimateThrowableHook(context, throwable);
-        }
-        return context;
+    public C execute() {
+        return execute(null);
     }
 
-    protected void mainProcess(boolean bachAsynchronousEnable, C context) {
+    /**
+     * 开始执行 Job。
+     */
+    public C execute(C inputContext) {
+        return mainProcess(inputContext);
+    }
+
+    protected C mainProcess(C context) {
         try {
+            if (context == null) {
+                context = createContext();
+            }
+            // 任务开始扩展点
+            jobStartHook(context);
+
+            // 配置项合法性检测
+            context.initConfigurationCheck();
+            // 初始化批次编号
+            context.setBatchCount(initialBatchCount);
+
+            // 初始化执行报告器
+            HyggeJobReporter jobReporter = createHyggeJobReporter(context);
+            context.setJobReporter(jobReporter);
+
+            // 初始化批次对象
             JBI jobBatchItem = createJobBatchItem(context);
             jobBatchItem.initStartTs();
             jobBatchItem.setBatchCount(context.getBatchCount());
@@ -121,7 +132,7 @@ public abstract class BaseHyggeJob<
                 List<JI> jobItemList = pressToJobItem(context, jobBatchItem, rawDataList);
                 jobBatchItem.setJobItemList(jobItemList);
 
-                if (bachAsynchronousEnable) {
+                if (context.isBachAsynchronousEnable()) {
                     processedDataList = asynchronousProcess(context, jobBatchItem, jobItemList);
                 } else {
                     processedDataList = new ArrayList<>(context.getBatchSize());
@@ -143,9 +154,12 @@ public abstract class BaseHyggeJob<
         } catch (Exception exception) {
             handleException(context, exception);
         } finally {
+            // 任务结束扩展点
             finallyHook(context);
             printLog(context);
         }
+
+        return context;
     }
 
     /**
@@ -159,10 +173,17 @@ public abstract class BaseHyggeJob<
     }
 
     /**
+     * 确认 context 对象非空后，{@link HyggeJobContext#initConfigurationCheck()} 调用前执行的钩子函数，等效于任务的最开端。
+     */
+    protected void jobStartHook(C context) {
+        // 默认什么都不做
+    }
+
+    /**
      * 无论成功与否，必然会在最后执行的钩子函数，默认什么也不做。
      */
     protected void finallyHook(C context) {
-        // 默认什么也不做，给子类提供一个钩子函数
+        // 默认什么都不做
     }
 
     protected Map<String, Object> getLogInfo(C context) {
@@ -182,6 +203,16 @@ public abstract class BaseHyggeJob<
             log.warn("{} execute fail:{}", getJobName(), jsonInfo);
         }
     }
+
+    /**
+     * 如果无扩展需求，可以直接创建 {@link HyggeJobContext}，无需创建自定义 Context 类。
+     */
+    public abstract C createContext();
+
+    /**
+     * 如果无扩展需求，可以直接创建 {@link HyggeJobBatchItem}，无需创建自定义 HyggeJobBatchItem 类。
+     */
+    protected abstract JBI createJobBatchItem(C context);
 
     /**
      * 初次拉取待处理的数据，该方法最多执行一次，后续改为循环调用 {@link BaseHyggeJob#getNextBatch(HyggeJobContext, HyggeJobBatchItem)}。<br/>
@@ -325,14 +356,4 @@ public abstract class BaseHyggeJob<
     protected HyggeJobReporter createHyggeJobReporter(C context) {
         return new DefaultHyggeJobReporter(new ArrayList<>(context.getBatchSize()), new ConcurrentLinkedQueue<>());
     }
-
-    /**
-     * 如果无扩展需求，可以直接创建 {@link HyggeJobContext}，无需创建自定义 Context 类。
-     */
-    protected abstract C createContext();
-
-    /**
-     * 如果无扩展需求，可以直接创建 {@link HyggeJobBatchItem}，无需创建自定义 HyggeJobBatchItem 类。
-     */
-    protected abstract JBI createJobBatchItem(C context);
 }
