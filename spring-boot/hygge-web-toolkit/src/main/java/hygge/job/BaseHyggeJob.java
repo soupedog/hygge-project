@@ -118,8 +118,8 @@ public abstract class BaseHyggeJob<
 
             // 初始化批次对象
             JBI jobBatchItem = createJobBatchItem(context);
-            jobBatchItem.initStartTs();
-            jobBatchItem.setBatchCount(context.getBatchCount());
+            initBatchItem(context, jobBatchItem);
+
             boolean isFirstBatch = true;
 
             List<RD> rawDataList = firstFetch(context, jobBatchItem);
@@ -132,8 +132,7 @@ public abstract class BaseHyggeJob<
                 } else {
                     // 仅当不是第 1 批次时需要创建
                     jobBatchItem = createJobBatchItem(context);
-                    jobBatchItem.initStartTs();
-                    jobBatchItem.setBatchCount(context.getBatchCount());
+                    initBatchItem(context, jobBatchItem);
                     batchStartHook(context, jobBatchItem, rawDataList);
                 }
 
@@ -177,14 +176,15 @@ public abstract class BaseHyggeJob<
      * @param exception 运行过程中抛出的异常
      */
     protected void handleException(C context, Exception exception) {
-        if (context != null) {
+        // 最小执行单元处理过异常时，状态会被置为 FAILURE，防止同一条错误重复汇报
+        if (context != null && !context.getStatus().equals(JobStatusEnum.FAILURE)) {
             context.setStatus(JobStatusEnum.FAILURE);
             LinkedHashMap<String, Object> exceptionInfo = new LinkedHashMap<>();
             // 单元之外的整个运行上下文（调度、线程池、资源等）
             exceptionInfo.put("scope", "context");
             exceptionInfo.put("batchCount", context.getBatchCount());
             exceptionInfo.put("message", exception.getMessage());
-            context.getJobReporter().addFailedInfo(exceptionInfo);
+            context.getJobReporter().addFailureInfo(exceptionInfo);
         }
 
         String loginInfo = getJobName() + " unexpected exception.";
@@ -233,6 +233,11 @@ public abstract class BaseHyggeJob<
      */
     protected abstract JBI createJobBatchItem(C context);
 
+    protected void initBatchItem(C context, JBI jobBatchItem) {
+        jobBatchItem.initStartTs();
+        jobBatchItem.setBatchCount(context.getBatchCount());
+    }
+
     /**
      * 初次拉取待处理的数据，该方法最多执行一次，后续改为循环调用 {@link BaseHyggeJob#getNextBatch(HyggeJobContext, HyggeJobBatchItem)}。<br/>
      * <p>
@@ -262,7 +267,7 @@ public abstract class BaseHyggeJob<
      */
     protected void handleExceptionForItem(C context, JI jobItem, Exception exception) {
         jobItem.setException(exception);
-        context.getJobReporter().addFailedInfo(jobItem.getErrorInfo());
+        context.getJobReporter().addFailureInfo(jobItem.getErrorInfo());
 
         String loginInfo = getJobName() + " unexpected exception(in unit).";
         log.error(loginInfo, exception);
@@ -380,6 +385,6 @@ public abstract class BaseHyggeJob<
     }
 
     protected HyggeJobReporter createHyggeJobReporter(C context) {
-        return new DefaultHyggeJobReporter(new ArrayList<>(context.getBatchSize()), new ConcurrentLinkedQueue<>());
+        return new DefaultHyggeJobReporter(new ArrayList<>(context.getBatchSize()), new ConcurrentLinkedQueue<>(), new ConcurrentLinkedQueue<>());
     }
 }

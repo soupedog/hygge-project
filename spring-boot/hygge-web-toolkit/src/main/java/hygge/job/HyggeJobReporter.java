@@ -25,7 +25,21 @@ import java.util.Map;
 public interface HyggeJobReporter {
     Map<String, Object> createReportInfo(HyggeJobContext context);
 
+    /**
+     * 添加批次汇总摘要信息
+     */
     void addBatchInfo(String batchInfo);
 
-    void addFailedInfo(Object failedInfo);
+    /**
+     * 添加流程追踪信息，Job 执行期间进行过什么操作
+     *
+     * @param ts           发生时间 UTC 毫秒级时间戳
+     * @param trackingInfo 发生事件描述
+     */
+    void addProcessTrackingInfo(long ts, String trackingInfo);
+
+    /**
+     * 添加失败信息
+     */
+    void addFailureInfo(Object failedInfo);
 }

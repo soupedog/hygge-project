@@ -17,6 +17,7 @@
 package example.hygge.job;
 
 import hygge.commons.constant.enums.StringCategoryEnum;
+import hygge.commons.exception.InternalRuntimeException;
 import hygge.job.BaseHyggeExclusiveJob;
 import hygge.job.BaseHyggeJob;
 import hygge.job.HyggeJobBatchItem;
@@ -101,8 +102,11 @@ public class MockJob extends SimpleHyggeJob<MockJobContext, MockJobItem, User, V
         }
 
         if (context.isMockException() && randomHelper.randomInteger(1, 100) > 80) {
-            throw new RuntimeException("随机模拟的业务处理异常:" + randomHelper.randomString(3, StringCategoryEnum.A_Z));
+            throw new InternalRuntimeException("随机模拟的业务处理异常:" + randomHelper.randomString(3, StringCategoryEnum.A_Z));
         }
+
+        context.getJobReporter()
+                .addProcessTrackingInfo(System.currentTimeMillis(), "进行了某种敏感业务操作：" + randomHelper.randomString(4, StringCategoryEnum.a_z, StringCategoryEnum.NUMBER));
 
         // 此处实例不需要返回值单纯查询操作，如有需要可以返回如 UserDTO
         // 通过重写 batchCompleteHook，可以对 UserDTO 进行使用

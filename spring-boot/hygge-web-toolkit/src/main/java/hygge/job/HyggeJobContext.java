@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date 2026/7/2
  */
 public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, HyggeJobContextKey> {
-    protected JobStatusEnum status = JobStatusEnum.SUCCESS;
+    protected volatile JobStatusEnum status = JobStatusEnum.SUCCESS;
     protected final Long startTs = System.currentTimeMillis();
     /**
      * 当前 Job 执行报告的标题
@@ -68,6 +68,10 @@ public class HyggeJobContext extends AbstractInterfaceKeyHyggeContext<Enum<?>, H
         if (batchSize < 1) {
             throw new InternalRuntimeException("HyggeJobContext: batchSize can't less than 1.");
         }
+    }
+
+    public boolean isSuccess() {
+        return JobStatusEnum.SUCCESS.equals(status);
     }
 
     public void batchContIncrease() {

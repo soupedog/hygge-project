@@ -16,22 +16,35 @@
 
 package hygge.job;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 /**
  * @author Xavier
  * @date 2026/7/2
  */
 public class DefaultHyggeJobReporter implements HyggeJobReporter {
+    /**
+     * 批次的报告信息，列表信息的每个元素代表一个批次的汇总的摘要信息。(批次之间是相互同步执行的)
+     */
     protected final List<String> jobBatchInfoList;
+    /**
+     * 流程追踪信息。(最小执行单元可能存在并发，必须确保多线程并发写操作不丢数据)
+     */
+    protected final ConcurrentLinkedQueue<TrackingItem> trackingInfoQueue;
+    /**
+     * 异常信息。(最小执行单元可能存在并发，必须确保多线程并发写操作不丢数据)
+     */
     protected final ConcurrentLinkedQueue<Object> failedInfoQueue;
 
-    public DefaultHyggeJobReporter(List<String> jobBatchInfoList, ConcurrentLinkedQueue<Object> failedInfoQueue) {
-        this.jobBatchInfoList = jobBatchInfoList;
+    public DefaultHyggeJobReporter(List<String> jobBatchInfoList, ConcurrentLinkedQueue<TrackingItem> trackingInfoQueue, ConcurrentLinkedQueue<Object> failedInfoQueue) {
         this.failedInfoQueue = failedInfoQueue;
+        this.trackingInfoQueue = trackingInfoQueue;
+        this.jobBatchInfoList = jobBatchInfoList;
     }
 
     @Override
@@ -45,6 +58,15 @@ public class DefaultHyggeJobReporter implements HyggeJobReporter {
         }
 
         logInfo.put("batchInfo", jobBatchInfoList);
+
+        if (!trackingInfoQueue.isEmpty()) {
+            // 按时间戳从早到晚排序
+            List<TrackingItem> trackingInfo = trackingInfoQueue.stream()
+                    .sorted(Comparator.comparingLong(TrackingItem::getTs))
+                    .collect(Collectors.toList());
+
+            logInfo.put("trackingInfo", trackingInfo);
+        }
 
         if (!failedInfoQueue.isEmpty()) {
             logInfo.put("failedInfos", failedInfoQueue);
@@ -67,7 +89,38 @@ public class DefaultHyggeJobReporter implements HyggeJobReporter {
     }
 
     @Override
-    public void addFailedInfo(Object failedInfo) {
+    public void addProcessTrackingInfo(long ts, String trackingInfo) {
+        trackingInfoQueue.add(new TrackingItem(ts, trackingInfo));
+    }
+
+    @Override
+    public void addFailureInfo(Object failedInfo) {
         failedInfoQueue.add(failedInfo);
+    }
+
+    public static class TrackingItem {
+        private long ts;
+        private String info;
+
+        public TrackingItem(long ts, String info) {
+            this.info = info;
+            this.ts = ts;
+        }
+
+        public long getTs() {
+            return ts;
+        }
+
+        public void setTs(long ts) {
+            this.ts = ts;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
     }
 }
