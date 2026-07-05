@@ -277,9 +277,9 @@ public abstract class BaseHyggeJob<
         PD result = null;
         try {
             jobItem.initStartTs();
-
             result = handleSingleItem(context, jobItem);
             jobItem.setProcessedData(result);
+            // 成功执行才 + 1
             context.itemCountIncrease();
         } catch (Exception exception) {
             handleExceptionForItem(context, jobItem, exception);
@@ -323,7 +323,7 @@ public abstract class BaseHyggeJob<
     protected void jobItemSuccessCheck(C contex, JI jobItem) {
         if (jobItem.isFailure()) {
             contex.setStatus(JobStatusEnum.FAILURE);
-            throw new InternalRuntimeException(getJobName() + " sub-task(" + jobItem.getUniqueIdentifier() + ") were failed.");
+            throw new InternalRuntimeException(getJobName() + " sub-task(" + jobItem.getUniqueIdentifier() + ") was failed.");
         }
     }
 
