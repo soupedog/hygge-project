@@ -104,6 +104,9 @@ public abstract class BaseHyggeJob<
             if (context == null) {
                 context = createContext();
             }
+            // 初始化执行报告器
+            HyggeJobReporter jobReporter = createHyggeJobReporter(context);
+
             // 任务开始扩展点
             jobStartHook(context);
 
@@ -112,8 +115,6 @@ public abstract class BaseHyggeJob<
             // 初始化批次编号
             context.setBatchCount(initialBatchCount);
 
-            // 初始化执行报告器
-            HyggeJobReporter jobReporter = createHyggeJobReporter(context);
             context.setJobReporter(jobReporter);
 
             // 初始化批次对象
